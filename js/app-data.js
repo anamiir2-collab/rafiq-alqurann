@@ -990,7 +990,8 @@ function getDailyMessage(date = new Date()) {
 }
 function getShortDayName(dateStr) {
   const d = new Date(dateStr + 'T00:00:00');
-  return AR_DAYS_SHORT[d.getDay()].slice(0, 3);
+  // إظهار اسم اليوم كاملًا (الخميس، الأحد...) بدلاً من المختصر (الخ، الأ...)
+  return AR_DAYS_SHORT[d.getDay()];
 }
 function formatArabicTime(time) {
   if (!time) return '';

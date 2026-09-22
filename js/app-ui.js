@@ -49,14 +49,14 @@ function render() {
   app.innerHTML = `
     <header class="topbar">
       <div class="container-app">
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-3">
           <img class="brand-logo" src="assets/ui-image-1.png" alt="شعار رفيق القرآن">
-          <div>
-            <div class="font-bold text-sm" style="line-height:1">رفيق القرآن</div>
+          <div style="min-width:0;flex:1">
+            <div class="font-bold" style="line-height:1.2;font-size:15px">رفيق القرآن</div>
             <div class="text-xs text-muted" style="margin-top:2px">مساعدك الذكي لحفظ القرآن</div>
             <div class="today-date-box text-xs">
               <span>${formatArabicDateWithDay(formatDate(new Date()))}</span>
-              <span>•</span>
+              <span style="opacity:0.5">•</span>
               <span class="hijri-date">${formatHijriDate(new Date())}</span>
             </div>
           </div>
@@ -67,16 +67,15 @@ function render() {
         </div>
       </div>
     </header>
-    <main>${main}</main>
+    <main class="page-enter">${main}</main>
     <nav class="bottomnav">
       <div class="container-app">
-        <div class="nav-items">
+        <div class="bottomnav-inner">
           ${renderNavBtn('calendar', 'التقويم', ICONS.calendar)}
-          ${renderNavBtn('test', 'اختبر حفظي', ICONS.list)}
-          ${renderNavBtn('dashboard', 'الرئيسية', ICONS.book)}
           ${renderNavBtn('mistakes', 'أخطائي', ICONS.alert, state.mistakes.filter(m => !m.resolved).length)}
+          ${renderNavBtn('dashboard', 'الرئيسية', ICONS.book, null, true)}
+          ${renderNavBtn('test', 'اختبر', ICONS.list)}
           ${renderNavBtn('reports', 'التقارير', ICONS.chart)}
-          ${renderNavBtn('achievements', 'الإنجازات', ICONS.award)}
         </div>
       </div>
     </nav>
@@ -84,9 +83,10 @@ function render() {
   `;
 }
 
-function renderNavBtn(view, label, icon, badge) {
+function renderNavBtn(view, label, icon, badge, isFab) {
   const active = app_view === view ? 'active' : '';
-  return `<button class="nav-btn ${active}" onclick="navigate('${view}')">
+  const fabClass = isFab ? 'nav-fab' : '';
+  return `<button class="nav-btn ${fabClass} ${active}" onclick="navigate('${view}')" aria-label="${label}">
     ${icon}
     <span class="nav-label">${label}</span>
     ${badge && badge > 0 ? `<span class="nav-badge">${badge > 9 ? '9+' : toAr(badge)}</span>` : ''}
@@ -121,21 +121,21 @@ function renderOnboarding() {
   const step = app_onboardingStep;
 
   return `
-    <div class="pattern-bg" style="min-height:100vh;padding:32px 16px">
-      <div class="container-app" style="max-width:600px">
-        <div class="text-center mb-6">
-          <div class="logo-icon" style="width:64px;height:64px;border-radius:16px;margin:0 auto 16px">${ICONS.book}</div>
-          <h1 class="text-2xl font-bold mb-2">رفيق القرآن</h1>
+    <div class="pattern-bg" style="min-height:100vh;padding:var(--space-6) var(--space-4);padding-top:calc(var(--space-8) + var(--safe-top))">
+      <div class="container-app" style="max-width:540px">
+        <div class="text-center" style="margin-bottom:var(--space-6)">
+          <div class="logo-icon floating" style="width:72px;height:72px;border-radius:var(--radius-xl);margin:0 auto var(--space-4)">${ICONS.book.replace('class="icon"', 'class="icon icon-xl"')}</div>
+          <h1 class="text-2xl font-extrabold" style="color:var(--fg-strong);margin-bottom:var(--space-2)">رفيق القرآن</h1>
           <p class="text-sm text-muted">مساعدك الذكي لحفظ القرآن الكريم ومراجعته</p>
         </div>
-        <div class="flex items-center justify-center gap-2 mb-6">
-          ${Array.from({length: TOTAL}).map((_, i) => `<div class="${i+1===step?'':i+1<step?'':''}" style="height:8px;border-radius:999px;transition:all 0.3s;${i+1===step?`width:32px;background:var(--primary)`:i+1<step?`width:8px;background:var(--primary);opacity:0.6`:`width:8px;background:var(--muted)`}"></div>`).join('')}
+        <div class="flex items-center justify-center gap-2" style="margin-bottom:var(--space-6)">
+          ${Array.from({length: TOTAL}).map((_, i) => `<div style="height:6px;border-radius:var(--radius-pill);transition:all 0.4s var(--ease-soft);${i+1===step?`width:32px;background:var(--gradient-primary);box-shadow:var(--shadow-primary)`:i+1<step?`width:6px;background:var(--primary);opacity:0.5`:`width:6px;background:var(--border)`}"></div>`).join('')}
         </div>
-        <div class="card">
+        <div class="card slide-up">
           <div class="card-pad-lg">
-            <span class="badge mb-2">الخطوة ${toAr(step)} من ${toAr(TOTAL)}</span>
-            <h2 class="text-xl font-bold mt-2 mb-1">${['','معلوماتك الشخصية','مستواك في الحفظ','خطة الحفظ','السورة أو الجزء','المقدار اليومي','الوقت وأيام الراحة'][step]}</h2>
-            <p class="text-sm text-muted mb-4">${['','الاسم الذي سيستخدمه النظام للتحدث معك بشكل شخصي','سيساعدنا هذا على ضبط سرعة الخطة بشكل مناسب لك','كم يومًا تريد أن تنهي خطة الحفظ فيها؟','من أين تبدأ وإلى أين تنتهي؟','مقدار الحفظ اليومي الذي يناسبك','الوقت المفضل للحفظ والمراجعة، وأيام الراحة الأسبوعية'][step]}</p>
+            <span class="badge badge-primary mb-2">الخطوة ${toAr(step)} من ${toAr(TOTAL)}</span>
+            <h2 class="text-xl font-extrabold" style="color:var(--fg-strong);margin-top:var(--space-2);margin-bottom:var(--space-1)">${['','معلوماتك الشخصية','مستواك في الحفظ','خطة الحفظ','السورة أو الجزء','المقدار اليومي','الوقت وأيام الراحة'][step]}</h2>
+            <p class="text-sm text-muted" style="margin-bottom:var(--space-4)">${['','الاسم الذي سيستخدمه النظام للتحدث معك بشكل شخصي','سيساعدنا هذا على ضبط سرعة الخطة بشكل مناسب لك','كم يومًا تريد أن تنهي خطة الحفظ فيها؟','من أين تبدأ وإلى أين تنتهي؟','مقدار الحفظ اليومي الذي يناسبك','الوقت المفضل للحفظ والمراجعة، وأيام الراحة الأسبوعية'][step]}</p>
             ${step === 1 ? `
               <div class="mb-3">
                 <label class="label">الاسم</label>
@@ -319,9 +319,9 @@ function renderOnboarding() {
               </div>
             ` : ''}
 
-            <div class="flex justify-between items-center pt-4 mt-4 border-t">
+            <div class="flex justify-between items-center" style="padding-top:var(--space-4);margin-top:var(--space-4);border-top:1px solid var(--border-soft)">
               <button class="btn btn-ghost" onclick="prevStep()" ${step === 1 ? 'disabled' : ''}>${ICONS.arrow_right} السابق</button>
-              ${step < 6 ? `<button class="btn btn-primary" onclick="nextStep()">التالي ${ICONS.arrow_left}</button>` : `<button class="btn btn-primary" onclick="finishOnboarding()">${ICONS.target} إنشاء الخطة وبدء الحفظ</button>`}
+              ${step < 6 ? `<button class="btn btn-primary" onclick="nextStep()">التالي ${ICONS.arrow_left}</button>` : `<button class="btn btn-gold btn-lg" onclick="finishOnboarding()">${ICONS.target} إنشاء الخطة وبدء الحفظ</button>`}
             </div>
           </div>
         </div>
@@ -387,86 +387,186 @@ function renderDashboard() {
   const unresolvedMistakes = state.mistakes.filter(m => !m.resolved);
   const overallScore = Math.round((stats.avgMemorizeScore * 0.4 + stats.avgReviewScore * 0.3 + stats.avgTestScore * 0.3) || 0);
 
-  return `
-    <div class="container-app py-4" style="padding-bottom:24px">
-      <div class="flex items-center justify-between mb-2">
-        <h1 class="text-xl font-bold">أهلًا يا ${esc(u.name)} 👋</h1>
-        ${streak > 0 ? `<span class="streak-badge">${ICONS.flame} ${toAr(streak)} ${streak === 1 ? 'يوم' : 'أيام متتالية'}</span>` : ''}
-      </div>
-      <p class="text-sm text-muted mb-4">${isRest ? `يوم راحتك يا ${esc(u.name)} 🌿 استرح وستكون قادرًا على المتابعة غدًا.` : `اليوم هو اليوم ${toAr(stats.currentDay)} من خطتك.`}</p>
+  // رسائل تحفيزية متغيرة
+  const motivationalMsgs = [
+    `اليوم ${toAr(stats.currentDay)} من رحلتك مع كتاب الله 🌿`,
+    `استمر يا ${esc(u.name)}، كل آية تخطو بك نحو الجنة ✨`,
+    `نسبة إنجازك: ${toAr(stats.memorizationProgress)}% — رائع! 🌟`,
+    `حفظت ${toAr(stats.memorizedVerses)} آية حتى الآن، ما شاء الله 🌙`,
+    `${toAr(streak)} ${streak === 1 ? 'يوم متتالٍ' : 'أيام متتالية'} من الالتزام 💚`
+  ];
+  const motivational = motivationalMsgs[Math.floor(new Date().getHours() / 5) % motivationalMsgs.length];
 
+  // حالة المهام
+  const tasks = [];
+  if (!isRest && activeDay) {
+    tasks.push({
+      id: 'memorize', icon: '📖', title: 'حفظ جديد',
+      desc: `${esc(activeDay.surahName)} • آيات ${toAr(activeDay.fromAyah)}-${toAr(activeDay.toAyah)}`,
+      progress: activeDay.memorizeSession?.completed ? 100 : 0,
+      completed: activeDay.memorizeSession?.completed,
+      action: `navigate('day', ${activeIdx})`, actionLabel: 'ابدأ',
+      color: ''
+    });
+    if (u.mode === 'memorize_review' && activeDay.reviewRange) {
+      tasks.push({
+        id: 'review', icon: '🔄', title: 'مراجعة',
+        desc: esc(activeDay.reviewRange),
+        progress: activeDay.reviewSession ? 100 : 0,
+        completed: !!activeDay.reviewSession,
+        action: `navigate('day', ${activeIdx})`, actionLabel: 'راجع',
+        color: 'gold'
+      });
+    }
+    tasks.push({
+      id: 'test', icon: '🧠', title: 'اختبر حفظي',
+      desc: `اختبار سريع على ما حفظته`,
+      progress: activeDay.testSession ? activeDay.testSession.score : 0,
+      completed: activeDay.testSession && activeDay.testSession.score >= 80,
+      action: `navigate('test')`, actionLabel: 'اختبر',
+      color: ''
+    });
+    tasks.push({
+      id: 'evaluate', icon: '⭐', title: 'قيّم يومك',
+      desc: activeDay.dayEvaluation ? `آخر تقييم: ${toAr(activeDay.dayEvaluation.final)}/100` : 'سجّل تقييمك الشامل لليوم',
+      progress: activeDay.dayEvaluation?.final || 0,
+      completed: !!activeDay.dayEvaluation,
+      action: `navigate('day', ${activeIdx})`, actionLabel: 'قيّم',
+      color: 'gold'
+    });
+  }
+
+  // دائرة التقدم في الـ Hero
+  const memorizePct = stats.memorizationProgress;
+  const circumference = 2 * Math.PI * 26;
+  const dashOffset = circumference - (memorizePct / 100) * circumference;
+
+  return `
+    <div class="container-app" style="padding-top:var(--space-4);padding-bottom:var(--space-6)">
+
+      <!-- Hero Card - البطاقة الرئيسية -->
+      <div class="hero-card slide-up">
+        <svg class="hero-progress-ring" viewBox="0 0 64 64" aria-hidden="true">
+          <circle cx="32" cy="32" r="26" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="4"/>
+          <circle cx="32" cy="32" r="26" fill="none" stroke="url(#goldGrad)" stroke-width="4"
+                  stroke-linecap="round" stroke-dasharray="${circumference}"
+                  stroke-dashoffset="${dashOffset}"
+                  transform="rotate(-90 32 32)"
+                  style="transition:stroke-dashoffset 1s var(--ease-soft)"/>
+          <defs>
+            <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#E8C99A"/>
+              <stop offset="100%" stop-color="#D4A574"/>
+            </linearGradient>
+          </defs>
+          <text x="32" y="36" text-anchor="middle" fill="white" font-size="13" font-weight="800" font-family="Cairo">${toAr(memorizePct)}%</text>
+        </svg>
+        <div class="hero-greeting">السلام عليكم 👋</div>
+        <h1 class="hero-name">أهلًا بك يا ${esc(u.name)}</h1>
+        <p class="hero-message">${motivational}</p>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="hero-stat-value">${toAr(streak)}</div>
+            <div class="hero-stat-label">أيام متتالية</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-value">${toAr(stats.memorizedVerses)}</div>
+            <div class="hero-stat-label">آية محفوظة</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-value">${toAr(stats.completedSurahs)}</div>
+            <div class="hero-stat-label">سورة مكتملة</div>
+          </div>
+        </div>
+      </div>
+
+      ${isRest ? `
+        <div class="card card-gold slide-up" style="margin-top:var(--space-4)">
+          <div class="card-pad text-center">
+            <div style="font-size:48px;margin-bottom:8px">🌿</div>
+            <h3 class="font-bold text-lg mb-1">يوم راحتك يا ${esc(u.name)}</h3>
+            <p class="text-sm text-muted">استرح وستكون قادرًا على المتابعة غدًا بإذن الله</p>
+          </div>
+        </div>
+      ` : ''}
+
+      <!-- رسالة اليوم -->
       ${(() => {
         const msg = getDailyMessage(new Date());
         return `
-          <div class="card daily-message mb-4 fade-in">
+          <div class="card daily-message slide-up" style="margin-top:var(--space-4)">
             <div class="card-pad" style="position:relative">
-              <div class="badge badge-primary mb-2">رسالة اليوم ✨</div>
-              <div class="font-bold text-lg mb-1">${msg.title}</div>
-              <div class="text-sm text-muted">${msg.text}</div>
+              <div class="badge badge-gold mb-2">✨ رسالة اليوم</div>
+              <div class="font-bold text-lg mb-1" style="color:var(--fg-strong)">${msg.title}</div>
+              <div class="text-sm" style="color:var(--muted-fg)">${msg.text}</div>
             </div>
           </div>
         `;
       })()}
 
-      ${!isRest && activeDay ? `
-        <div class="card mb-4 fade-in" style="border-color:var(--primary);background:linear-gradient(135deg, rgba(26,107,84,0.05), var(--card))">
-          <div class="card-pad">
-            <div class="flex justify-between items-start mb-3">
-              <div>
-                <span class="badge badge-primary mb-2">مهمة اليوم</span>
-                <h3 class="text-lg font-bold flex items-center gap-2">${ICONS.book} ${esc(activeDay.surahName)}</h3>
+      <!-- مهام اليوم -->
+      ${tasks.length > 0 ? `
+        <div class="flex items-center justify-between" style="margin-top:var(--space-6);margin-bottom:var(--space-3)">
+          <h2 class="font-bold" style="font-size:var(--fs-md);color:var(--fg-strong)">مهام اليوم</h2>
+          <span class="badge badge-primary">${toAr(tasks.filter(t => t.completed).length)}/${toAr(tasks.length)}</span>
+        </div>
+        <div class="stagger-cards" style="display:flex;flex-direction:column;gap:var(--space-3)">
+          ${tasks.map(t => `
+            <div class="task-card ${t.completed ? 'completed' : ''}" onclick="${t.action}">
+              <div class="task-icon ${t.color}">${t.icon}</div>
+              <div class="task-info">
+                <div class="task-title">${t.title}</div>
+                <div class="task-desc">${t.desc}</div>
+                ${!t.completed && t.progress > 0 ? `
+                  <div class="progress task-progress"><div class="progress-bar" style="width:${t.progress}%"></div></div>
+                ` : ''}
               </div>
-              <div class="text-left">
-                <div class="text-xs text-muted">${formatArabicDateWithDay(activeDay.date)}</div>
-                <div class="text-xs text-muted mt-1">اليوم ${toAr(activeDay.dayNumber)}</div>
-              </div>
+              <button class="btn ${t.completed ? 'btn-success' : 'btn-primary'} btn-sm" onclick="event.stopPropagation();${t.action}">
+                ${t.completed ? '✓ تم' : t.actionLabel}
+              </button>
             </div>
-            <div class="grid grid-2 mb-3">
-              <div class="bg-card" style="border:1px solid var(--border);border-radius:8px;padding:12px">
-                <div class="text-xs text-muted flex items-center gap-1">${ICONS.book} الحفظ</div>
-                <div class="font-semibold mt-1">من الآية ${toAr(activeDay.fromAyah)} إلى الآية ${toAr(activeDay.toAyah)}</div>
-                <div class="text-xs text-muted mt-1">${toAr(activeDay.verseCount)} آية</div>
-              </div>
-              ${activeDay.reviewRange ? `
-                <div class="bg-card" style="border:1px solid var(--border);border-radius:8px;padding:12px">
-                  <div class="text-xs text-muted flex items-center gap-1">${ICONS.refresh} المراجعة</div>
-                  <div class="font-semibold mt-1" style="font-size:13px">${esc(activeDay.reviewRange)}</div>
-                </div>
-              ` : ''}
-            </div>
-            <div class="flex flex-wrap gap-2">
-              <button class="btn btn-primary flex-1" style="min-width:140px" onclick="navigate('day', ${activeIdx})">${ICONS.book} ابدأ الحفظ</button>
-              ${u.mode === 'memorize_review' ? `<button class="btn btn-outline flex-1" style="min-width:140px" onclick="navigate('day', ${activeIdx})">${ICONS.refresh} ابدأ المراجعة</button>` : ''}
-              <button class="btn btn-outline flex-1" style="min-width:140px" onclick="navigate('test')">${ICONS.list} اختبر حفظي</button>
-              <button class="btn btn-ghost" style="min-width:100px" onclick="navigate('day', ${activeIdx})">${ICONS.target} قيّم يومك</button>
-            </div>
-          </div>
+          `).join('')}
         </div>
       ` : ''}
 
-      <div class="card mb-4">
+      <!-- تقدم الخطة -->
+      <div class="flex items-center justify-between" style="margin-top:var(--space-6);margin-bottom:var(--space-3)">
+        <h2 class="font-bold" style="font-size:var(--fs-md);color:var(--fg-strong)">تقدم خطتك</h2>
+        <span class="text-xs text-muted">${toAr(stats.completedDays)} من ${toAr(stats.totalDays)} يوم</span>
+      </div>
+      <div class="card slide-up">
         <div class="card-pad">
-          <h3 class="text-base font-bold flex items-center gap-2 mb-3">${ICONS.trend} تقدم خطتك</h3>
           ${renderProgressRow('تقدم الخطة', Math.round(((stats.totalDays - stats.daysRemaining) / stats.totalDays) * 100), 'var(--primary)')}
-          ${renderProgressRow('الحفظ', stats.memorizationProgress, '#16a34a', `${toAr(stats.memorizedVerses)} / ${toAr(stats.totalVerses)} آية`)}
-          ${renderProgressRow('المراجعة', stats.reviewProgress, '#0d9488')}
-          <div class="grid grid-3 mt-3 pt-3 border-t">
-            <div class="text-center"><div class="text-lg font-bold text-success">${toAr(stats.completedDays)}</div><div class="text-xs text-muted">مكتملة</div></div>
-            <div class="text-center"><div class="text-lg font-bold text-primary">${toAr(stats.daysRemaining)}</div><div class="text-xs text-muted">متبقية</div></div>
-            <div class="text-center"><div class="text-lg font-bold text-muted">${toAr(stats.restDays)}</div><div class="text-xs text-muted">أيام راحة</div></div>
+          ${renderProgressRow('الحفظ', stats.memorizationProgress, 'var(--success)', `${toAr(stats.memorizedVerses)} / ${toAr(stats.totalVerses)} آية`)}
+          ${renderProgressRow('المراجعة', stats.reviewProgress, 'var(--secondary)')}
+          <div class="grid grid-3" style="margin-top:var(--space-4);padding-top:var(--space-4);border-top:1px solid var(--border-soft)">
+            <div class="text-center">
+              <div class="text-lg font-extrabold text-success">${toAr(stats.completedDays)}</div>
+              <div class="text-xs text-muted">مكتملة</div>
+            </div>
+            <div class="text-center">
+              <div class="text-lg font-extrabold text-primary">${toAr(stats.daysRemaining)}</div>
+              <div class="text-xs text-muted">متبقية</div>
+            </div>
+            <div class="text-center">
+              <div class="text-lg font-extrabold" style="color:var(--muted-fg)">${toAr(stats.restDays)}</div>
+              <div class="text-xs text-muted">راحة</div>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="grid grid-4 mb-4">
+      <!-- بطاقات الإحصائيات -->
+      <div class="grid grid-4 slide-up" style="margin-top:var(--space-4)">
         ${renderStatCard(ICONS.book, 'الآيات المحفوظة', toAr(stats.memorizedVerses), 'success')}
-        ${renderStatCard(ICONS.award, 'السور المكتملة', toAr(stats.completedSurahs), 'warning')}
+        ${renderStatCard(ICONS.award, 'السور المكتملة', toAr(stats.completedSurahs), 'gold')}
         ${renderStatCard(ICONS.list, 'الاختبارات', toAr(stats.testCount), 'primary')}
         ${renderStatCard(ICONS.trend, 'نسبة الالتزام', `${toAr(stats.commitmentRate)}%`, stats.commitmentRate >= 70 ? 'success' : stats.commitmentRate >= 50 ? 'warning' : 'danger')}
       </div>
 
+      <!-- متوسط التقييمات -->
       ${(stats.avgMemorizeScore > 0 || stats.avgReviewScore > 0 || stats.avgTestScore > 0) ? `
-        <div class="card mb-4">
+        <div class="card slide-up" style="margin-top:var(--space-4)">
           <div class="card-pad">
             <h3 class="text-base font-bold flex items-center gap-2 mb-3">${ICONS.sparkles} متوسط تقييماتك</h3>
             ${stats.avgMemorizeScore > 0 ? renderScoreRow('متوسط الحفظ', stats.avgMemorizeScore) : ''}
@@ -475,7 +575,7 @@ function renderDashboard() {
             <div class="pt-3 mt-3 border-t">
               <div class="flex justify-between mb-2">
                 <span class="text-sm font-semibold">التقييم الشامل</span>
-                <span class="text-2xl font-bold ${scoreColor(overallScore)}">${toAr(overallScore)}</span>
+                <span class="text-2xl font-extrabold ${scoreColor(overallScore)}">${toAr(overallScore)}</span>
               </div>
               <div class="progress"><div class="progress-bar" style="width:${overallScore}%"></div></div>
             </div>
@@ -483,22 +583,46 @@ function renderDashboard() {
         </div>
       ` : ''}
 
-      <div class="card mb-4" style="background:linear-gradient(135deg, rgba(22,163,74,0.06), var(--card))">
+      <!-- باقٍ على نهاية الخطة -->
+      <div class="card card-premium slide-up" style="margin-top:var(--space-4)">
         <div class="card-pad flex justify-between items-center">
           <div>
-            <div class="text-sm text-muted mb-1">باقٍ على نهاية خطتك</div>
-            <div class="text-2xl font-bold">${formatDuration(stats.daysRemaining)}</div>
+            <div class="text-sm" style="opacity:0.85;margin-bottom:4px">باقٍ على نهاية خطتك</div>
+            <div class="text-2xl font-extrabold">${formatDuration(stats.daysRemaining)}</div>
           </div>
-          <div style="color:var(--primary);opacity:0.4">${ICONS.calendar.replace('class="icon"', 'class="icon" style="width:40px;height:40px"')}</div>
+          <div style="color:var(--light-gold);opacity:0.6">${ICONS.calendar.replace('class="icon"', 'class="icon" style="width:40px;height:40px"')}</div>
         </div>
       </div>
 
+      <!-- روابط سريعة للإنجازات -->
+      <div class="grid grid-2 slide-up" style="margin-top:var(--space-4)">
+        <button class="card card-pressable" onclick="navigate('achievements')" style="border:none;text-align:right;cursor:pointer;font-family:inherit;color:inherit">
+          <div class="card-pad flex items-center gap-3">
+            <div class="task-icon gold">${ICONS.award.replace('class="icon"', 'class="icon icon-lg"')}</div>
+            <div>
+              <div class="font-bold text-sm" style="color:var(--fg)">الإنجازات</div>
+              <div class="text-xs text-muted">شاراتك ومكافآتك</div>
+            </div>
+          </div>
+        </button>
+        <button class="card card-pressable" onclick="navigate('reports')" style="border:none;text-align:right;cursor:pointer;font-family:inherit;color:inherit">
+          <div class="card-pad flex items-center gap-3">
+            <div class="task-icon">${ICONS.chart.replace('class="icon"', 'class="icon icon-lg"')}</div>
+            <div>
+              <div class="font-bold text-sm" style="color:var(--fg)">التقارير</div>
+              <div class="text-xs text-muted">تقارير أدائك المفصلة</div>
+            </div>
+          </div>
+        </button>
+      </div>
+
+      <!-- اقتراحات ذكية -->
       ${state.suggestions.length > 0 ? `
-        <div class="card mb-4">
+        <div class="card slide-up" style="margin-top:var(--space-4)">
           <div class="card-pad">
             <h3 class="text-base font-bold flex items-center gap-2 mb-3">${ICONS.sparkles} اقتراحات ذكية</h3>
             ${state.suggestions.slice(0, 3).map(s => `
-              <div class="flex items-start gap-3 p-3 mb-2" style="border-radius:8px;border:1px solid ${s.severity === 'warning' ? 'rgba(217,119,6,0.3)' : s.severity === 'success' ? 'rgba(22,163,74,0.3)' : 'rgba(26,107,84,0.2)'};background:${s.severity === 'warning' ? 'rgba(217,119,6,0.08)' : s.severity === 'success' ? 'rgba(22,163,74,0.08)' : 'rgba(26,107,84,0.05)'}">
+              <div class="flex items-start gap-3 p-3 mb-2" style="border-radius:var(--radius-md);border:1px solid ${s.severity === 'warning' ? 'rgba(217,119,6,0.3)' : s.severity === 'success' ? 'rgba(22,163,74,0.3)' : 'rgba(23,107,85,0.2)'};background:${s.severity === 'warning' ? 'var(--warning-soft)' : s.severity === 'success' ? 'var(--success-soft)' : 'var(--primary-light)'}">
                 <div class="flex-1 text-sm">${esc(s.message)}</div>
                 <button class="btn btn-sm btn-ghost" onclick="clearSuggestion('${s.id}')">حسنًا</button>
               </div>
@@ -507,17 +631,18 @@ function renderDashboard() {
         </div>
       ` : ''}
 
+      <!-- آيات تحتاج مراجعة -->
       ${unresolvedMistakes.length > 0 ? `
-        <div class="card mb-4">
+        <div class="card slide-up" style="margin-top:var(--space-4)">
           <div class="card-pad">
             <div class="flex justify-between items-center mb-3">
               <h3 class="text-base font-bold flex items-center gap-2">${ICONS.alert} آيات تحتاج إلى مراجعة</h3>
               <button class="btn btn-sm btn-ghost" onclick="navigate('mistakes')">عرض الكل ${ICONS.chevron_left}</button>
             </div>
             ${unresolvedMistakes.slice(0, 3).map(m => `
-              <div class="flex justify-between items-center p-2 bg-muted" style="border-radius:8px;margin-bottom:8px;font-size:13px">
+              <div class="flex justify-between items-center p-3" style="background:var(--secondary-bg);border-radius:var(--radius-md);margin-bottom:8px;font-size:13px">
                 <div><span class="font-semibold">${esc(m.surahName)}</span><span class="text-muted mr-2">الآية ${toAr(m.ayah)}</span></div>
-                <span class="badge">${toAr(m.errorCount)} ${m.errorCount === 1 ? 'خطأ' : 'أخطاء'}</span>
+                <span class="badge badge-danger">${toAr(m.errorCount)} ${m.errorCount === 1 ? 'خطأ' : 'أخطاء'}</span>
               </div>
             `).join('')}
             ${unresolvedMistakes.length > 3 ? `<p class="text-xs text-muted text-center mt-2">و${toAr(unresolvedMistakes.length - 3)} آيات أخرى...</p>` : ''}
@@ -529,7 +654,7 @@ function renderDashboard() {
 }
 
 function renderProgressRow(label, value, color, detail) {
-  return `<div style="margin-bottom:12px">
+  return `<div style="margin-bottom:var(--space-3)">
     <div class="flex justify-between text-sm mb-1">
       <span class="text-muted">${label}</span>
       <span class="font-semibold">${toAr(value)}%${detail ? `<span class="text-xs text-muted mr-2">(${detail})</span>` : ''}</span>
@@ -539,12 +664,20 @@ function renderProgressRow(label, value, color, detail) {
 }
 
 function renderStatCard(icon, label, value, color) {
-  const colors = { success: 'rgba(22,163,74,0.1)', warning: 'rgba(217,119,6,0.1)', primary: 'rgba(26,107,84,0.1)', danger: 'rgba(220,38,38,0.1)' };
-  const textColors = { success: 'var(--success)', warning: 'var(--warning)', primary: 'var(--primary)', danger: 'var(--danger)' };
-  return `<div class="card"><div class="card-pad" style="padding:12px;display:flex;align-items:center;gap:8px">
-    <div style="width:32px;height:32px;border-radius:8px;background:${colors[color]};color:${textColors[color]};display:flex;align-items:center;justify-content:center;flex-shrink:0">${icon}</div>
-    <div><div class="text-lg font-bold" style="line-height:1">${value}</div><div class="text-xs text-muted mt-1">${label}</div></div>
-  </div></div>`;
+  const colors = {
+    success: 'stat-icon-success',
+    warning: 'stat-icon-warning',
+    primary: 'stat-icon-primary',
+    danger: 'stat-icon-danger',
+    gold: 'stat-icon-gold'
+  };
+  return `<div class="stat-card">
+    <div class="stat-icon ${colors[color] || 'stat-icon-primary'}">${icon}</div>
+    <div style="min-width:0">
+      <div class="stat-value">${value}</div>
+      <div class="stat-label">${label}</div>
+    </div>
+  </div>`;
 }
 
 function renderScoreRow(label, score) {
@@ -1766,12 +1899,12 @@ render();
   const app = document.getElementById('app');
   if (!loader || !app) return;
 
-  // Keep the splash screen for exactly 10 seconds, then fade it out smoothly.
+  // Keep the splash screen briefly, then fade it out smoothly.
   setTimeout(() => {
     app.classList.add('app-ready');
     loader.classList.add('is-hidden');
     setTimeout(() => loader.remove(), 950);
-  }, 2000);
+  }, 2500);
 })();
 
 // Auto-redistribute on first load
