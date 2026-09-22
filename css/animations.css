@@ -1,0 +1,444 @@
+/* =====================================================================
+   رفيق القرآن — الحركات والـ Micro-interactions
+   كل الأنيميشن خفيف وسريع، مع دعم prefers-reduced-motion
+   ===================================================================== */
+
+/* ====== Fade In ====== */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ====== Fade In + Slide Up ====== */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ====== Slide Down ====== */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ====== Slide In from right (RTL: from left) ====== */
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ====== Scale In ====== */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ====== Pop In (with bounce) ====== */
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ====== Ripple effect ====== */
+@keyframes ripple {
+  to {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+/* ====== Pulse ====== */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.85;
+  }
+}
+
+/* ====== Soft pulse for indicators ====== */
+@keyframes pulseSoft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* ====== Bounce ====== */
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+/* ====== Spin ====== */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ====== Shimmer (for loading and premium effects) ====== */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ====== Glow ====== */
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 0 0 var(--primary-medium); }
+  50% { box-shadow: 0 0 0 8px transparent; }
+}
+
+/* ====== Progress fill animation ====== */
+@keyframes progressFill {
+  from { width: 0%; }
+  to { width: var(--progress-width, 100%); }
+}
+
+/* ====== Floating ====== */
+@keyframes floating {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* ====== Equalizer bars (for audio playing) ====== */
+@keyframes equalize {
+  0%, 100% { height: 30%; }
+  50% { height: 100%; }
+}
+
+/* ====== Checkmark draw ====== */
+@keyframes checkmarkDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* ====== Toast slide ====== */
+@keyframes toastSlide {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -20px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+/* ====== Success burst ====== */
+@keyframes successBurst {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+/* ====== Page transition ====== */
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ====== Header shimmer (for premium cards) ====== */
+@keyframes headerShimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* ====== Heart beat ====== */
+@keyframes heartBeat {
+  0%, 100% { transform: scale(1); }
+  25% { transform: scale(1.15); }
+  50% { transform: scale(1); }
+  75% { transform: scale(1.1); }
+}
+
+/* ====== Background gradient shift ====== */
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* =====================================================================
+   فئات الأنيميشن الجاهزة للاستخدام
+   ===================================================================== */
+.fade-in { animation: fadeIn var(--transition-base) var(--ease-soft) both; }
+.slide-up { animation: slideUp 0.4s var(--ease-soft) both; }
+.slide-down { animation: slideDown 0.3s var(--ease-soft) both; }
+.slide-in-left { animation: slideInLeft 0.4s var(--ease-soft) both; }
+.scale-in { animation: scaleIn 0.3s var(--ease-bounce) both; }
+.pop-in { animation: popIn 0.4s var(--ease-bounce) both; }
+.page-enter { animation: pageEnter 0.35s var(--ease-soft) both; }
+
+/* Stagger children — يدخل الأبناء بالتتابع */
+.stagger > * {
+  animation: slideUp 0.4s var(--ease-soft) backwards;
+}
+.stagger > *:nth-child(1) { animation-delay: 0.04s; }
+.stagger > *:nth-child(2) { animation-delay: 0.08s; }
+.stagger > *:nth-child(3) { animation-delay: 0.12s; }
+.stagger > *:nth-child(4) { animation-delay: 0.16s; }
+.stagger > *:nth-child(5) { animation-delay: 0.20s; }
+.stagger > *:nth-child(6) { animation-delay: 0.24s; }
+.stagger > *:nth-child(7) { animation-delay: 0.28s; }
+.stagger > *:nth-child(8) { animation-delay: 0.32s; }
+.stagger > *:nth-child(9) { animation-delay: 0.36s; }
+.stagger > *:nth-child(10) { animation-delay: 0.40s; }
+
+/* Stagger for grid items (cards) */
+.stagger-cards > * {
+  animation: slideUp 0.5s var(--ease-soft) backwards;
+}
+.stagger-cards > *:nth-child(1) { animation-delay: 0.05s; }
+.stagger-cards > *:nth-child(2) { animation-delay: 0.10s; }
+.stagger-cards > *:nth-child(3) { animation-delay: 0.15s; }
+.stagger-cards > *:nth-child(4) { animation-delay: 0.20s; }
+.stagger-cards > *:nth-child(5) { animation-delay: 0.25s; }
+.stagger-cards > *:nth-child(6) { animation-delay: 0.30s; }
+
+/* =====================================================================
+   تأثيرات الضغط والتفاعل
+   ===================================================================== */
+
+/* Press effect — للبطاقات والأزرار عند الضغط */
+.pressable {
+  transition: transform var(--transition-fast), box-shadow var(--transition-base);
+  will-change: transform;
+}
+.pressable:active {
+  transform: scale(0.97);
+}
+
+/* Card hover lift */
+.card-lift {
+  transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
+}
+.card-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+.card-lift:active {
+  transform: translateY(0) scale(0.99);
+}
+
+/* Button press */
+.btn-press {
+  transition: transform var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast);
+}
+.btn-press:active {
+  transform: scale(0.96);
+}
+
+/* Ripple container */
+.ripple-container {
+  position: relative;
+  overflow: hidden;
+}
+.ripple-effect {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  pointer-events: none;
+  transform: scale(0);
+  animation: ripple 0.6s var(--ease-smooth) forwards;
+}
+
+/* =====================================================================
+   أنيميشن خاصة بالعناصر
+   ===================================================================== */
+
+/* Shimmer for premium cards */
+.shimmer-bg {
+  background: linear-gradient(
+    110deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.08) 50%,
+    transparent 70%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 4s var(--ease-smooth) infinite;
+}
+
+/* Floating animation */
+.floating {
+  animation: floating 3s var(--ease-soft) infinite;
+}
+
+/* Pulse for badges */
+.pulse-soft {
+  animation: pulseSoft 2s var(--ease-smooth) infinite;
+}
+
+/* Spinning loader */
+.spinning {
+  animation: spin 0.8s linear infinite;
+}
+
+/* =====================================================================
+   مشغل الصوت — Equalizer
+   ===================================================================== */
+.audio-bars {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 16px;
+}
+.audio-bars span {
+  display: block;
+  width: 3px;
+  height: 100%;
+  background: currentColor;
+  border-radius: 2px;
+  animation: equalize 1s ease-in-out infinite;
+}
+.audio-bars span:nth-child(1) { animation-delay: 0s; }
+.audio-bars span:nth-child(2) { animation-delay: 0.2s; }
+.audio-bars span:nth-child(3) { animation-delay: 0.4s; }
+.audio-bars span:nth-child(4) { animation-delay: 0.1s; }
+
+.audio-bars.paused span {
+  animation-play-state: paused;
+  height: 30%;
+}
+
+/* =====================================================================
+   تقدم دائري — Animated circular progress
+   ===================================================================== */
+@keyframes circularProgress {
+  from { stroke-dashoffset: var(--circumference); }
+  to { stroke-dashoffset: var(--circumference-target); }
+}
+
+.circular-progress circle.progress-ring {
+  transition: stroke-dashoffset 1s var(--ease-soft);
+}
+
+/* =====================================================================
+   تقدم خطي متحرك
+   ===================================================================== */
+.progress-animated .progress-bar {
+  background-image: linear-gradient(
+    90deg,
+    var(--primary) 0%,
+    var(--secondary) 50%,
+    var(--primary) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s linear infinite;
+}
+
+/* =====================================================================
+   Success burst — عند إكمال مهمة
+   ===================================================================== */
+.success-burst {
+  position: relative;
+}
+.success-burst::before,
+.success-burst::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle, var(--success-soft) 0%, transparent 70%);
+  opacity: 0;
+  pointer-events: none;
+}
+.success-burst.celebrating::before {
+  animation: successBurst 0.8s var(--ease-soft);
+}
+.success-burst.celebrating::after {
+  animation: successBurst 0.8s 0.15s var(--ease-soft);
+}
+
+/* =====================================================================
+   Toast animations
+   ===================================================================== */
+.toast-enter {
+  animation: toastSlide 0.35s var(--ease-bounce) forwards;
+}
+
+/* =====================================================================
+   توهج ذهبي للعناصر المميزة
+   ===================================================================== */
+.gold-glow {
+  position: relative;
+}
+.gold-glow::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, var(--gold), var(--light-gold), var(--gold));
+  background-size: 200% 200%;
+  z-index: -1;
+  opacity: 0.6;
+  animation: gradientShift 4s ease infinite;
+  filter: blur(6px);
+}
+
+/* =====================================================================
+   Reduced motion — احترام تفضيل المستخدم
+   ===================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .fade-in, .slide-up, .slide-down, .slide-in-left,
+  .scale-in, .pop-in, .page-enter,
+  .stagger > *, .stagger-cards > *,
+  .shimmer-bg, .floating, .pulse-soft, .spinning,
+  .audio-bars span, .progress-animated .progress-bar {
+    animation: none !important;
+  }
+
+  .pressable:active,
+  .card-lift:hover, .card-lift:active,
+  .btn-press:active {
+    transform: none !important;
+  }
+}
