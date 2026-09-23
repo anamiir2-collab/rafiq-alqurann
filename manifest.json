@@ -1,26 +1,46 @@
 {
-  "name": "رفيق القرآن",
+  "name": "رفيق القرآن - رفيقك في رحلة الحفظ والمراجعة",
   "short_name": "رفيق القرآن",
-  "description": "مساعدك الذكي لحفظ القرآن الكريم ومراجعته",
+  "description": "تطبيق متكامل لحفظ القرآن الكريم ومراجعه وتدبره مع نظام صوتي متقدم",
   "lang": "ar",
   "dir": "rtl",
   "start_url": "./index.html",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
   "orientation": "portrait-primary",
-  "background_color": "#faf8f3",
-  "theme_color": "#1a6b54",
+  "background_color": "#F7F1E5",
+  "theme_color": "#0F5C4D",
+  "categories": ["education", "books", "lifestyle"],
+  "lang": "ar-SA",
   "icons": [
-    {
-      "src": "assets/logo-1.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
     {
       "src": "assets/ui-image-1.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
+    },
+    {
+      "src": "assets/logo-1.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "الرئيسية",
+      "url": "./index.html#dashboard",
+      "icons": [{"src": "assets/ui-image-1.png", "sizes": "96x96", "type": "image/png"}]
+    },
+    {
+      "name": "القرآن",
+      "url": "./index.html#quran",
+      "icons": [{"src": "assets/ui-image-1.png", "sizes": "96x96", "type": "image/png"}]
+    },
+    {
+      "name": "التقويم",
+      "url": "./index.html#calendar",
+      "icons": [{"src": "assets/ui-image-1.png", "sizes": "96x96", "type": "image/png"}]
     }
   ]
 }
