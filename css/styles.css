@@ -1,11 +1,12 @@
 /* =====================================================================
    رفيق القرآن — الأنماط الأساسية (Base Styles)
-   يعتمد على theme.css و animations.css
+   تصميم Premium Mobile App - Modern Islamic UI
    ===================================================================== */
 
 /* ====== الخطوط ====== */
 .font-quran { font-family: var(--font-quran); line-height: var(--lh-quran); }
 .font-secondary { font-family: var(--font-secondary); }
+.font-heading { font-family: var(--font-heading); }
 
 /* ====== الحاوي الرئيسي ====== */
 .container-app {
@@ -26,47 +27,32 @@
    ===================================================================== */
 .card {
   background: var(--card);
-  border-radius: var(--radius-2xl);
+  border-radius: var(--radius-xl);
   border: 1px solid var(--border-soft);
   box-shadow: var(--shadow-card);
   overflow: hidden;
   transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
 }
 
-.card-pad {
-  padding: var(--space-5);
-}
+.card-pad { padding: var(--space-5); }
+.card-pad-lg { padding: var(--space-6); }
+.card-pad-sm { padding: var(--space-4); }
 
-.card-pad-lg {
-  padding: var(--space-6);
-}
-
-.card-pad-sm {
-  padding: var(--space-4);
-}
-
-/* بطاقة ضغطة */
-.card-pressable {
-  cursor: pointer;
-}
-
+.card-pressable { cursor: pointer; }
 .card-pressable:hover {
-  transform: translateY(-2px);
+  transform: translateY(-1px);
   box-shadow: var(--shadow-md);
   border-color: var(--primary-medium);
 }
+.card-pressable:active { transform: translateY(0) scale(0.99); }
 
-.card-pressable:active {
-  transform: translateY(0) scale(0.99);
-}
-
-/* بطاقة مميزة بحدود ذهبية */
+/* بطاقة بلمسة ذهبية */
 .card-gold {
-  border-color: var(--gold-medium);
-  background: linear-gradient(160deg, var(--gold-light) 0%, var(--card) 50%);
+  background: linear-gradient(160deg, var(--gold-light-bg) 0%, var(--card) 50%);
+  border-color: var(--gold-medium-bg);
 }
 
-/* بطاقة Premium بتدرج أخضر */
+/* بطاقة Premium - أخضر عميق */
 .card-premium {
   background: var(--gradient-card-premium);
   color: var(--primary-fg);
@@ -81,15 +67,12 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 80% 20%, rgba(212, 165, 116, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 20% 80%, rgba(42, 168, 137, 0.2) 0%, transparent 50%);
+    radial-gradient(circle at 80% 20%, rgba(198, 154, 82, 0.18) 0%, transparent 50%),
+    radial-gradient(circle at 20% 80%, rgba(74, 124, 111, 0.20) 0%, transparent 50%);
   pointer-events: none;
 }
 
-.card-premium > * {
-  position: relative;
-  z-index: 1;
-}
+.card-premium > * { position: relative; z-index: 1; }
 
 /* =====================================================================
    الأزرار — Buttons
@@ -100,7 +83,7 @@
   justify-content: center;
   gap: var(--space-2);
   padding: 12px 18px;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   border: 1px solid transparent;
   font-family: inherit;
   font-size: var(--fs-base);
@@ -116,13 +99,8 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-.btn:hover {
-  background: var(--secondary-bg);
-}
-
-.btn:active {
-  transform: scale(0.97);
-}
+.btn:hover { background: var(--secondary-bg); }
+.btn:active { transform: scale(0.97); }
 
 .btn-primary {
   background: var(--gradient-primary);
@@ -130,24 +108,19 @@
   border-color: transparent;
   box-shadow: var(--shadow-primary);
 }
-
 .btn-primary:hover {
   filter: brightness(1.08);
   background: var(--gradient-primary);
-  box-shadow: 0 12px 28px rgba(23, 107, 85, 0.32);
+  box-shadow: 0 12px 28px rgba(15, 92, 77, 0.28);
 }
 
 .btn-gold {
   background: var(--gradient-gold);
-  color: var(--dark-green);
+  color: var(--fg-on-gold);
   border-color: transparent;
   box-shadow: var(--shadow-gold);
 }
-
-.btn-gold:hover {
-  filter: brightness(1.05);
-  background: var(--gradient-gold);
-}
+.btn-gold:hover { filter: brightness(1.05); background: var(--gradient-gold); }
 
 .btn-outline {
   background: transparent;
@@ -155,7 +128,6 @@
   color: var(--fg);
   box-shadow: none;
 }
-
 .btn-outline:hover {
   background: var(--secondary-bg);
   border-color: var(--primary-medium);
@@ -167,78 +139,17 @@
   color: var(--fg);
   box-shadow: none;
 }
+.btn-ghost:hover { background: var(--secondary-bg); }
 
-.btn-ghost:hover {
-  background: var(--secondary-bg);
-}
+.btn-danger { background: var(--danger-soft); border-color: transparent; color: var(--danger); }
+.btn-danger:hover { background: var(--danger); color: white; }
+.btn-success { background: var(--success-soft); border-color: transparent; color: var(--success); }
+.btn-success:hover { background: var(--success); color: white; }
 
-.btn-danger {
-  background: var(--danger-soft);
-  border-color: transparent;
-  color: var(--danger);
-}
-
-.btn-danger:hover {
-  background: var(--danger);
-  color: white;
-}
-
-.btn-success {
-  background: var(--success-soft);
-  border-color: transparent;
-  color: var(--success);
-}
-
-.btn-success:hover {
-  background: var(--success);
-  color: white;
-}
-
-.btn-sm {
-  padding: 8px 12px;
-  font-size: var(--fs-sm);
-  min-height: 36px;
-  border-radius: var(--radius-md);
-}
-
-.btn-lg {
-  padding: 14px 24px;
-  font-size: var(--fs-md);
-  min-height: 52px;
-}
-
-.btn-block {
-  width: 100%;
-}
-
-.btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none !important;
-}
-
-/* أزرار الفاب */
-.btn-fab {
-  width: 56px;
-  height: 56px;
-  padding: 0;
-  border-radius: var(--radius-circle);
-  background: var(--gradient-primary);
-  color: var(--primary-fg);
-  border: none;
-  box-shadow: var(--shadow-primary);
-  cursor: pointer;
-  transition: transform var(--transition-base), box-shadow var(--transition-base);
-}
-
-.btn-fab:hover {
-  transform: scale(1.06);
-  box-shadow: 0 14px 32px rgba(23, 107, 85, 0.36);
-}
-
-.btn-fab:active {
-  transform: scale(0.94);
-}
+.btn-sm { padding: 8px 12px; font-size: var(--fs-sm); min-height: 36px; border-radius: var(--radius-sm); }
+.btn-lg { padding: 14px 24px; font-size: var(--fs-md); min-height: 52px; }
+.btn-block { width: 100%; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
 
 /* =====================================================================
    الحقول — Inputs
@@ -252,7 +163,7 @@
   color: var(--fg);
   font-family: inherit;
   font-size: var(--fs-base);
-  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
   min-height: 48px;
 }
 
@@ -267,11 +178,7 @@
   opacity: 0.7;
 }
 
-.textarea {
-  resize: vertical;
-  min-height: 96px;
-  line-height: var(--lh-relaxed);
-}
+.textarea { resize: vertical; min-height: 96px; line-height: var(--lh-relaxed); }
 
 .label {
   display: block;
@@ -295,45 +202,17 @@
   background: var(--secondary-bg);
   color: var(--fg);
   border: 1px solid var(--border);
-  letter-spacing: 0.2px;
 }
 
-.badge-primary {
-  background: var(--primary-light);
-  color: var(--primary);
-  border-color: var(--primary-medium);
-}
-
-.badge-success {
-  background: var(--success-soft);
-  color: var(--success);
-  border-color: transparent;
-}
-
-.badge-warning {
-  background: var(--warning-soft);
-  color: var(--warning);
-  border-color: transparent;
-}
-
-.badge-danger {
-  background: var(--danger-soft);
-  color: var(--danger);
-  border-color: transparent;
-}
-
-.badge-gold {
-  background: var(--gold-light);
-  color: #8B6914;
-  border-color: var(--gold-medium);
-}
-
-.dark .badge-gold {
-  color: var(--light-gold);
-}
+.badge-primary { background: var(--primary-light); color: var(--primary); border-color: var(--primary-medium); }
+.badge-success { background: var(--success-soft); color: var(--success); border-color: transparent; }
+.badge-warning { background: var(--warning-soft); color: var(--warning); border-color: transparent; }
+.badge-danger { background: var(--danger-soft); color: var(--danger); border-color: transparent; }
+.badge-gold { background: var(--gold-light-bg); color: var(--gold-deep); border-color: var(--gold-medium-bg); }
+.dark .badge-gold { color: var(--gold-light); }
 
 /* =====================================================================
-   التقدم — Progress bars
+   التقدم — Progress
    ===================================================================== */
 .progress {
   height: 8px;
@@ -342,7 +221,6 @@
   overflow: hidden;
   position: relative;
 }
-
 .progress-bar {
   height: 100%;
   background: var(--gradient-primary);
@@ -350,42 +228,34 @@
   transition: width 0.6s var(--ease-soft);
   position: relative;
 }
-
 .progress-bar-success { background: linear-gradient(90deg, var(--success), #4ade80); }
 .progress-bar-warning { background: linear-gradient(90deg, var(--warning), #fbbf24); }
 .progress-bar-danger  { background: linear-gradient(90deg, var(--danger), #f87171); }
 .progress-bar-gold    { background: var(--gradient-gold); }
-
-/* Progress رفيع */
-.progress-thin {
-  height: 4px;
-}
-
-/* Progress سميك */
-.progress-thick {
-  height: 12px;
-}
+.progress-thin { height: 4px; }
+.progress-thick { height: 12px; }
 
 /* =====================================================================
    الشبكات — Grids
    ===================================================================== */
 .grid { display: grid; gap: var(--space-3); }
 .grid-2 { grid-template-columns: repeat(2, 1fr); }
-.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-3 { grid-template-columns: repeat(2, 1fr); }
 .grid-4 { grid-template-columns: repeat(2, 1fr); }
 
 @media (min-width: 480px) {
-  .grid-4 { grid-template-columns: repeat(4, 1fr); }
   .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
 }
-
+@media (min-width: 640px) {
+  .grid-4 { grid-template-columns: repeat(4, 1fr); }
+}
 @media (max-width: 360px) {
   .grid-3 { grid-template-columns: repeat(2, 1fr); }
-  .grid-4 { grid-template-columns: repeat(2, 1fr); }
 }
 
 /* =====================================================================
-   الأدوات المساعدة — Utilities
+   أدوات مساعدة — Utilities
    ===================================================================== */
 .flex { display: flex; }
 .flex-col { flex-direction: column; }
@@ -435,23 +305,15 @@
 .text-gold { color: var(--gold); }
 .text-fg { color: var(--fg); }
 
-.mt-1 { margin-top: var(--space-1); }
-.mt-2 { margin-top: var(--space-2); }
-.mt-3 { margin-top: var(--space-3); }
-.mt-4 { margin-top: var(--space-4); }
-.mt-6 { margin-top: var(--space-6); }
-.mt-8 { margin-top: var(--space-8); }
-.mb-1 { margin-bottom: var(--space-1); }
-.mb-2 { margin-bottom: var(--space-2); }
-.mb-3 { margin-bottom: var(--space-3); }
-.mb-4 { margin-bottom: var(--space-4); }
-.mb-6 { margin-bottom: var(--space-6); }
-.mb-8 { margin-bottom: var(--space-8); }
+.mt-1 { margin-top: var(--space-1); } .mt-2 { margin-top: var(--space-2); }
+.mt-3 { margin-top: var(--space-3); } .mt-4 { margin-top: var(--space-4); }
+.mt-6 { margin-top: var(--space-6); } .mt-8 { margin-top: var(--space-8); }
+.mb-1 { margin-bottom: var(--space-1); } .mb-2 { margin-bottom: var(--space-2); }
+.mb-3 { margin-bottom: var(--space-3); } .mb-4 { margin-bottom: var(--space-4); }
+.mb-6 { margin-bottom: var(--space-6); } .mb-8 { margin-bottom: var(--space-8); }
 
-.p-2 { padding: var(--space-2); }
-.p-3 { padding: var(--space-3); }
-.p-4 { padding: var(--space-4); }
-.p-5 { padding: var(--space-5); }
+.p-2 { padding: var(--space-2); } .p-3 { padding: var(--space-3); }
+.p-4 { padding: var(--space-4); } .p-5 { padding: var(--space-5); }
 .p-6 { padding: var(--space-6); }
 
 .py-2 { padding-top: var(--space-2); padding-bottom: var(--space-2); }
@@ -478,6 +340,7 @@
 .bg-primary { background: var(--primary); }
 .bg-card { background: var(--card); }
 .bg-secondary { background: var(--secondary-bg); }
+.bg-cream { background: var(--card-cream); }
 
 .hidden { display: none !important; }
 .invisible { visibility: hidden; }
@@ -512,7 +375,7 @@
 
 #app-loader .loader-logo-wrap {
   position: relative;
-  width: min(70vw, 240px);
+  width: min(70vw, 200px);
   margin: 0 auto var(--space-6);
   animation: floating 3s var(--ease-soft) infinite;
 }
@@ -541,14 +404,7 @@
   width: 32%;
   height: 160%;
   transform: rotate(18deg);
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255,255,255,0) 20%,
-    rgba(255,255,255,0.65) 50%,
-    rgba(255,255,255,0) 80%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0) 20%, rgba(255,255,255,0.65) 50%, rgba(255,255,255,0) 80%, transparent 100%);
   filter: blur(3px);
   animation: shimmer 3.6s ease-in-out infinite;
 }
@@ -556,7 +412,7 @@
 #app-loader .loader-status {
   font-size: var(--fs-sm);
   font-weight: var(--fw-semibold);
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(247, 241, 229, 0.9);
   margin-top: var(--space-2);
   animation: pulseSoft 1.8s ease-in-out infinite;
   letter-spacing: 0.3px;
@@ -566,7 +422,7 @@
   width: min(70vw, 260px);
   height: 4px;
   margin: var(--space-4) auto 0;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(247, 241, 229, 0.15);
   border-radius: var(--radius-pill);
   overflow: hidden;
 }
@@ -577,15 +433,15 @@
   width: 0%;
   border-radius: inherit;
   background: var(--gradient-gold);
-  animation: loaderProgress 10s linear forwards;
-  box-shadow: 0 0 12px rgba(232, 201, 154, 0.6);
+  animation: loaderProgress 2.5s linear forwards;
+  box-shadow: 0 0 12px rgba(217, 184, 117, 0.6);
 }
 
 #app-loader .loader-credit {
   margin-top: var(--space-6);
   font-size: var(--fs-2xs);
   letter-spacing: 1px;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(247, 241, 229, 0.5);
   direction: ltr;
   text-transform: uppercase;
 }
@@ -599,10 +455,7 @@
   opacity: 0;
   transition: opacity 0.9s ease;
 }
-
-#app.app-ready {
-  opacity: 1;
-}
+#app.app-ready { opacity: 1; }
 
 /* =====================================================================
    الشعار والصور
@@ -613,35 +466,8 @@
   object-fit: contain;
   display: block;
   flex: 0 0 40px;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   box-shadow: var(--shadow-sm);
-}
-
-/* =====================================================================
-   الهيدر — Top bar
-   ===================================================================== */
-header.topbar {
-  position: sticky;
-  top: 0;
-  z-index: var(--z-sticky);
-  background: rgba(247, 249, 252, 0.85);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-bottom: 1px solid var(--border-soft);
-  padding-top: var(--safe-top);
-}
-
-.dark header.topbar {
-  background: rgba(11, 23, 19, 0.85);
-}
-
-header.topbar .container-app {
-  padding-top: var(--space-3);
-  padding-bottom: var(--space-3);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
 }
 
 .logo-icon {
@@ -656,6 +482,31 @@ header.topbar .container-app {
   box-shadow: var(--shadow-primary);
 }
 
+/* =====================================================================
+   الهيدر — Top bar
+   ===================================================================== */
+header.topbar {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  background: rgba(247, 241, 229, 0.92);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border-soft);
+  padding-top: var(--safe-top);
+}
+
+.dark header.topbar { background: rgba(16, 24, 21, 0.92); }
+
+header.topbar .container-app {
+  padding-top: var(--space-3);
+  padding-bottom: var(--space-3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
 .icon-btn {
   width: 44px;
   height: 44px;
@@ -668,24 +519,15 @@ header.topbar .container-app {
   align-items: center;
   justify-content: center;
   transition: background var(--transition-fast), transform var(--transition-fast);
-  position: relative;
+  flex-shrink: 0;
 }
-
-.icon-btn:hover {
-  background: var(--secondary-bg);
-}
-
-.icon-btn:active {
-  transform: scale(0.92);
-}
-
-.icon-btn:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
-}
+.icon-btn:hover { background: var(--secondary-bg); }
+.icon-btn:active { transform: scale(0.92); }
+.icon-btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
 
 /* =====================================================================
    التنقل السفلي — Floating Bottom Navigation
+   ثلاثة عناصر فقط: التقويم - الرئيسية (FAB) - المزيد
    ===================================================================== */
 nav.bottomnav {
   position: fixed;
@@ -693,24 +535,24 @@ nav.bottomnav {
   left: 0;
   right: 0;
   z-index: var(--z-nav);
-  padding: 0 var(--space-3) calc(var(--space-3) + var(--safe-bottom));
+  padding: 0 var(--space-4) calc(var(--space-3) + var(--safe-bottom));
   pointer-events: none;
 }
 
 nav.bottomnav .container-app {
-  max-width: 540px;
+  max-width: 480px;
   padding: 0;
   pointer-events: auto;
 }
 
 .bottomnav-inner {
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(247, 241, 229, 0.95);
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-2xl);
   box-shadow: var(--shadow-floating);
-  padding: var(--space-2) var(--space-2);
+  padding: var(--space-2);
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -719,52 +561,40 @@ nav.bottomnav .container-app {
 }
 
 .dark .bottomnav-inner {
-  background: rgba(18, 34, 28, 0.85);
+  background: rgba(22, 34, 30, 0.95);
   border-color: var(--border);
 }
 
 .nav-btn {
   flex: 1;
-  max-width: 76px;
+  max-width: 100px;
   background: transparent;
   border: none;
   cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
+  gap: 4px;
   padding: var(--space-2) var(--space-1);
   border-radius: var(--radius-md);
-  transition: color var(--transition-fast), transform var(--transition-fast), background var(--transition-fast);
+  transition: color var(--transition-fast), transform var(--transition-fast);
   color: var(--muted-fg);
   position: relative;
   min-height: 48px;
   font-family: inherit;
 }
 
-.nav-btn:hover {
-  color: var(--fg);
-}
-
-.nav-btn:active {
-  transform: scale(0.92);
-}
-
-.nav-btn.active {
-  color: var(--primary);
-}
-
-.nav-btn.active .nav-label {
-  font-weight: var(--fw-bold);
-}
-
+.nav-btn:hover { color: var(--fg); }
+.nav-btn:active { transform: scale(0.94); }
+.nav-btn.active { color: var(--primary); }
+.nav-btn.active .nav-label { font-weight: var(--fw-bold); }
 .nav-btn.active::before {
   content: '';
   position: absolute;
-  top: 2px;
+  top: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 28px;
+  width: 24px;
   height: 3px;
   background: var(--gradient-primary);
   border-radius: var(--radius-pill);
@@ -778,8 +608,8 @@ nav.bottomnav .container-app {
 
 .nav-badge {
   position: absolute;
-  top: 0;
-  left: 18%;
+  top: 2px;
+  left: 22%;
   background: var(--danger);
   color: white;
   font-size: 9px;
@@ -791,11 +621,13 @@ nav.bottomnav .container-app {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid var(--card);
+  border: 2px solid var(--bg);
   box-shadow: var(--shadow-sm);
 }
 
-/* زر المنتصف المرتفع — FAB center button */
+.dark .nav-badge { border-color: var(--card); }
+
+/* زر المنتصف المرتفع — FAB */
 .nav-btn.nav-fab {
   flex: 0 0 auto;
   width: var(--bottomnav-fab-size);
@@ -805,47 +637,25 @@ nav.bottomnav .container-app {
   color: var(--primary-fg);
   border-radius: var(--radius-circle);
   box-shadow: var(--shadow-primary);
-  margin-top: -28px;
+  margin-top: -22px;
   padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 4px solid var(--card);
+  border: 3px solid var(--bg);
   transition: transform var(--transition-base), box-shadow var(--transition-base);
 }
 
-.dark .nav-btn.nav-fab {
-  border-color: var(--bg);
-}
+.dark .nav-btn.nav-fab { border-color: var(--bg); }
 
-.nav-btn.nav-fab .nav-label {
-  display: none;
-}
+.nav-btn.nav-fab .nav-label { display: none; }
+.nav-btn.nav-fab:hover { transform: scale(1.06) translateY(-2px); }
+.nav-btn.nav-fab:active { transform: scale(0.94); }
+.nav-btn.nav-fab.active { background: var(--gradient-primary); color: var(--primary-fg); }
+.nav-btn.nav-fab.active::before { display: none; }
+.nav-btn.nav-fab .icon { width: 24px; height: 24px; }
 
-.nav-btn.nav-fab:hover {
-  transform: scale(1.08) translateY(-2px);
-  box-shadow: 0 16px 32px rgba(23, 107, 85, 0.4);
-}
-
-.nav-btn.nav-fab:active {
-  transform: scale(0.94);
-}
-
-.nav-btn.nav-fab.active {
-  background: var(--gradient-primary);
-  color: var(--primary-fg);
-}
-
-.nav-btn.nav-fab.active::before {
-  display: none;
-}
-
-.nav-btn.nav-fab .icon {
-  width: 26px;
-  height: 26px;
-}
-
-/* مساحة أسفل المحتوى حتى لا يغطيه التنقل */
+/* مساحة أسفل المحتوى */
 main {
   padding-bottom: calc(var(--bottomnav-h) + var(--safe-bottom) + var(--space-4));
 }
@@ -862,13 +672,7 @@ main {
 .status-rest { color: var(--muted-fg); }
 .status-pending { color: #94a3b8; }
 
-.dot {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  border-radius: var(--radius-circle);
-}
-
+.dot { display: inline-block; width: 10px; height: 10px; border-radius: var(--radius-circle); }
 .dot-completed { background: var(--success); }
 .dot-completed_needs_review { background: var(--warning); }
 .dot-memorized_not_reviewed { background: var(--info); }
@@ -879,54 +683,48 @@ main {
 .dot-pending { background: #cbd5e1; }
 
 /* =====================================================================
-   عرض الآيات القرآنية
+   عرض الآيات القرآنية — Verse display
    ===================================================================== */
 .verse-list {
-  max-height: 380px;
+  max-height: 480px;
   overflow-y: auto;
-  padding-inline-start: var(--space-2);
+  padding-inline: var(--space-2);
   scroll-behavior: smooth;
 }
 
-.verse-list::-webkit-scrollbar {
-  width: 4px;
-}
-
-.verse-list::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.verse-list::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: var(--radius-pill);
-}
+.verse-list::-webkit-scrollbar { width: 4px; }
+.verse-list::-webkit-scrollbar-track { background: transparent; }
+.verse-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: var(--radius-pill); }
 
 .verse-item {
   display: flex;
   align-items: flex-start;
   gap: var(--space-3);
-  padding: var(--space-3) 0;
+  padding: var(--space-4) var(--space-2);
   border-bottom: 1px dashed var(--border-soft);
   transition: background var(--transition-fast);
-  border-radius: var(--radius-sm);
-  padding-inline: var(--space-2);
+  border-radius: var(--radius-md);
+  position: relative;
+  cursor: pointer;
 }
 
-.verse-item:last-child {
-  border-bottom: none;
+.verse-item:hover { background: var(--secondary-bg); }
+.verse-item.playing {
+  background: var(--primary-light);
+  border-bottom-color: var(--primary-medium);
 }
-
-.verse-item:hover {
-  background: var(--secondary-bg);
+.verse-item.playing .verse-num {
+  background: var(--gradient-primary);
+  animation: pulse 1.5s ease-in-out infinite;
 }
 
 .verse-num {
   flex-shrink: 0;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: var(--radius-circle);
-  background: var(--gradient-primary);
-  color: var(--primary-fg);
+  background: var(--gold-light-bg);
+  color: var(--gold-deep);
   font-size: var(--fs-xs);
   font-weight: var(--fw-bold);
   display: inline-flex;
@@ -934,8 +732,11 @@ main {
   justify-content: center;
   margin-top: var(--space-1);
   box-shadow: var(--shadow-sm);
+  border: 1.5px solid var(--gold-medium-bg);
   font-family: var(--font-app);
 }
+
+.dark .verse-num { color: var(--gold-light); }
 
 .verse-text {
   font-family: var(--font-quran);
@@ -944,15 +745,46 @@ main {
   flex: 1;
   color: var(--fg-strong);
   text-align: right;
+  letter-spacing: 0.5px;
 }
 
-/* =====================================================================
-   تقييم النقاط — Rating dots
-   ===================================================================== */
-.rating-dots {
-  display: inline-flex;
-  gap: var(--space-1);
+.verse-actions {
+  display: none;
+  position: absolute;
+  bottom: -34px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  padding: 4px;
+  box-shadow: var(--shadow-md);
+  gap: 2px;
+  z-index: 10;
+  white-space: nowrap;
 }
+
+.verse-item.expanded .verse-actions { display: flex; }
+
+.verse-action-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-circle);
+  border: none;
+  background: transparent;
+  color: var(--fg);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition-fast);
+}
+.verse-action-btn:hover { background: var(--secondary-bg); color: var(--primary); }
+
+/* =====================================================================
+   تقييم النقاط — Rating
+   ===================================================================== */
+.rating-dots { display: inline-flex; gap: var(--space-1); }
 
 .rating-dot {
   width: 32px;
@@ -970,23 +802,17 @@ main {
 
 .rating-dot.active {
   background: var(--gradient-gold);
-  color: var(--dark-green);
+  color: var(--fg-on-gold);
   border-color: var(--gold);
   box-shadow: var(--shadow-gold);
   transform: scale(1.08);
 }
 
-.rating-dot:hover {
-  border-color: var(--gold);
-  transform: scale(1.05);
-}
-
-.rating-dot:active {
-  transform: scale(0.95);
-}
+.rating-dot:hover { border-color: var(--gold); transform: scale(1.05); }
+.rating-dot:active { transform: scale(0.95); }
 
 /* =====================================================================
-   الـ Slider
+   Slider
    ===================================================================== */
 input[type="range"] {
   -webkit-appearance: none;
@@ -1012,9 +838,7 @@ input[type="range"]::-webkit-slider-thumb {
   transition: transform var(--transition-fast);
 }
 
-input[type="range"]::-webkit-slider-thumb:hover {
-  transform: scale(1.15);
-}
+input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
 
 input[type="range"]::-moz-range-thumb {
   width: 22px;
@@ -1061,7 +885,7 @@ input[type="range"]::-moz-range-thumb {
 }
 
 /* =====================================================================
-   بطاقات اليوم — Day cards (calendar)
+   بطاقات اليوم — Calendar day cards
    ===================================================================== */
 .day-card {
   width: 100%;
@@ -1085,9 +909,7 @@ input[type="range"]::-moz-range-thumb {
   box-shadow: var(--shadow-md);
 }
 
-.day-card:active {
-  transform: translateY(0) scale(0.99);
-}
+.day-card:active { transform: translateY(0) scale(0.99); }
 
 .day-card.today {
   border-color: var(--primary);
@@ -1096,10 +918,7 @@ input[type="range"]::-moz-range-thumb {
   box-shadow: var(--shadow-primary);
 }
 
-.day-card.past {
-  background: var(--secondary-bg);
-  opacity: 0.9;
-}
+.day-card.past { background: var(--secondary-bg); opacity: 0.9; }
 
 .day-indicator {
   width: 4px;
@@ -1138,20 +957,9 @@ input[type="range"]::-moz-range-thumb {
   font-weight: var(--fw-medium);
 }
 
-.toast.success {
-  border-right-color: var(--success);
-  background: linear-gradient(90deg, var(--success-soft) 0%, var(--card) 30%);
-}
-
-.toast.error {
-  border-right-color: var(--danger);
-  background: linear-gradient(90deg, var(--danger-soft) 0%, var(--card) 30%);
-}
-
-.toast.warning {
-  border-right-color: var(--warning);
-  background: linear-gradient(90deg, var(--warning-soft) 0%, var(--card) 30%);
-}
+.toast.success { border-right-color: var(--success); background: linear-gradient(90deg, var(--success-soft) 0%, var(--card) 30%); }
+.toast.error { border-right-color: var(--danger); background: linear-gradient(90deg, var(--danger-soft) 0%, var(--card) 30%); }
+.toast.warning { border-right-color: var(--warning); background: linear-gradient(90deg, var(--warning-soft) 0%, var(--card) 30%); }
 
 /* =====================================================================
    Modal
@@ -1160,7 +968,7 @@ input[type="range"]::-moz-range-thumb {
   position: fixed;
   inset: 0;
   z-index: var(--z-modal);
-  background: rgba(11, 23, 19, 0.6);
+  background: rgba(16, 24, 21, 0.6);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   display: flex;
@@ -1188,7 +996,7 @@ input[type="range"]::-moz-range-thumb {
   position: fixed;
   inset: 0;
   z-index: var(--z-modal);
-  background: rgba(11, 23, 19, 0.5);
+  background: rgba(16, 24, 21, 0.5);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   animation: fadeIn 0.25s ease;
@@ -1224,19 +1032,21 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .hijri-date {
-  color: var(--gold);
+  color: var(--gold-deep);
   font-weight: var(--fw-semibold);
 }
+
+.dark .hijri-date { color: var(--gold-light); }
 
 .daily-message {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, var(--gold-light), var(--card) 60%);
-  border: 1px solid var(--gold-medium);
+  background: linear-gradient(135deg, var(--gold-light-bg), var(--card) 60%);
+  border: 1px solid var(--gold-medium-bg);
 }
 
 .dark .daily-message {
-  background: linear-gradient(135deg, rgba(232, 201, 154, 0.08), var(--card) 60%);
+  background: linear-gradient(135deg, rgba(208, 166, 90, 0.08), var(--card) 60%);
 }
 
 .daily-message::before {
@@ -1245,7 +1055,7 @@ input[type="range"]::-moz-range-thumb {
   width: 100px;
   height: 100px;
   border-radius: var(--radius-circle);
-  background: var(--gold-light);
+  background: var(--gold-light-bg);
   left: -32px;
   top: -40px;
   opacity: 0.6;
@@ -1255,13 +1065,7 @@ input[type="range"]::-moz-range-thumb {
 /* =====================================================================
    الأيقونات — SVG icons
    ===================================================================== */
-.icon {
-  width: 20px;
-  height: 20px;
-  stroke-width: 2;
-  flex-shrink: 0;
-}
-
+.icon { width: 20px; height: 20px; stroke-width: 1.8; flex-shrink: 0; }
 .icon-sm { width: 16px; height: 16px; }
 .icon-lg { width: 24px; height: 24px; }
 .icon-xl { width: 32px; height: 32px; }
@@ -1274,21 +1078,16 @@ input[type="range"]::-moz-range-thumb {
   -ms-overflow-style: none;
   scrollbar-width: none;
   scroll-behavior: smooth;
-  scroll-snap-type: x mandatory;
   padding-bottom: var(--space-1);
+  display: flex;
+  gap: var(--space-3);
 }
 
-.scroll-x::-webkit-scrollbar {
-  display: none;
-}
-
-.scroll-x > * {
-  scroll-snap-align: start;
-  flex-shrink: 0;
-}
+.scroll-x::-webkit-scrollbar { display: none; }
+.scroll-x > * { flex-shrink: 0; }
 
 /* =====================================================================
-   شارة التتابع — Streak badge
+   شارة التتابع — Streak
    ===================================================================== */
 .streak-badge {
   display: inline-flex;
@@ -1296,18 +1095,14 @@ input[type="range"]::-moz-range-thumb {
   gap: 4px;
   padding: 5px 12px;
   border-radius: var(--radius-pill);
-  background: linear-gradient(135deg, rgba(234, 88, 12, 0.12), rgba(245, 158, 11, 0.12));
-  color: #ea580c;
-  border: 1px solid rgba(234, 88, 12, 0.25);
+  background: var(--primary-light);
+  color: var(--primary);
+  border: 1px solid var(--primary-medium);
   font-size: var(--fs-xs);
   font-weight: var(--fw-bold);
-  box-shadow: 0 2px 8px rgba(234, 88, 12, 0.1);
 }
 
-.dark .streak-badge {
-  background: linear-gradient(135deg, rgba(234, 88, 12, 0.18), rgba(245, 158, 11, 0.18));
-  color: #fbbf24;
-}
+.dark .streak-badge { color: var(--primary); }
 
 /* =====================================================================
    Empty state
@@ -1315,6 +1110,33 @@ input[type="range"]::-moz-range-thumb {
 .empty-state {
   text-align: center;
   padding: var(--space-12) var(--space-4);
+}
+
+.empty-state-icon {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto var(--space-4);
+  border-radius: var(--radius-circle);
+  background: var(--secondary-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted-fg);
+}
+
+.empty-state-title {
+  font-size: var(--fs-md);
+  font-weight: var(--fw-bold);
+  color: var(--fg);
+  margin-bottom: var(--space-2);
+}
+
+.empty-state-desc {
+  font-size: var(--fs-sm);
+  color: var(--muted-fg);
+  margin-bottom: var(--space-4);
+  max-width: 320px;
+  margin-inline: auto;
 }
 
 /* =====================================================================
@@ -1331,9 +1153,7 @@ input[type="range"]::-moz-range-thumb {
   scrollbar-width: none;
 }
 
-.tabs::-webkit-scrollbar {
-  display: none;
-}
+.tabs::-webkit-scrollbar { display: none; }
 
 .tab {
   flex: 1;
@@ -1358,16 +1178,14 @@ input[type="range"]::-moz-range-thumb {
   font-weight: var(--fw-bold);
 }
 
-.tab:active {
-  transform: scale(0.97);
-}
+.tab:active { transform: scale(0.97); }
 
 /* =====================================================================
    Achievement cards
    ===================================================================== */
 .achievement-unlocked {
-  background: linear-gradient(135deg, var(--gold-light), var(--card) 50%);
-  border-color: var(--gold-medium);
+  background: linear-gradient(135deg, var(--gold-light-bg), var(--card) 50%);
+  border-color: var(--gold-medium-bg);
   position: relative;
   overflow: hidden;
 }
@@ -1376,7 +1194,7 @@ input[type="range"]::-moz-range-thumb {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(110deg, transparent 40%, rgba(232, 201, 154, 0.12) 50%, transparent 60%);
+  background: linear-gradient(110deg, transparent 40%, rgba(198, 154, 82, 0.12) 50%, transparent 60%);
   background-size: 200% 100%;
   animation: shimmer 5s linear infinite;
   pointer-events: none;
@@ -1399,46 +1217,63 @@ input[type="range"]::-moz-range-thumb {
   font-family: var(--font-quran);
   font-size: var(--fs-2xl);
   line-height: var(--lh-quran);
-  border: 1px solid var(--gold-medium);
+  border: 1px solid var(--gold-medium-bg);
   position: relative;
   color: var(--fg-strong);
 }
 
 /* =====================================================================
-   مشغل الصوت — Audio player (floating)
+   مشغل الصوت — Floating Audio Player
    ===================================================================== */
-.audio-player {
+.audio-player-fab {
   position: fixed;
-  bottom: calc(var(--bottomnav-h) + var(--safe-bottom) + var(--space-3));
+  bottom: calc(var(--bottomnav-h) + var(--safe-bottom) + var(--space-2));
   left: var(--space-3);
   right: var(--space-3);
   z-index: var(--z-nav);
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  background: var(--card);
   border: 1px solid var(--border-soft);
-  border-radius: var(--radius-2xl);
+  border-radius: var(--radius-xl);
   box-shadow: var(--shadow-floating);
   padding: var(--space-3) var(--space-4);
+  display: none;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-width: 480px;
+  margin: 0 auto;
+  animation: slideUp 0.35s var(--ease-soft);
+}
+
+.audio-player-fab.visible { display: flex; }
+
+.audio-player-header {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  max-width: 540px;
-  margin: 0 auto;
-  animation: slideUp 0.4s var(--ease-soft);
 }
 
-.dark .audio-player {
-  background: rgba(18, 34, 28, 0.92);
-  border-color: var(--border);
+.audio-player-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: var(--gradient-primary);
+  color: var(--primary-fg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
-.audio-player .player-info {
+.audio-player-icon.playing {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.audio-player-info {
   flex: 1;
   min-width: 0;
 }
 
-.audio-player .player-title {
+.audio-player-title {
   font-size: var(--fs-sm);
   font-weight: var(--fw-bold);
   color: var(--fg);
@@ -1447,19 +1282,61 @@ input[type="range"]::-moz-range-thumb {
   text-overflow: ellipsis;
 }
 
-.audio-player .player-reciter {
+.audio-player-reciter {
   font-size: var(--fs-xs);
   color: var(--muted-fg);
   margin-top: 2px;
 }
 
-.audio-player .player-controls {
-  display: flex;
+.audio-player-close {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-circle);
+  border: none;
+  background: transparent;
+  color: var(--muted-fg);
+  cursor: pointer;
+  display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
+  justify-content: center;
+  transition: background var(--transition-fast);
+  flex-shrink: 0;
 }
 
-.audio-player .player-btn {
+.audio-player-close:hover { background: var(--secondary-bg); color: var(--danger); }
+
+.audio-player-progress {
+  height: 4px;
+  background: var(--secondary-bg);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+}
+
+.audio-player-progress-bar {
+  height: 100%;
+  background: var(--gradient-primary);
+  border-radius: var(--radius-pill);
+  transition: width 0.1s linear;
+}
+
+.audio-player-time {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--fs-2xs);
+  color: var(--muted-fg);
+  font-variant-numeric: tabular-nums;
+}
+
+.audio-player-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+}
+
+.audio-player-btn {
   width: 40px;
   height: 40px;
   border-radius: var(--radius-circle);
@@ -1471,18 +1348,14 @@ input[type="range"]::-moz-range-thumb {
   align-items: center;
   justify-content: center;
   transition: all var(--transition-fast);
+  flex-shrink: 0;
 }
 
-.audio-player .player-btn:hover {
-  background: var(--primary-light);
-  color: var(--primary);
-}
+.audio-player-btn:hover { background: var(--primary-light); color: var(--primary); }
+.audio-player-btn:active { transform: scale(0.92); }
+.audio-player-btn.active { background: var(--gold-light-bg); color: var(--gold-deep); }
 
-.audio-player .player-btn:active {
-  transform: scale(0.92);
-}
-
-.audio-player .player-btn.play-btn {
+.audio-player-btn.play-btn {
   width: 48px;
   height: 48px;
   background: var(--gradient-primary);
@@ -1490,31 +1363,10 @@ input[type="range"]::-moz-range-thumb {
   box-shadow: var(--shadow-primary);
 }
 
-.audio-player .player-btn.play-btn:hover {
-  background: var(--gradient-primary);
-  filter: brightness(1.1);
-}
-
-.audio-player .player-progress {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: var(--secondary-bg);
-  border-radius: 0 0 var(--radius-2xl) var(--radius-2xl);
-  overflow: hidden;
-}
-
-.audio-player .player-progress-bar {
-  height: 100%;
-  background: var(--gradient-primary);
-  border-radius: var(--radius-pill);
-  transition: width 0.1s linear;
-}
+.audio-player-btn.play-btn:hover { background: var(--gradient-primary); filter: brightness(1.1); color: var(--primary-fg); }
 
 /* =====================================================================
-   زخرفة فاصلة ذهبية
+   زخرفة فاصلة
    ===================================================================== */
 .section-divider {
   display: flex;
@@ -1536,7 +1388,6 @@ input[type="range"]::-moz-range-thumb {
   font-size: var(--fs-xs);
   font-weight: var(--fw-semibold);
   letter-spacing: 1px;
-  text-transform: uppercase;
 }
 
 /* =====================================================================
@@ -1544,7 +1395,7 @@ input[type="range"]::-moz-range-thumb {
    ===================================================================== */
 .hero-card {
   background: var(--gradient-hero);
-  color: white;
+  color: var(--fg-on-primary);
   border-radius: var(--radius-2xl);
   padding: var(--space-6);
   position: relative;
@@ -1557,19 +1408,16 @@ input[type="range"]::-moz-range-thumb {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 85% 15%, rgba(212, 165, 116, 0.2) 0%, transparent 40%),
-    radial-gradient(circle at 15% 85%, rgba(42, 168, 137, 0.25) 0%, transparent 40%);
+    radial-gradient(circle at 85% 15%, rgba(198, 154, 82, 0.18) 0%, transparent 40%),
+    radial-gradient(circle at 15% 85%, rgba(74, 124, 111, 0.22) 0%, transparent 40%);
   pointer-events: none;
 }
 
-.hero-card > * {
-  position: relative;
-  z-index: 1;
-}
+.hero-card > * { position: relative; z-index: 1; }
 
 .hero-greeting {
   font-size: var(--fs-sm);
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(247, 241, 229, 0.8);
   margin-bottom: var(--space-1);
   font-weight: var(--fw-medium);
 }
@@ -1577,14 +1425,14 @@ input[type="range"]::-moz-range-thumb {
 .hero-name {
   font-size: var(--fs-2xl);
   font-weight: var(--fw-extrabold);
-  color: white;
+  color: var(--fg-on-primary);
   margin-bottom: var(--space-2);
   line-height: var(--lh-tight);
 }
 
 .hero-message {
   font-size: var(--fs-sm);
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(247, 241, 229, 0.85);
   line-height: var(--lh-relaxed);
   max-width: 90%;
 }
@@ -1595,17 +1443,15 @@ input[type="range"]::-moz-range-thumb {
   gap: var(--space-2);
   margin-top: var(--space-5);
   padding-top: var(--space-4);
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-top: 1px solid rgba(247, 241, 229, 0.15);
 }
 
-.hero-stat {
-  text-align: center;
-}
+.hero-stat { text-align: center; }
 
 .hero-stat-value {
   font-size: var(--fs-xl);
   font-weight: var(--fw-extrabold);
-  color: var(--light-gold);
+  color: var(--gold-light);
   line-height: 1;
   margin-bottom: 4px;
   font-family: var(--font-app);
@@ -1613,11 +1459,10 @@ input[type="range"]::-moz-range-thumb {
 
 .hero-stat-label {
   font-size: var(--fs-2xs);
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(247, 241, 229, 0.7);
   font-weight: var(--fw-medium);
 }
 
-/* دائرة التقدم في الـ hero */
 .hero-progress-ring {
   position: absolute;
   top: var(--space-5);
@@ -1625,6 +1470,86 @@ input[type="range"]::-moz-range-thumb {
   width: 64px;
   height: 64px;
   z-index: 2;
+}
+
+/* =====================================================================
+   بطاقة ورد اليوم — Wird Card
+   ===================================================================== */
+.wird-card {
+  background: var(--gradient-card-premium);
+  color: var(--fg-on-primary);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-5) var(--space-6);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-primary);
+}
+
+.wird-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 90% 10%, rgba(198, 154, 82, 0.20) 0%, transparent 50%),
+    radial-gradient(circle at 10% 90%, rgba(74, 124, 111, 0.20) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.wird-card > * { position: relative; z-index: 1; }
+
+.wird-card-label {
+  font-size: var(--fs-xs);
+  color: var(--gold-light);
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.5px;
+  margin-bottom: var(--space-2);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.wird-card-surah {
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-bold);
+  color: var(--fg-on-primary);
+  margin-bottom: var(--space-1);
+  line-height: var(--lh-tight);
+}
+
+.wird-card-detail {
+  font-size: var(--fs-sm);
+  color: rgba(247, 241, 229, 0.8);
+  margin-bottom: var(--space-4);
+}
+
+.wird-card-progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.wird-card-progress-pct {
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-extrabold);
+  color: var(--gold-light);
+  line-height: 1;
+  min-width: 60px;
+}
+
+.wird-card-progress-bar {
+  flex: 1;
+  height: 6px;
+  background: rgba(247, 241, 229, 0.15);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.wird-card-progress-fill {
+  height: 100%;
+  background: var(--gradient-gold);
+  border-radius: var(--radius-pill);
+  transition: width 0.6s var(--ease-soft);
 }
 
 /* =====================================================================
@@ -1650,9 +1575,7 @@ input[type="range"]::-moz-range-thumb {
   transform: translateY(-1px);
 }
 
-.task-card:active {
-  transform: scale(0.99);
-}
+.task-card:active { transform: scale(0.99); }
 
 .task-card.completed {
   background: linear-gradient(135deg, var(--success-soft), var(--card));
@@ -1660,7 +1583,7 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .task-card.completed::after {
-  content: '✓';
+  content: '';
   position: absolute;
   top: var(--space-2);
   left: var(--space-2);
@@ -1674,12 +1597,16 @@ input[type="range"]::-moz-range-thumb {
   justify-content: center;
   font-size: var(--fs-xs);
   font-weight: var(--fw-bold);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+  background-size: 14px;
+  background-position: center;
+  background-repeat: no-repeat;
   animation: popIn 0.4s var(--ease-bounce);
 }
 
 .task-icon {
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   border-radius: var(--radius-md);
   background: var(--primary-light);
   color: var(--primary);
@@ -1687,22 +1614,16 @@ input[type="range"]::-moz-range-thumb {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  font-size: 22px;
 }
 
 .task-icon.gold {
-  background: var(--gold-light);
-  color: #8B6914;
+  background: var(--gold-light-bg);
+  color: var(--gold-deep);
 }
 
-.dark .task-icon.gold {
-  color: var(--light-gold);
-}
+.dark .task-icon.gold { color: var(--gold-light); }
 
-.task-info {
-  flex: 1;
-  min-width: 0;
-}
+.task-info { flex: 1; min-width: 0; }
 
 .task-title {
   font-size: var(--fs-base);
@@ -1717,10 +1638,7 @@ input[type="range"]::-moz-range-thumb {
   line-height: var(--lh-snug);
 }
 
-.task-progress {
-  margin-top: var(--space-2);
-  height: 4px;
-}
+.task-progress { margin-top: var(--space-2); height: 4px; }
 
 /* =====================================================================
    بطاقة الإحصائيات — Stat card
@@ -1729,7 +1647,7 @@ input[type="range"]::-moz-range-thumb {
   background: var(--card);
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-lg);
-  padding: var(--space-3) var(--space-3);
+  padding: var(--space-3);
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -1756,8 +1674,8 @@ input[type="range"]::-moz-range-thumb {
 .stat-icon-warning { background: var(--warning-soft); color: var(--warning); }
 .stat-icon-primary { background: var(--primary-light); color: var(--primary); }
 .stat-icon-danger  { background: var(--danger-soft); color: var(--danger); }
-.stat-icon-gold    { background: var(--gold-light); color: #8B6914; }
-.dark .stat-icon-gold { color: var(--light-gold); }
+.stat-icon-gold    { background: var(--gold-light-bg); color: var(--gold-deep); }
+.dark .stat-icon-gold { color: var(--gold-light); }
 
 .stat-value {
   font-size: var(--fs-lg);
@@ -1774,14 +1692,12 @@ input[type="range"]::-moz-range-thumb {
 }
 
 /* =====================================================================
-   بطاقات الأيام في التقويم — Calendar cards
+   Calendar day names
    ===================================================================== */
 .calendar-day-name {
   font-size: var(--fs-xs);
   font-weight: var(--fw-semibold);
   color: var(--muted-fg);
-  text-transform: none;
-  letter-spacing: 0;
 }
 
 .calendar-day-num {
@@ -1799,29 +1715,433 @@ input[type="range"]::-moz-range-thumb {
 }
 
 /* =====================================================================
-   Responsive adjustments
+   قائمة السور - Surah list
    ===================================================================== */
-@media (max-width: 360px) {
-  body { font-size: var(--fs-sm); }
-  .container-app { padding: 0 var(--space-3); }
-  .card-pad { padding: var(--space-4); }
-  .hero-card { padding: var(--space-5); }
-  .hero-name { font-size: var(--fs-xl); }
-  .btn { padding: 10px 14px; font-size: var(--fs-sm); }
-  .nav-btn { max-width: 60px; }
-  .nav-label { font-size: 9px; }
-  .verse-text { font-size: var(--fs-lg); }
+.surah-card {
+  background: var(--card);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  margin-bottom: var(--space-2);
 }
 
-@media (min-width: 768px) {
-  .container-app { max-width: 760px; }
-  .hero-card { padding: var(--space-8); }
-  .hero-name { font-size: var(--fs-3xl); }
-  .hero-message { font-size: var(--fs-md); }
+.surah-card:hover {
+  border-color: var(--primary-medium);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.surah-card:active { transform: scale(0.99); }
+
+.surah-card-num {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: var(--primary-light);
+  color: var(--primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-sm);
+  flex-shrink: 0;
+}
+
+.surah-card-info { flex: 1; min-width: 0; }
+
+.surah-card-name {
+  font-size: var(--fs-md);
+  font-weight: var(--fw-bold);
+  color: var(--fg);
+  margin-bottom: 2px;
+}
+
+.surah-card-meta {
+  font-size: var(--fs-xs);
+  color: var(--muted-fg);
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.surah-card-progress {
+  width: 50px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.surah-card-progress-pct {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--primary);
 }
 
 /* =====================================================================
-   Focus visibility — للوصول
+   صفحة قارئ القرآن
+   ===================================================================== */
+.quran-reader-header {
+  background: var(--card);
+  border-bottom: 1px solid var(--border-soft);
+  padding: var(--space-4);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.quran-page {
+  background: var(--card-cream);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6) var(--space-4);
+  margin: var(--space-4) 0;
+  box-shadow: var(--shadow-sm);
+}
+
+.bismillah {
+  text-align: center;
+  font-family: var(--font-quran);
+  font-size: var(--fs-xl);
+  color: var(--gold-deep);
+  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--gold-medium-bg);
+}
+
+.dark .bismillah { color: var(--gold-light); }
+
+/* =====================================================================
+   صفحة المزيد - More menu
+   ===================================================================== */
+.more-list-item {
+  background: var(--card);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  margin-bottom: var(--space-2);
+  text-decoration: none;
+  color: inherit;
+  font-family: inherit;
+  width: 100%;
+  text-align: right;
+}
+
+.more-list-item:hover {
+  border-color: var(--primary-medium);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.more-list-item:active { transform: scale(0.99); }
+
+.more-list-item-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: var(--primary-light);
+  color: var(--primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.more-list-item-icon.gold {
+  background: var(--gold-light-bg);
+  color: var(--gold-deep);
+}
+
+.dark .more-list-item-icon.gold { color: var(--gold-light); }
+
+.more-list-item-text { flex: 1; }
+
+.more-list-item-title {
+  font-size: var(--fs-base);
+  font-weight: var(--fw-semibold);
+  color: var(--fg);
+}
+
+.more-list-item-desc {
+  font-size: var(--fs-xs);
+  color: var(--muted-fg);
+  margin-top: 2px;
+}
+
+/* =====================================================================
+   بطاقات التجويد
+   ===================================================================== */
+.tajweed-card {
+  background: var(--card);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  margin-bottom: var(--space-3);
+  transition: all var(--transition-base);
+}
+
+.tajweed-card:hover {
+  border-color: var(--primary-medium);
+  box-shadow: var(--shadow-sm);
+}
+
+.tajweed-card-title {
+  font-size: var(--fs-md);
+  font-weight: var(--fw-bold);
+  color: var(--primary);
+  margin-bottom: var(--space-2);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.tajweed-card-section {
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px dashed var(--border-soft);
+}
+
+.tajweed-card-section-label {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  color: var(--gold-deep);
+  margin-bottom: var(--space-1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.dark .tajweed-card-section-label { color: var(--gold-light); }
+
+.tajweed-card-section-text {
+  font-size: var(--fs-sm);
+  color: var(--fg);
+  line-height: var(--lh-relaxed);
+}
+
+.tajweed-card-section-text.quran {
+  font-family: var(--font-quran);
+  font-size: var(--fs-md);
+  color: var(--fg-strong);
+  line-height: var(--lh-quran);
+}
+
+/* =====================================================================
+   صفحة الأذكار - عداد
+   ===================================================================== */
+.zikr-card {
+  background: var(--card);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  margin-bottom: var(--space-3);
+  transition: all var(--transition-base);
+}
+
+.zikr-card.completed {
+  background: linear-gradient(135deg, var(--success-soft), var(--card));
+  border-color: var(--success);
+}
+
+.zikr-text {
+  font-size: var(--fs-md);
+  line-height: var(--lh-relaxed);
+  color: var(--fg);
+  margin-bottom: var(--space-4);
+  font-weight: var(--fw-medium);
+}
+
+.zikr-source {
+  font-size: var(--fs-xs);
+  color: var(--muted-fg);
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px dashed var(--border-soft);
+}
+
+.zikr-counter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  background: var(--secondary-bg);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3);
+}
+
+.zikr-counter-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-circle);
+  border: none;
+  background: var(--card);
+  color: var(--primary);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+  font-family: inherit;
+}
+
+.zikr-counter-btn:hover {
+  background: var(--primary);
+  color: var(--primary-fg);
+  transform: scale(1.05);
+}
+
+.zikr-counter-btn:active { transform: scale(0.92); }
+
+.zikr-counter-display {
+  flex: 1;
+  text-align: center;
+}
+
+.zikr-counter-current {
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-extrabold);
+  color: var(--primary);
+  line-height: 1;
+}
+
+.zikr-counter-target {
+  font-size: var(--fs-xs);
+  color: var(--muted-fg);
+  margin-top: 2px;
+}
+
+/* =====================================================================
+   بطاقات التدبر ودفتر القرآن
+   ===================================================================== */
+.note-card {
+  background: var(--card);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  margin-bottom: var(--space-3);
+  transition: all var(--transition-base);
+}
+
+.note-card:hover {
+  border-color: var(--primary-medium);
+  box-shadow: var(--shadow-sm);
+}
+
+.note-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-2);
+}
+
+.note-card-tag {
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-bold);
+  padding: 3px 8px;
+  border-radius: var(--radius-pill);
+  background: var(--gold-light-bg);
+  color: var(--gold-deep);
+}
+
+.dark .note-card-tag { color: var(--gold-light); }
+
+.note-card-date {
+  font-size: var(--fs-2xs);
+  color: var(--muted-fg);
+}
+
+.note-card-verse {
+  font-family: var(--font-quran);
+  font-size: var(--fs-md);
+  color: var(--fg-strong);
+  line-height: var(--lh-quran);
+  margin: var(--space-2) 0;
+  padding: var(--space-3);
+  background: var(--secondary-bg);
+  border-radius: var(--radius-md);
+  border-right: 3px solid var(--gold);
+}
+
+.note-card-content {
+  font-size: var(--fs-sm);
+  color: var(--fg);
+  line-height: var(--lh-relaxed);
+}
+
+/* =====================================================================
+   بطاقة الختمة
+   ===================================================================== */
+.khatma-card {
+  background: var(--card);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  margin-bottom: var(--space-3);
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition-base);
+}
+
+.khatma-card.active {
+  background: linear-gradient(135deg, var(--primary-light), var(--card));
+  border-color: var(--primary);
+}
+
+.khatma-card.completed {
+  background: linear-gradient(135deg, var(--gold-light-bg), var(--card));
+  border-color: var(--gold);
+}
+
+.khatma-progress-ring {
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+}
+
+/* =====================================================================
+   Search input - شريط البحث
+   ===================================================================== */
+.search-input-wrap {
+  position: relative;
+  margin-bottom: var(--space-4);
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 16px 12px 44px;
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--border);
+  background: var(--card);
+  color: var(--fg);
+  font-family: inherit;
+  font-size: var(--fs-base);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  min-height: 48px;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px var(--primary-light);
+}
+
+.search-input-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted-fg);
+  pointer-events: none;
+}
+
+/* =====================================================================
+   Focus visibility
    ===================================================================== */
 *:focus-visible {
   outline: 2px solid var(--primary);
@@ -1838,39 +2158,45 @@ button:focus-visible,
 }
 
 /* =====================================================================
-   تحسينات الـ scroll
+   Scrollbars
    ===================================================================== */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: var(--radius-pill); }
+::-webkit-scrollbar-thumb:hover { background: var(--muted-fg); }
 
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: var(--radius-pill);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--muted-fg);
-}
-
-/* =====================================================================
-   منع تحديد النص على الأزرار
-   ===================================================================== */
+/* منع تحديد النص على الأزرار */
 button, .btn, .nav-btn, .icon-btn, .tab {
   user-select: none;
   -webkit-user-select: none;
 }
 
-/* =====================================================================
-   تحسين عرض الأرقام العربية
-   ===================================================================== */
+/* الأرقام */
 .font-quran .verse-num,
 .verse-num {
   font-feature-settings: "tnum";
   font-variant-numeric: tabular-nums;
+}
+
+/* =====================================================================
+   Responsive adjustments
+   ===================================================================== */
+@media (max-width: 360px) {
+  body { font-size: var(--fs-sm); }
+  .container-app { padding: 0 var(--space-3); }
+  .card-pad { padding: var(--space-4); }
+  .hero-card { padding: var(--space-5); }
+  .hero-name { font-size: var(--fs-xl); }
+  .btn { padding: 10px 14px; font-size: var(--fs-sm); }
+  .nav-btn { max-width: 80px; }
+  .nav-label { font-size: 9px; }
+  .verse-text { font-size: var(--fs-lg); }
+  .wird-card { padding: var(--space-4); }
+}
+
+@media (min-width: 768px) {
+  .container-app { max-width: 760px; }
+  .hero-card { padding: var(--space-8); }
+  .hero-name { font-size: var(--fs-3xl); }
+  .hero-message { font-size: var(--fs-md); }
 }

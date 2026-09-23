@@ -1,66 +1,72 @@
 /* =====================================================================
    رفيق القرآن — نظام التصميم (Design Tokens & Theme)
-   كل الألوان، الخطوط، الظلال، والمسافات في مكان واحد
+   هوية إسلامية عصرية - Modern Islamic Premium UI
    ===================================================================== */
 
 :root {
-  /* ====== الألوان الأساسية ====== */
-  --primary: #176B55;
-  --primary-fg: #ffffff;
-  --secondary: #2AA889;
-  --dark-green: #0B3D32;
-  --gold: #D4A574;
-  --light-gold: #E8C99A;
+  /* ====== الألوان الأساسية — الهوية الجديدة ====== */
+  --primary: #0F5C4D;          /* أخضر زمردي عميق */
+  --primary-fg: #F7F1E5;       /* عاجي للنص على الأخضر */
+  --primary-deep: #083F35;     /* أخضر داكن */
+  --secondary: #4A7C6F;        /* أخضر زيتوني هادئ */
+  --gold: #C69A52;             /* ذهبي دافئ */
+  --gold-light: #D9B875;       /* ذهبي فاتح */
+  --gold-deep: #A67D3A;        /* ذهبي داكن للنص */
 
   /* ====== الخلفيات والبطاقات ====== */
-  --bg: #F7F9FC;
-  --card: #FFFFFF;
-  --secondary-bg: #F1F5F9;
-  --muted: #F1F5F9;
-  --border: #E5E7EB;
-  --border-soft: #EEF2F4;
+  --bg: #F7F1E5;               /* عاجي/كريمي - الخلفية الأساسية */
+  --bg-warm: #F2EAD3;          /* خلفية أدفأ */
+  --card: #FFFFFF;             /* بطاقات */
+  --card-cream: #FDFAF1;       /* بطاقات بلون عاجي */
+  --secondary-bg: #EDE3CC;     /* خلفية ثانوية */
+  --muted: #EDE3CC;
+  --border: #D9CDB0;           /* حدود بلون البيج */
+  --border-soft: #E5DCC4;      /* حدود ناعمة */
 
   /* ====== النصوص ====== */
-  --fg: #10231D;
-  --muted-fg: #718078;
-  --fg-strong: #0B3D32;
+  --fg: #24352F;               /* بني داكن للنص الأساسي */
+  --fg-strong: #1A2823;        /* نص أقوى */
+  --muted-fg: #718078;         /* نص ثانوي */
+  --fg-on-primary: #F7F1E5;    /* نص على الأخضر */
+  --fg-on-gold: #2A1F0A;       /* نص على الذهبي */
 
   /* ====== حالات الألوان ====== */
-  --success: #16A34A;
-  --success-soft: #DCFCE7;
-  --warning: #D97706;
-  --warning-soft: #FEF3C7;
-  --danger: #DC2626;
-  --danger-soft: #FEE2E2;
-  --info: #0284C7;
-  --info-soft: #DBEAFE;
+  --success: #2D7A5F;
+  --success-soft: #D9EBE0;
+  --warning: #B8860B;
+  --warning-soft: #F5E5C0;
+  --danger: #A03A2C;
+  --danger-soft: #F0D9D3;
+  --info: #3B6E8F;
+  --info-soft: #D6E3EB;
 
   /* ====== متغيرات مشتقة ====== */
-  --primary-light: rgba(23, 107, 85, 0.08);
-  --primary-medium: rgba(23, 107, 85, 0.16);
-  --primary-strong: rgba(23, 107, 85, 0.24);
-  --gold-light: rgba(212, 165, 116, 0.12);
-  --gold-medium: rgba(212, 165, 116, 0.24);
+  --primary-light: rgba(15, 92, 77, 0.08);
+  --primary-medium: rgba(15, 92, 77, 0.16);
+  --primary-strong: rgba(15, 92, 77, 0.24);
+  --gold-light-bg: rgba(198, 154, 82, 0.10);
+  --gold-medium-bg: rgba(198, 154, 82, 0.20);
 
-  /* ====== التدرجات اللونية ====== */
-  --gradient-primary: linear-gradient(135deg, #176B55 0%, #2AA889 100%);
-  --gradient-primary-dark: linear-gradient(135deg, #0B3D32 0%, #176B55 100%);
-  --gradient-gold: linear-gradient(135deg, #D4A574 0%, #E8C99A 100%);
-  --gradient-hero: linear-gradient(140deg, #176B55 0%, #0B3D32 60%, #176B55 100%);
-  --gradient-hero-soft: linear-gradient(160deg, rgba(23,107,85,0.06) 0%, rgba(212,165,116,0.06) 100%);
-  --gradient-card-premium: linear-gradient(160deg, #176B55 0%, #0B3D32 100%);
+  /* ====== التدرجات ====== */
+  --gradient-primary: linear-gradient(135deg, #0F5C4D 0%, #083F35 100%);
+  --gradient-primary-soft: linear-gradient(135deg, rgba(15,92,77,0.95) 0%, rgba(8,63,53,0.95) 100%);
+  --gradient-gold: linear-gradient(135deg, #C69A52 0%, #D9B875 100%);
+  --gradient-hero: linear-gradient(150deg, #0F5C4D 0%, #083F35 60%, #0A4D40 100%);
+  --gradient-card-premium: linear-gradient(155deg, #0F5C4D 0%, #083F35 100%);
+  --gradient-cream: linear-gradient(160deg, #FDFAF1 0%, #F7F1E5 100%);
+  --gradient-gold-accent: linear-gradient(90deg, transparent 0%, rgba(198,154,82,0.4) 50%, transparent 100%);
 
   /* ====== الظلال ====== */
-  --shadow-xs: 0 1px 2px rgba(16, 35, 29, 0.04);
-  --shadow-sm: 0 2px 6px rgba(16, 35, 29, 0.05);
-  --shadow-md: 0 4px 14px rgba(16, 35, 29, 0.06);
-  --shadow-lg: 0 10px 28px rgba(16, 35, 29, 0.08);
-  --shadow-xl: 0 18px 40px rgba(16, 35, 29, 0.12);
-  --shadow-2xl: 0 24px 60px rgba(16, 35, 29, 0.16);
-  --shadow-primary: 0 10px 24px rgba(23, 107, 85, 0.22);
-  --shadow-gold: 0 8px 20px rgba(212, 165, 116, 0.25);
-  --shadow-card: 0 2px 8px rgba(16, 35, 29, 0.04), 0 1px 2px rgba(16, 35, 29, 0.04);
-  --shadow-floating: 0 12px 32px rgba(16, 35, 29, 0.12), 0 4px 10px rgba(16, 35, 29, 0.06);
+  --shadow-xs: 0 1px 2px rgba(36, 53, 47, 0.04);
+  --shadow-sm: 0 2px 6px rgba(36, 53, 47, 0.05);
+  --shadow-md: 0 4px 14px rgba(36, 53, 47, 0.07);
+  --shadow-lg: 0 10px 28px rgba(36, 53, 47, 0.09);
+  --shadow-xl: 0 18px 40px rgba(36, 53, 47, 0.12);
+  --shadow-2xl: 0 24px 60px rgba(36, 53, 47, 0.16);
+  --shadow-primary: 0 10px 24px rgba(15, 92, 77, 0.20);
+  --shadow-gold: 0 8px 20px rgba(198, 154, 82, 0.22);
+  --shadow-card: 0 2px 8px rgba(36, 53, 47, 0.04), 0 1px 2px rgba(36, 53, 47, 0.04);
+  --shadow-floating: 0 12px 32px rgba(36, 53, 47, 0.12), 0 4px 10px rgba(36, 53, 47, 0.06);
 
   /* ====== الزوايا الدائرية ====== */
   --radius-xs: 8px;
@@ -69,7 +75,6 @@
   --radius-lg: 20px;
   --radius-xl: 24px;
   --radius-2xl: 28px;
-  --radius-3xl: 32px;
   --radius-pill: 999px;
   --radius-circle: 50%;
 
@@ -86,9 +91,10 @@
   --space-12: 48px;
 
   /* ====== الخطوط ====== */
-  --font-app: 'Cairo', system-ui, -apple-system, sans-serif;
-  --font-quran: 'Amiri', 'Cairo', serif;
-  --font-secondary: 'Tajawal', 'Cairo', sans-serif;
+  --font-app: 'IBM Plex Sans Arabic', 'Cairo', system-ui, -apple-system, sans-serif;
+  --font-quran: 'Amiri Quran', 'Amiri', serif;
+  --font-heading: 'IBM Plex Sans Arabic', 'Cairo', sans-serif;
+  --font-secondary: 'IBM Plex Sans Arabic', 'Tajawal', sans-serif;
 
   --fs-2xs: 10px;
   --fs-xs: 11px;
@@ -105,7 +111,7 @@
   --lh-snug: 1.4;
   --lh-normal: 1.6;
   --lh-relaxed: 1.75;
-  --lh-quran: 2.2;
+  --lh-quran: 2.4;
 
   --fw-normal: 400;
   --fw-medium: 500;
@@ -129,8 +135,8 @@
 
   /* ====== أحجام التنقل ====== */
   --topbar-h: 64px;
-  --bottomnav-h: 76px;
-  --bottomnav-fab-size: 60px;
+  --bottomnav-h: 72px;
+  --bottomnav-fab-size: 56px;
 
   /* ====== z-index ====== */
   --z-base: 1;
@@ -142,26 +148,31 @@
 }
 
 /* =====================================================================
-   الوضع الداكن — Dark Mode
+   الوضع الداكن — Dark Mode الحقيقي
    ===================================================================== */
 .dark {
-  --primary: #2AA889;
-  --primary-fg: #0B1713;
-  --secondary: #2AA889;
-  --dark-green: #176B55;
-  --gold: #E8C99A;
-  --light-gold: #D4A574;
+  --primary: #176957;          /* أخضر فاتح للوضع الداكن */
+  --primary-fg: #F3EFE5;
+  --primary-deep: #0A4D40;
+  --secondary: #2D8472;
+  --gold: #D0A65A;
+  --gold-light: #E0BC78;
+  --gold-deep: #C69A52;
 
-  --bg: #0B1713;
-  --card: #12221C;
-  --secondary-bg: #192C24;
-  --muted: #192C24;
-  --border: #243530;
-  --border-soft: #1F2E27;
+  --bg: #101815;               /* خلفية داكنة حقيقية */
+  --bg-warm: #0F1614;
+  --card: #16221E;             /* بطاقات داكنة */
+  --card-cream: #1A2622;
+  --secondary-bg: #1F2D28;     /* خلفية ثانوية */
+  --muted: #1F2D28;
+  --border: #2A3A33;
+  --border-soft: #1F2D28;
 
-  --fg: #EDF7F2;
-  --muted-fg: #9CAFA5;
+  --fg: #F3EFE5;               /* نص فاتح على الداكن */
   --fg-strong: #FFFFFF;
+  --muted-fg: #9CAFA5;
+  --fg-on-primary: #F3EFE5;
+  --fg-on-gold: #1A1206;
 
   --success: #4ADE80;
   --success-soft: rgba(74, 222, 128, 0.14);
@@ -172,18 +183,18 @@
   --info: #38BDF8;
   --info-soft: rgba(56, 189, 248, 0.14);
 
-  --primary-light: rgba(42, 168, 137, 0.14);
-  --primary-medium: rgba(42, 168, 137, 0.22);
-  --primary-strong: rgba(42, 168, 137, 0.32);
-  --gold-light: rgba(232, 201, 154, 0.12);
-  --gold-medium: rgba(232, 201, 154, 0.22);
+  --primary-light: rgba(23, 105, 87, 0.18);
+  --primary-medium: rgba(23, 105, 87, 0.26);
+  --primary-strong: rgba(23, 105, 87, 0.36);
+  --gold-light-bg: rgba(208, 166, 90, 0.12);
+  --gold-medium-bg: rgba(208, 166, 90, 0.22);
 
-  --gradient-primary: linear-gradient(135deg, #2AA889 0%, #176B55 100%);
-  --gradient-primary-dark: linear-gradient(135deg, #176B55 0%, #0B3D32 100%);
-  --gradient-gold: linear-gradient(135deg, #E8C99A 0%, #D4A574 100%);
-  --gradient-hero: linear-gradient(140deg, #176B55 0%, #0B3D32 60%, #2AA889 100%);
-  --gradient-hero-soft: linear-gradient(160deg, rgba(42,168,137,0.08) 0%, rgba(232,201,154,0.06) 100%);
-  --gradient-card-premium: linear-gradient(160deg, #1A3329 0%, #0B3D32 100%);
+  --gradient-primary: linear-gradient(135deg, #176957 0%, #0A4D40 100%);
+  --gradient-primary-soft: linear-gradient(135deg, rgba(23,105,87,0.95) 0%, rgba(10,77,64,0.95) 100%);
+  --gradient-gold: linear-gradient(135deg, #D0A65A 0%, #E0BC78 100%);
+  --gradient-hero: linear-gradient(150deg, #176957 0%, #0A4D40 60%, #1A3329 100%);
+  --gradient-card-premium: linear-gradient(155deg, #1A3329 0%, #0F2218 100%);
+  --gradient-cream: linear-gradient(160deg, #1A2622 0%, #16221E 100%);
 
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
   --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.35);
@@ -191,14 +202,14 @@
   --shadow-lg: 0 10px 28px rgba(0, 0, 0, 0.45);
   --shadow-xl: 0 18px 40px rgba(0, 0, 0, 0.5);
   --shadow-2xl: 0 24px 60px rgba(0, 0, 0, 0.55);
-  --shadow-primary: 0 10px 24px rgba(42, 168, 137, 0.32);
-  --shadow-gold: 0 8px 20px rgba(232, 201, 154, 0.22);
+  --shadow-primary: 0 10px 24px rgba(23, 105, 87, 0.32);
+  --shadow-gold: 0 8px 20px rgba(208, 166, 90, 0.22);
   --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
   --shadow-floating: 0 12px 32px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 /* =====================================================================
-   الإعدادات الأساسية للجسم والمستند
+   الإعدادات الأساسية
    ===================================================================== */
 * {
   box-sizing: border-box;
@@ -223,52 +234,83 @@ body {
   font-size: var(--fs-base);
   overflow-x: hidden;
   transition: background-color var(--transition-base), color var(--transition-base);
+  /* نمنع اختيار النص المطول على الموبايل لكن نسمح به في النصوص */
+  -webkit-user-select: none;
+  user-select: none;
 }
 
-/* تعطيل تأثير النقر على iOS */
+/* السماح باختيار النص في عناصر معينة */
+input, textarea, [contenteditable], .selectable, .verse-text {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
 button, a, [role="button"] {
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
 
-/* تحسين ظهور النص في المتصفحات الحديثة */
 @supports (font-optical-sizing: auto) {
   body { font-optical-sizing: auto; }
 }
 
 /* =====================================================================
-   الخلفيات الزخرفية الإسلامية
+   الخلفيات الزخرفية الإسلامية — ناعمة جدًا
    ===================================================================== */
 .pattern-bg {
+  background-color: var(--bg);
   background-image:
-    radial-gradient(circle at 1px 1px, rgba(23, 107, 85, 0.05) 1px, transparent 0),
-    radial-gradient(circle at 1px 1px, rgba(212, 165, 116, 0.03) 1px, transparent 0);
-  background-size: 32px 32px, 64px 64px;
-  background-position: 0 0, 16px 16px;
+    radial-gradient(circle at 1px 1px, rgba(15, 92, 77, 0.04) 1px, transparent 0);
+  background-size: 32px 32px;
 }
 
 .dark .pattern-bg {
   background-image:
-    radial-gradient(circle at 1px 1px, rgba(42, 168, 137, 0.06) 1px, transparent 0),
-    radial-gradient(circle at 1px 1px, rgba(232, 201, 154, 0.04) 1px, transparent 0);
+    radial-gradient(circle at 1px 1px, rgba(23, 105, 87, 0.06) 1px, transparent 0);
 }
 
-/* زخرفة هندسية إسلامية ناعمة */
+/* زخرفة هندسية إسلامية خفيفة جدًا */
 .pattern-islamic {
   background-color: var(--bg);
   background-image:
-    linear-gradient(30deg, rgba(23, 107, 85, 0.025) 12%, transparent 12.5%, transparent 87%, rgba(23, 107, 85, 0.025) 87.5%, rgba(23, 107, 85, 0.025)),
-    linear-gradient(150deg, rgba(23, 107, 85, 0.025) 12%, transparent 12.5%, transparent 87%, rgba(23, 107, 85, 0.025) 87.5%, rgba(23, 107, 85, 0.025)),
-    linear-gradient(30deg, rgba(23, 107, 85, 0.025) 12%, transparent 12.5%, transparent 87%, rgba(23, 107, 85, 0.025) 87.5%, rgba(23, 107, 85, 0.025)),
-    linear-gradient(150deg, rgba(23, 107, 85, 0.025) 12%, transparent 12.5%, transparent 87%, rgba(23, 107, 85, 0.025) 87.5%, rgba(23, 107, 85, 0.025));
+    linear-gradient(30deg, rgba(15, 92, 77, 0.02) 12%, transparent 12.5%, transparent 87%, rgba(15, 92, 77, 0.02) 87.5%, rgba(15, 92, 77, 0.02)),
+    linear-gradient(150deg, rgba(15, 92, 77, 0.02) 12%, transparent 12.5%, transparent 87%, rgba(15, 92, 77, 0.02) 87.5%, rgba(15, 92, 77, 0.02));
   background-size: 80px 140px;
-  background-position: 0 0, 0 0, 40px 70px, 40px 70px;
+  background-position: 0 0, 40px 70px;
 }
 
 /* خط ذهبي زخرفي */
 .gold-divider {
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold-medium), transparent);
+  background: linear-gradient(90deg, transparent, var(--gold-medium-bg), transparent);
   border: none;
   margin: var(--space-4) 0;
+}
+
+/* زخرفة Bismillah-style في الأعلى */
+.bismillah-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  margin: var(--space-4) 0;
+  color: var(--gold);
+  opacity: 0.6;
+}
+
+.bismillah-divider::before,
+.bismillah-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-medium-bg), transparent);
+  max-width: 80px;
+}
+
+/* خط القاعدة الذهبية */
+.gold-rule {
+  background: var(--gradient-gold);
+  height: 2px;
+  width: 60px;
+  border-radius: var(--radius-pill);
 }
