@@ -1,597 +1,287 @@
+/* =====================================================================
+   رفيق القرآن — نظام الصوت (Quran Audio System)
+   Audio Per Ayah - تشغيل آية بآية مع دعم القارئ
+   المصدر: EveryAyah API (مجاني ومفتوح)
+   ===================================================================== */
+
 'use strict';
 
-(function initQuranAudio() {
-  const RECITER = 'ar.minshawi';
-  const BITRATE = 128;
-  const CDN = 'https://cdn.islamic.network/quran/audio';
+// ================== القراء المتاحون ==================
+const RECITERS = {
+  'mishary_alafasy':    { name: 'مشاري راشد العفاسي',   dir: 'Alafasy_128kbps',         lang: 'ar' },
+  'minshawi_murattal':  { name: 'محمد صديق المنشاوي',  dir: 'Minshawy_Murattal_128kbps', lang: 'ar', default: true },
+  'minshawi_mujawwad':  { name: 'المنشاوي - تجويد',    dir: 'Minshawy_Mujawwad_192kbps', lang: 'ar' },
+  'abdulbasit_murattal':{ name: 'عبد الباسط عبد الصمد', dir: 'Abdul_Basit_Murattal_192kbps', lang: 'ar' },
+  'abdulbasit_mujawwad':{ name: 'عبد الباسط - تجويد',  dir: 'Abdul_Basit_Mujawwad_192kbps', lang: 'ar' },
+  'husary':             { name: 'محمود خليل الحصري',   dir: 'Husary_128kbps',           lang: 'ar' },
+  'sudais':             { name: 'عبد الرحمن السديس',   dir: 'Abdurrahmaan_As-Sudais_192kbps', lang: 'ar' },
+  'shuraim':            { name: 'سعود الشريم',          dir: 'Saood_ash-Shuraym_128kbps', lang: 'ar' },
+  'maher_muaiqly':      { name: 'ماهر المعيقلي',        dir: 'MaherAlMuaiqy128kbps',     lang: 'ar' },
+  'ahmed_neana':        { name: 'أحمد نعينع',           dir: 'Ahmed_ibn_Ali_al-Ajamy_128kbps', lang: 'ar' },
+};
 
-  const AYAH_COUNTS = [
-    7,286,200,176,120,165,206,75,129,109,123,111,43,52,99,128,111,110,98,135,
-    112,78,118,64,77,227,93,88,69,60,34,30,73,54,45,83,182,88,75,85,54,53,89,
-    59,37,35,38,29,18,45,60,49,62,55,78,96,29,22,24,13,14,11,11,18,12,12,30,
-    52,52,44,28,28,20,56,40,31,50,40,46,42,29,19,36,25,22,17,19,26,30,20,15,
-    21,11,8,8,19,5,8,8,11,11,8,3,9,5,4,7,3,6,3,5,4,5,6,3,6,5
-  ];
+const DEFAULT_RECITER = 'minshawi_murattal';
+const RECITER_KEY = 'rafiq_reciter';
+const REPEAT_KEY = 'rafiq_repeat';
 
-  const OFFSETS = [];
-  let total = 0;
+// ================== حالة الصوت ==================
+const AudioState = {
+  audio: null,
+  currentSurah: null,
+  currentAyah: null,
+  reciter: localStorage.getItem(RECITER_KEY) || DEFAULT_RECITER,
+  repeat: parseInt(localStorage.getItem(REPEAT_KEY) || '1', 10),
+  repeatCount: 0,
+  isPlaying: false,
+  duration: 0,
+  currentTime: 0,
+  playlist: [],      // قائمة الآيات الحالية
+  playlistIdx: 0,
+  onStateChange: null,
+};
 
-  AYAH_COUNTS.forEach(count => {
-    OFFSETS.push(total);
-    total += count;
+// ================== بناء URL للآية ==================
+function getAyahAudioUrl(surah, ayah) {
+  const reciter = RECITERS[AudioState.reciter] || RECITERS[DEFAULT_RECITER];
+  const surahStr = String(surah).padStart(3, '0');
+  const ayahStr = String(ayah).padStart(3, '0');
+  // محاولة أول: EveryAyah (MP3 بجودة عالية)
+  return `https://everyayah.com/data/${reciter.dir}/${surahStr}${ayahStr}.mp3`;
+}
+
+// محاولة بديلة: Quran CDN
+function getAyahAudioUrlAlt(surah, ayah) {
+  const reciter = AudioState.reciter;
+  // مصدر بديل - AlQuran Cloud
+  const cdnMap = {
+    'minshawi_murattal': 'ar.minshawi',
+    'mishary_alafasy': 'ar.alafasy',
+    'abdulbasit_murattal': 'ar.abdulbasitmurattal',
+    'husary': 'ar.husary',
+    'sudais': 'ar.abdurrahmaansudais',
+  };
+  const edition = cdnMap[reciter] || 'ar.minshawi';
+  return `https://cdn.islamic.network/quran/audio/128/${edition}/${getAyahGlobalNumber(surah, ayah)}.mp3`;
+}
+
+// حساب الرقم العالمي للآية (للاستخدام مع CDN البديل)
+function getAyahGlobalNumber(surah, ayah) {
+  // بيانات عدد آيات كل سورة
+  const surahAyahCounts = [7,286,200,176,120,165,206,75,129,109,123,111,43,52,99,128,111,110,98,135,112,78,118,64,77,227,93,88,69,60,34,30,73,54,45,83,182,88,75,85,54,53,89,59,37,35,38,29,18,45,60,49,62,55,78,96,29,22,24,13,14,11,11,18,12,12,30,52,52,44,28,28,20,56,40,31,50,40,46,29,19,36,25,22,17,19,26,30,20,15,21,11,8,8,19,5,8,8,11,3,9,5,4,7,3,6,3,5,4,5,6];
+  let num = 0;
+  for (let i = 0; i < surah - 1; i++) num += surahAyahCounts[i];
+  return num + ayah;
+}
+
+// ================== تشغيل آية واحدة ==================
+function playAyah(surah, ayah, options = {}) {
+  stopAudio();
+  AudioState.currentSurah = surah;
+  AudioState.currentAyah = ayah;
+  AudioState.audio = new Audio(getAyahAudioUrl(surah, ayah));
+
+  AudioState.audio.addEventListener('loadedmetadata', () => {
+    AudioState.duration = AudioState.audio.duration;
+    notifyStateChange();
   });
 
-  function toLatinDigits(value) {
-    return String(value).replace(/[٠-٩]/g, d =>
-      '٠١٢٣٤٥٦٧٨٩'.indexOf(d)
-    );
-  }
+  AudioState.audio.addEventListener('timeupdate', () => {
+    AudioState.currentTime = AudioState.audio.currentTime;
+    notifyStateChange();
+  });
 
-  function getGlobalAyah(surah, ayah) {
-    if (!surah || !ayah) return null;
-    if (!AYAH_COUNTS[surah - 1]) return null;
-
-    return OFFSETS[surah - 1] + ayah;
-  }
-
-  /* =========================
-     أيقونة السماعة
-  ========================= */
-
-  function speakerIcon() {
-    return `
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M4 10v4h4l5 4V6L8 10H4z"></path>
-        <path d="M16 9.5c1.1 1.1 1.1 3.9 0 5"></path>
-        <path d="M18.5 7c2.8 2.8 2.8 7.2 0 10"></path>
-      </svg>
-    `;
-  }
-
-  /* =========================
-     أيقونة الإيقاف المؤقت
-  ========================= */
-
-  function pauseIcon() {
-    return `
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <rect x="6" y="5" width="4" height="14" rx="1"></rect>
-        <rect x="14" y="5" width="4" height="14" rx="1"></rect>
-      </svg>
-    `;
-  }
-
-  let audio = null;
-  let activeButton = null;
-
-  /* =========================
-     تغيير حالة زر الصوت
-  ========================= */
-
-  function setButtonState(button, playing) {
-    if (!button) return;
-
-    button.innerHTML = playing
-      ? pauseIcon()
-      : speakerIcon();
-
-    button.classList.toggle('playing', playing);
-
-    button.setAttribute(
-      'aria-label',
-      playing
-        ? 'إيقاف مؤقت للتلاوة'
-        : 'تشغيل الآية'
-    );
-  }
-
-  /* =========================
-     إيقاف الصوت
-  ========================= */
-
-  function stopAudio() {
-    if (audio) {
-      audio.pause();
-      audio.currentTime = 0;
-    }
-
-    if (activeButton) {
-      setButtonState(activeButton, false);
-    }
-
-    audio = null;
-    activeButton = null;
-  }
-
-  /* =========================
-     تشغيل الآية
-  ========================= */
-
-  function playAyah(surah, ayah, button) {
-    const globalAyah = getGlobalAyah(
-      surah,
-      ayah
-    );
-
-    if (!globalAyah) return;
-
-    /* لو نفس الآية */
-    if (
-      activeButton === button &&
-      audio
-    ) {
-      if (audio.paused) {
-
-        audio.play()
-          .then(() => {
-            setButtonState(button, true);
-          })
-          .catch(() => {});
-
+  AudioState.audio.addEventListener('ended', () => {
+    AudioState.repeatCount++;
+    if (AudioState.repeatCount < AudioState.repeat) {
+      // تكرار نفس الآية
+      AudioState.audio.currentTime = 0;
+      AudioState.audio.play().catch(() => {});
+    } else {
+      AudioState.repeatCount = 0;
+      // الانتقال للآية التالية إن وجدت في القائمة
+      if (options.autoNext !== false && AudioState.playlist.length > 0) {
+        nextAyah();
       } else {
-
-        audio.pause();
-
-        setButtonState(
-          button,
-          false
-        );
+        AudioState.isPlaying = false;
+        notifyStateChange();
       }
-
-      return;
     }
+  });
 
-    /* إيقاف أي آية أخرى */
-    stopAudio();
-
-    const url =
-      `${CDN}/${BITRATE}/${RECITER}/${globalAyah}.mp3`;
-
-    audio = new Audio(url);
-
-    activeButton = button;
-
-    setButtonState(
-      button,
-      true
-    );
-
-    /* عند انتهاء الآية */
-    audio.addEventListener(
-      'ended',
-      () => {
-
-        setButtonState(
-          button,
-          false
-        );
-
-        audio = null;
-        activeButton = null;
-      }
-    );
-
-    /* في حالة وجود خطأ */
-    audio.addEventListener(
-      'error',
-      () => {
-
-        stopAudio();
-
-        if (typeof toast === 'function') {
-          toast(
-            'تعذر تشغيل التلاوة، حاول مرة أخرى',
-            'error'
-          );
-        }
-      }
-    );
-
-    /* تشغيل الصوت */
-    audio.play()
-      .catch(() => {
-
-        stopAudio();
-
-        if (typeof toast === 'function') {
-          toast(
-            'اضغط على زر التشغيل مرة أخرى',
-            'error'
-          );
-        }
+  AudioState.audio.addEventListener('error', () => {
+    // محاولة بالمصدر البديل
+    if (AudioState.audio && !AudioState.audio._altTried) {
+      AudioState.audio._altTried = true;
+      try { AudioState.audio.pause(); } catch(e) {}
+      AudioState.audio = new Audio(getAyahAudioUrlAlt(surah, ayah));
+      AudioState.audio.addEventListener('ended', () => {
+        if (options.autoNext !== false && AudioState.playlist.length > 0) nextAyah();
+        else { AudioState.isPlaying = false; notifyStateChange(); }
       });
+      AudioState.audio.play().catch(() => {
+        toast('تعذر تشغيل الصوت', 'error');
+        AudioState.isPlaying = false;
+        notifyStateChange();
+      });
+    } else {
+      toast('تعذر تشغيل الصوت', 'error');
+      AudioState.isPlaying = false;
+      notifyStateChange();
+    }
+  });
+
+  AudioState.audio.play().then(() => {
+    AudioState.isPlaying = true;
+    notifyStateChange();
+  }).catch(() => {
+    AudioState.isPlaying = false;
+    notifyStateChange();
+  });
+}
+
+// ================== تشغيل قائمة آيات ==================
+function playAyahRange(surah, fromAyah, toAyah) {
+  const playlist = [];
+  for (let a = fromAyah; a <= toAyah; a++) playlist.push({ surah, ayah: a });
+  AudioState.playlist = playlist;
+  AudioState.playlistIdx = 0;
+  playAyahFromPlaylist();
+}
+
+function playSurahFull(surah) {
+  const meta = getSurahMeta(surah);
+  if (!meta) return;
+  playAyahRange(surah, 1, meta.ayahCount);
+}
+
+function playAyahFromPlaylist() {
+  if (AudioState.playlistIdx >= AudioState.playlist.length) {
+    AudioState.isPlaying = false;
+    AudioState.playlist = [];
+    AudioState.playlistIdx = 0;
+    notifyStateChange();
+    return;
   }
+  const item = AudioState.playlist[AudioState.playlistIdx];
+  playAyah(item.surah, item.ayah, { autoNext: false });
+  // بعد انتهاء الآية، الانتقال للتالي (مدموج في playAyah عبر nextAyah)
+}
 
-  /* =========================
-     معرفة السورة الحالية
-  ========================= */
+function nextAyah() {
+  if (AudioState.playlist.length === 0) return;
+  AudioState.playlistIdx++;
+  if (AudioState.playlistIdx >= AudioState.playlist.length) {
+    AudioState.isPlaying = false;
+    AudioState.playlist = [];
+    AudioState.playlistIdx = 0;
+    notifyStateChange();
+    return;
+  }
+  playAyahFromPlaylist();
+}
 
-  function getCurrentSurah() {
+function prevAyah() {
+  if (AudioState.playlist.length === 0) return;
+  AudioState.playlistIdx = Math.max(0, AudioState.playlistIdx - 1);
+  playAyahFromPlaylist();
+}
+
+// ================== تحكم أساسي ==================
+function pauseAudio() {
+  if (AudioState.audio && AudioState.isPlaying) {
+    AudioState.audio.pause();
+    AudioState.isPlaying = false;
+    notifyStateChange();
+  }
+}
+
+function resumeAudio() {
+  if (AudioState.audio && !AudioState.isPlaying) {
+    AudioState.audio.play().then(() => {
+      AudioState.isPlaying = true;
+      notifyStateChange();
+    }).catch(() => {});
+  }
+}
+
+function togglePlayPause() {
+  if (AudioState.isPlaying) pauseAudio();
+  else resumeAudio();
+}
+
+function stopAudio() {
+  if (AudioState.audio) {
     try {
-
-      const day =
-        state?.plan?.days?.[app_dayIdx];
-
-      return Number(
-        day?.surahNumber || 0
-      );
-
-    } catch (e) {
-
-      return 0;
-    }
+      AudioState.audio.pause();
+      AudioState.audio.src = '';
+    } catch(e) {}
   }
+  AudioState.audio = null;
+  AudioState.isPlaying = false;
+  AudioState.currentTime = 0;
+  AudioState.duration = 0;
+  notifyStateChange();
+}
 
-  /* =========================
-     إضافة أزرار الصوت
-  ========================= */
-
-  function addAudioButtons() {
-
-    const surah =
-      getCurrentSurah();
-
-    if (!surah) return;
-
-    document
-      .querySelectorAll(
-        '.verse-list .verse-item'
-      )
-      .forEach(item => {
-
-        /* منع تكرار الزر */
-        if (
-          item.querySelector(
-            '.ayah-audio-btn'
-          )
-        ) {
-          return;
-        }
-
-        const numberEl =
-          item.querySelector(
-            '.verse-num'
-          );
-
-        if (!numberEl) return;
-
-        const ayah =
-          Number(
-            toLatinDigits(
-              numberEl.textContent.trim()
-            )
-          );
-
-        if (!ayah) return;
-
-        const button =
-          document.createElement(
-            'button'
-          );
-
-        button.className =
-          'ayah-audio-btn';
-
-        button.type =
-          'button';
-
-        setButtonState(
-          button,
-          false
-        );
-
-        button.title =
-          'استماع بصوت الشيخ محمد صديق المنشاوي';
-
-        button.onclick =
-          function(event) {
-
-            event.stopPropagation();
-
-            playAyah(
-              surah,
-              ayah,
-              button
-            );
-          };
-
-        item.insertBefore(
-          button,
-          item.firstChild
-        );
-      });
+function seekAudio(time) {
+  if (AudioState.audio) {
+    AudioState.audio.currentTime = time;
+    AudioState.currentTime = time;
+    notifyStateChange();
   }
-
-  /* =========================
-     تصميم أزرار الصوت
-  ========================= */
-
-  const style =
-    document.createElement('style');
-
-  style.textContent = `
-
-    /* مساحة للزر داخل الآية */
-    .verse-item {
-      position: relative;
-      padding-left: 58px !important;
-    }
-
-    /* زر الصوت */
-    .ayah-audio-btn {
-      position: absolute;
-
-      left: 9px;
-      top: 50%;
-
-      transform:
-        translateY(-50%);
-
-      width: 40px;
-      height: 40px;
-
-      padding: 0;
-
-      border:
-        1px solid
-        rgba(194, 136, 78, .28);
-
-      border-radius: 50%;
-
-      background:
-        linear-gradient(
-          145deg,
-          rgba(255,255,255,.96),
-          rgba(245,237,221,.96)
-        );
-
-      color:
-        var(--primary);
-
-      display: flex;
-
-      align-items: center;
-      justify-content: center;
-
-      cursor: pointer;
-
-      -webkit-tap-highlight-color:
-        transparent;
-
-      box-shadow:
-
-        0 4px 12px
-        rgba(92, 62, 32, .10),
-
-        inset 0 1px 0
-        rgba(255,255,255,.8);
-
-      transition:
-
-        transform .25s ease,
-        box-shadow .25s ease,
-        background .25s ease,
-        color .25s ease;
-
-      z-index: 2;
-    }
-
-    /* أيقونة السماعة */
-    .ayah-audio-btn svg {
-
-      width: 19px;
-      height: 19px;
-
-      fill: none;
-
-      stroke:
-        currentColor;
-
-      stroke-width: 1.8;
-
-      stroke-linecap: round;
-
-      stroke-linejoin: round;
-
-      transition:
-        transform .25s ease;
-    }
-
-    /* عند المرور بالماوس */
-    .ayah-audio-btn:hover {
-
-      transform:
-        translateY(-50%)
-        scale(1.08);
-
-      box-shadow:
-
-        0 7px 18px
-        rgba(92, 62, 32, .16),
-
-        0 0 0 4px
-        rgba(194, 136, 78, .08);
-    }
-
-    /* عند الضغط */
-    .ayah-audio-btn:active {
-
-      transform:
-        translateY(-50%)
-        scale(.94);
-    }
-
-    /* أثناء التشغيل */
-    .ayah-audio-btn.playing {
-
-      background:
-        var(--primary);
-
-      color:
-        #fff;
-
-      border-color:
-        var(--primary);
-
-      box-shadow:
-
-        0 6px 18px
-        rgba(92, 62, 32, .22),
-
-        0 0 0 5px
-        rgba(194, 136, 78, .12);
-    }
-
-    /* حركة أيقونة التشغيل */
-    .ayah-audio-btn.playing svg {
-
-      transform:
-        scale(.94);
-    }
-
-    /* دائرة النبض */
-    .ayah-audio-btn.playing::before {
-
-      content: "";
-
-      position: absolute;
-
-      inset: -5px;
-
-      border:
-        1px solid
-        rgba(194, 136, 78, .42);
-
-      border-radius: 50%;
-
-      animation:
-        ayahAudioPulse
-        1.5s
-        ease-out
-        infinite;
-
-      pointer-events: none;
-    }
-
-    /* التركيز */
-    .ayah-audio-btn:focus-visible {
-
-      outline:
-        3px solid
-        rgba(194, 136, 78, .25);
-
-      outline-offset:
-        3px;
-    }
-
-    /* حركة النبض */
-    @keyframes ayahAudioPulse {
-
-      0% {
-
-        transform:
-          scale(.88);
-
-        opacity: .8;
-      }
-
-      70% {
-
-        transform:
-          scale(1.28);
-
-        opacity: 0;
-      }
-
-      100% {
-
-        transform:
-          scale(1.28);
-
-        opacity: 0;
-      }
-    }
-
-    /* =========================
-       الوضع الليلي
-    ========================= */
-
-    @media (prefers-color-scheme: dark) {
-
-      .ayah-audio-btn {
-
-        background:
-          linear-gradient(
-            145deg,
-            rgba(55,55,55,.96),
-            rgba(38,38,38,.96)
-          );
-
-        border-color:
-          rgba(255,255,255,.10);
-
-        box-shadow:
-
-          0 4px 12px
-          rgba(0,0,0,.25),
-
-          inset 0 1px 0
-          rgba(255,255,255,.05);
-      }
-    }
-
-    /* =========================
-       تحسين للموبايل
-    ========================= */
-
-    @media (max-width: 480px) {
-
-      .verse-item {
-
-        padding-left:
-          54px !important;
-      }
-
-      .ayah-audio-btn {
-
-        left: 7px;
-
-        width: 38px;
-        height: 38px;
-      }
-
-      .ayah-audio-btn svg {
-
-        width: 18px;
-        height: 18px;
-      }
-    }
-
-  `;
-
-  document.head.appendChild(style);
-
-  /* =========================
-     مراقبة تغيير الآيات
-  ========================= */
-
-  const observer =
-    new MutationObserver(
-      addAudioButtons
-    );
-
-  observer.observe(
-    document.body,
-    {
-      childList: true,
-      subtree: true
-    }
-  );
-
-  /* تشغيل أولي */
-  setTimeout(
-    addAudioButtons,
-    300
-  );
-
-})();
+}
+
+function setReciter(reciterKey) {
+  if (!RECITERS[reciterKey]) return;
+  AudioState.reciter = reciterKey;
+  localStorage.setItem(RECITER_KEY, reciterKey);
+  // إعادة تشغيل الآية الحالية بالقارئ الجديد
+  if (AudioState.currentSurah && AudioState.currentAyah) {
+    const wasPlaying = AudioState.isPlaying;
+    playAyah(AudioState.currentSurah, AudioState.currentAyah);
+  }
+}
+
+function setRepeat(count) {
+  AudioState.repeat = Math.max(1, Math.min(10, count));
+  localStorage.setItem(REPEAT_KEY, String(AudioState.repeat));
+  notifyStateChange();
+}
+
+// ================== حالة الصوت ==================
+function getAudioState() {
+  return {
+    isPlaying: AudioState.isPlaying,
+    currentSurah: AudioState.currentSurah,
+    currentAyah: AudioState.currentAyah,
+    reciter: AudioState.reciter,
+    reciterName: RECITERS[AudioState.reciter]?.name || '',
+    duration: AudioState.duration,
+    currentTime: AudioState.currentTime,
+    repeat: AudioState.repeat,
+    playlistLength: AudioState.playlist.length,
+    playlistIdx: AudioState.playlistIdx,
+  };
+}
+
+function onAudioStateChange(callback) {
+  AudioState.onStateChange = callback;
+}
+
+function notifyStateChange() {
+  if (AudioState.onStateChange) {
+    AudioState.onStateChange(getAudioState());
+  }
+  // تحديث UI لمشغل الصوت إن كان معروضاً
+  if (typeof updateAudioPlayerUI === 'function') {
+    updateAudioPlayerUI(getAudioState());
+  }
+}
+
+// ================== تنسيق الوقت ==================
+function formatAudioTime(seconds) {
+  if (!seconds || isNaN(seconds)) return '0:00';
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return `${m}:${s.toString().padStart(2, '0')}`;
+}

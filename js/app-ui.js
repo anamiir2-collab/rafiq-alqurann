@@ -45,6 +45,16 @@ function render() {
   else if (app_view === 'calendar') main = renderCalendar();
   else if (app_view === 'reports') main = renderReports();
   else if (app_view === 'achievements') main = renderAchievements();
+  else if (app_view === 'more') main = renderMore();
+  else if (app_view === 'quran') main = renderQuranList();
+  else if (app_view === 'quran-reader') main = renderQuranReader();
+  else if (app_view === 'tajweed') main = renderTajweed();
+  else if (app_view === 'adhkar') main = renderAdhkar();
+  else if (app_view === 'tadabbur') main = renderTadabbur();
+  else if (app_view === 'notebook') main = renderNotebook();
+  else if (app_view === 'khatma') main = renderKhatma();
+  else if (app_view === 'memorize') main = renderMemorizePage();
+  else if (app_view === 'review') main = renderReviewPage();
 
   app.innerHTML = `
     <header class="topbar">
@@ -53,16 +63,15 @@ function render() {
           <img class="brand-logo" src="assets/ui-image-1.png" alt="شعار رفيق القرآن">
           <div style="min-width:0;flex:1">
             <div class="font-bold" style="line-height:1.2;font-size:15px">رفيق القرآن</div>
-            <div class="text-xs text-muted" style="margin-top:2px">مساعدك الذكي لحفظ القرآن</div>
             <div class="today-date-box text-xs">
-              <span>${formatArabicDateWithDay(formatDate(new Date()))}</span>
+              <span class="text-muted">${formatArabicDateWithDay(formatDate(new Date()))}</span>
               <span style="opacity:0.5">•</span>
               <span class="hijri-date">${formatHijriDate(new Date())}</span>
             </div>
           </div>
         </div>
         <div class="flex gap-1">
-          <button class="icon-btn" onclick="toggleTheme()" aria-label="تبديل الوضع">${document.documentElement.classList.contains('dark') ? ICONS.sun : ICONS.moon}</button>
+          <button class="icon-btn" onclick="toggleTheme()" aria-label="تبديل الوضع">${document.documentElement.classList.contains('dark') ? ICONS.moon : ICONS.sun}</button>
           <button class="icon-btn" onclick="openSettings()" aria-label="الإعدادات">${ICONS.settings}</button>
         </div>
       </div>
@@ -72,14 +81,13 @@ function render() {
       <div class="container-app">
         <div class="bottomnav-inner">
           ${renderNavBtn('calendar', 'التقويم', ICONS.calendar)}
-          ${renderNavBtn('mistakes', 'أخطائي', ICONS.alert, state.mistakes.filter(m => !m.resolved).length)}
-          ${renderNavBtn('dashboard', 'الرئيسية', ICONS.book, null, true)}
-          ${renderNavBtn('test', 'اختبر', ICONS.list)}
-          ${renderNavBtn('reports', 'التقارير', ICONS.chart)}
+          ${renderNavBtn('dashboard', 'الرئيسية', ICONS.home, null, true)}
+          ${renderNavBtn('more', 'المزيد', ICONS.grid)}
         </div>
       </div>
     </nav>
     ${app_settingsOpen ? renderSettings() : ''}
+    <div id="audio-player-fab" class="audio-player-fab"></div>
   `;
 }
 
@@ -387,67 +395,41 @@ function renderDashboard() {
   const unresolvedMistakes = state.mistakes.filter(m => !m.resolved);
   const overallScore = Math.round((stats.avgMemorizeScore * 0.4 + stats.avgReviewScore * 0.3 + stats.avgTestScore * 0.3) || 0);
 
-  // رسائل تحفيزية متغيرة
+  // رسائل تحفيزية متغيرة (بدون إيموجي)
   const motivationalMsgs = [
-    `اليوم ${toAr(stats.currentDay)} من رحلتك مع كتاب الله 🌿`,
-    `استمر يا ${esc(u.name)}، كل آية تخطو بك نحو الجنة ✨`,
-    `نسبة إنجازك: ${toAr(stats.memorizationProgress)}% — رائع! 🌟`,
-    `حفظت ${toAr(stats.memorizedVerses)} آية حتى الآن، ما شاء الله 🌙`,
-    `${toAr(streak)} ${streak === 1 ? 'يوم متتالٍ' : 'أيام متتالية'} من الالتزام 💚`
+    `اليوم ${toAr(stats.currentDay)} من رحلتك مع كتاب الله`,
+    `استمر يا ${esc(u.name)}، كل آية تخطو بك خطوة`,
+    `نسبة إنجازك: ${toAr(stats.memorizationProgress)}% — واصل التقدم`,
+    `حفظت ${toAr(stats.memorizedVerses)} آية حتى الآن، أحسنت`,
+    `${toAr(streak)} ${streak === 1 ? 'يوم متتالٍ' : 'أيام متتالية'} من الالتزام`
   ];
   const motivational = motivationalMsgs[Math.floor(new Date().getHours() / 5) % motivationalMsgs.length];
-
-  // حالة المهام
-  const tasks = [];
-  if (!isRest && activeDay) {
-    tasks.push({
-      id: 'memorize', icon: '📖', title: 'حفظ جديد',
-      desc: `${esc(activeDay.surahName)} • آيات ${toAr(activeDay.fromAyah)}-${toAr(activeDay.toAyah)}`,
-      progress: activeDay.memorizeSession?.completed ? 100 : 0,
-      completed: activeDay.memorizeSession?.completed,
-      action: `navigate('day', ${activeIdx})`, actionLabel: 'ابدأ',
-      color: ''
-    });
-    if (u.mode === 'memorize_review' && activeDay.reviewRange) {
-      tasks.push({
-        id: 'review', icon: '🔄', title: 'مراجعة',
-        desc: esc(activeDay.reviewRange),
-        progress: activeDay.reviewSession ? 100 : 0,
-        completed: !!activeDay.reviewSession,
-        action: `navigate('day', ${activeIdx})`, actionLabel: 'راجع',
-        color: 'gold'
-      });
-    }
-    tasks.push({
-      id: 'test', icon: '🧠', title: 'اختبر حفظي',
-      desc: `اختبار سريع على ما حفظته`,
-      progress: activeDay.testSession ? activeDay.testSession.score : 0,
-      completed: activeDay.testSession && activeDay.testSession.score >= 80,
-      action: `navigate('test')`, actionLabel: 'اختبر',
-      color: ''
-    });
-    tasks.push({
-      id: 'evaluate', icon: '⭐', title: 'قيّم يومك',
-      desc: activeDay.dayEvaluation ? `آخر تقييم: ${toAr(activeDay.dayEvaluation.final)}/100` : 'سجّل تقييمك الشامل لليوم',
-      progress: activeDay.dayEvaluation?.final || 0,
-      completed: !!activeDay.dayEvaluation,
-      action: `navigate('day', ${activeIdx})`, actionLabel: 'قيّم',
-      color: 'gold'
-    });
-  }
 
   // دائرة التقدم في الـ Hero
   const memorizePct = stats.memorizationProgress;
   const circumference = 2 * Math.PI * 26;
   const dashOffset = circumference - (memorizePct / 100) * circumference;
 
+  // حساب آخر موضع قراءة
+  const lastPosition = getLastReadingPosition();
+  
+  // حساب نسبة ورد اليوم
+  let wirdProgress = 0;
+  let wirdTotal = 0;
+  let wirdDone = 0;
+  if (activeDay && !isRest) {
+    wirdTotal = activeDay.verseCount || 0;
+    wirdDone = activeDay.memorizeSession?.versesMemorized || 0;
+    wirdProgress = wirdTotal > 0 ? Math.round((wirdDone / wirdTotal) * 100) : 0;
+  }
+
   return `
     <div class="container-app" style="padding-top:var(--space-4);padding-bottom:var(--space-6)">
 
-      <!-- Hero Card - البطاقة الرئيسية -->
+      <!-- Hero Card - الترحيب -->
       <div class="hero-card slide-up">
         <svg class="hero-progress-ring" viewBox="0 0 64 64" aria-hidden="true">
-          <circle cx="32" cy="32" r="26" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="4"/>
+          <circle cx="32" cy="32" r="26" fill="none" stroke="rgba(247,241,229,0.15)" stroke-width="4"/>
           <circle cx="32" cy="32" r="26" fill="none" stroke="url(#goldGrad)" stroke-width="4"
                   stroke-linecap="round" stroke-dasharray="${circumference}"
                   stroke-dashoffset="${dashOffset}"
@@ -455,14 +437,14 @@ function renderDashboard() {
                   style="transition:stroke-dashoffset 1s var(--ease-soft)"/>
           <defs>
             <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#E8C99A"/>
-              <stop offset="100%" stop-color="#D4A574"/>
+              <stop offset="0%" stop-color="#D9B875"/>
+              <stop offset="100%" stop-color="#C69A52"/>
             </linearGradient>
           </defs>
-          <text x="32" y="36" text-anchor="middle" fill="white" font-size="13" font-weight="800" font-family="Cairo">${toAr(memorizePct)}%</text>
+          <text x="32" y="36" text-anchor="middle" fill="#F7F1E5" font-size="12" font-weight="700" font-family="IBM Plex Sans Arabic">${toAr(memorizePct)}%</text>
         </svg>
-        <div class="hero-greeting">السلام عليكم 👋</div>
-        <h1 class="hero-name">أهلًا بك يا ${esc(u.name)}</h1>
+        <div class="hero-greeting">السلام عليكم</div>
+        <h1 class="hero-name">رفيق القرآن</h1>
         <p class="hero-message">${motivational}</p>
         <div class="hero-stats">
           <div class="hero-stat">
@@ -482,50 +464,114 @@ function renderDashboard() {
 
       ${isRest ? `
         <div class="card card-gold slide-up" style="margin-top:var(--space-4)">
-          <div class="card-pad text-center">
-            <div style="font-size:48px;margin-bottom:8px">🌿</div>
-            <h3 class="font-bold text-lg mb-1">يوم راحتك يا ${esc(u.name)}</h3>
-            <p class="text-sm text-muted">استرح وستكون قادرًا على المتابعة غدًا بإذن الله</p>
+          <div class="card-pad flex items-center gap-3">
+            <div class="task-icon gold">${ICONS.moon}</div>
+            <div class="flex-1">
+              <h3 class="font-bold text-base" style="color:var(--fg-strong)">يوم راحتك يا ${esc(u.name)}</h3>
+              <p class="text-sm text-muted mt-1">استرح وستكون قادرًا على المتابعة غدًا بإذن الله</p>
+            </div>
           </div>
         </div>
       ` : ''}
 
-      <!-- رسالة اليوم -->
-      ${(() => {
-        const msg = getDailyMessage(new Date());
-        return `
-          <div class="card daily-message slide-up" style="margin-top:var(--space-4)">
-            <div class="card-pad" style="position:relative">
-              <div class="badge badge-gold mb-2">✨ رسالة اليوم</div>
-              <div class="font-bold text-lg mb-1" style="color:var(--fg-strong)">${msg.title}</div>
-              <div class="text-sm" style="color:var(--muted-fg)">${msg.text}</div>
+      <!-- ورد اليوم - Wird Card -->
+      ${!isRest && activeDay ? `
+        <div class="wird-card slide-up" style="margin-top:var(--space-4)">
+          <div class="wird-card-label">
+            ${ICONS.bookOpen}
+            <span>ورد اليوم</span>
+          </div>
+          <div class="wird-card-surah">${esc(activeDay.surahName)}</div>
+          <div class="wird-card-detail">الآيات ${toAr(activeDay.fromAyah)} إلى ${toAr(activeDay.toAyah)} • ${toAr(activeDay.verseCount)} آية</div>
+          <div class="wird-card-progress-wrap">
+            <div class="wird-card-progress-pct">${toAr(wirdProgress)}%</div>
+            <div class="wird-card-progress-bar">
+              <div class="wird-card-progress-fill" style="width:${wirdProgress}%"></div>
             </div>
           </div>
-        `;
-      })()}
+          <button class="btn btn-gold btn-block" onclick="navigate('day', ${activeIdx})">
+            ${ICONS.play}
+            <span>ابدأ الورد</span>
+          </button>
+        </div>
+      ` : ''}
+
+      <!-- أكمل من حيث توقفت -->
+      ${lastPosition ? `
+        <div class="card slide-up" style="margin-top:var(--space-4)">
+          <div class="card-pad flex items-center gap-3">
+            <div class="task-icon">${ICONS.bookmark}</div>
+            <div class="flex-1">
+              <div class="text-xs text-muted mb-1">أكمل من حيث توقفت</div>
+              <div class="font-bold text-base">${esc(lastPosition.surahName)}</div>
+              <div class="text-sm text-muted">الآية ${toAr(lastPosition.ayah)}</div>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="openQuranReader(${lastPosition.surah}, ${lastPosition.ayah})">
+              متابعة
+            </button>
+          </div>
+        </div>
+      ` : ''}
+
+      <!-- رحلتك مع القرآن - الإحصائيات -->
+      <div class="flex items-center justify-between" style="margin-top:var(--space-6);margin-bottom:var(--space-3)">
+        <h2 class="font-bold" style="font-size:var(--fs-md);color:var(--fg-strong)">رحلتك مع القرآن</h2>
+      </div>
+      <div class="grid grid-4 slide-up">
+        ${renderStatCard(ICONS.book, 'المحفوظ', toAr(stats.memorizedVerses), 'success')}
+        ${renderStatCard(ICONS.refresh, 'المراجَع', toAr(stats.reviewedVerses || 0), 'primary')}
+        ${renderStatCard(ICONS.flame, 'أيام الالتزام', toAr(streak), 'gold')}
+        ${renderStatCard(ICONS.trophy, 'الختمات', toAr(state.khatmas?.filter(k => k.completed).length || 0), 'warning')}
+      </div>
 
       <!-- مهام اليوم -->
-      ${tasks.length > 0 ? `
+      ${!isRest && activeDay ? `
         <div class="flex items-center justify-between" style="margin-top:var(--space-6);margin-bottom:var(--space-3)">
           <h2 class="font-bold" style="font-size:var(--fs-md);color:var(--fg-strong)">مهام اليوم</h2>
-          <span class="badge badge-primary">${toAr(tasks.filter(t => t.completed).length)}/${toAr(tasks.length)}</span>
         </div>
         <div class="stagger-cards" style="display:flex;flex-direction:column;gap:var(--space-3)">
-          ${tasks.map(t => `
-            <div class="task-card ${t.completed ? 'completed' : ''}" onclick="${t.action}">
-              <div class="task-icon ${t.color}">${t.icon}</div>
+          <div class="task-card ${activeDay.memorizeSession?.completed ? 'completed' : ''}" onclick="navigate('day', ${activeIdx})">
+            <div class="task-icon">${ICONS.memorize}</div>
+            <div class="task-info">
+              <div class="task-title">حفظ جديد</div>
+              <div class="task-desc">${esc(activeDay.surahName)} • آيات ${toAr(activeDay.fromAyah)}-${toAr(activeDay.toAyah)}</div>
+            </div>
+            <button class="btn ${activeDay.memorizeSession?.completed ? 'btn-success' : 'btn-primary'} btn-sm" onclick="event.stopPropagation();navigate('day', ${activeIdx})">
+              ${activeDay.memorizeSession?.completed ? ICONS.check : ICONS.play}
+            </button>
+          </div>
+          ${u.mode === 'memorize_review' && activeDay.reviewRange ? `
+            <div class="task-card ${activeDay.reviewSession ? 'completed' : ''}" onclick="navigate('day', ${activeIdx})">
+              <div class="task-icon gold">${ICONS.review}</div>
               <div class="task-info">
-                <div class="task-title">${t.title}</div>
-                <div class="task-desc">${t.desc}</div>
-                ${!t.completed && t.progress > 0 ? `
-                  <div class="progress task-progress"><div class="progress-bar" style="width:${t.progress}%"></div></div>
-                ` : ''}
+                <div class="task-title">مراجعة</div>
+                <div class="task-desc">${esc(activeDay.reviewRange)}</div>
               </div>
-              <button class="btn ${t.completed ? 'btn-success' : 'btn-primary'} btn-sm" onclick="event.stopPropagation();${t.action}">
-                ${t.completed ? '✓ تم' : t.actionLabel}
+              <button class="btn ${activeDay.reviewSession ? 'btn-success' : 'btn-outline'} btn-sm" onclick="event.stopPropagation();navigate('day', ${activeIdx})">
+                ${activeDay.reviewSession ? ICONS.check : 'راجع'}
               </button>
             </div>
-          `).join('')}
+          ` : ''}
+          <div class="task-card ${activeDay.testSession && activeDay.testSession.score >= 80 ? 'completed' : ''}" onclick="navigate('test')">
+            <div class="task-icon">${ICONS.quiz}</div>
+            <div class="task-info">
+              <div class="task-title">اختبر حفظي</div>
+              <div class="task-desc">${activeDay.testSession ? `آخر نتيجة: ${toAr(activeDay.testSession.score)}%` : 'اختبار سريع على ما حفظته'}</div>
+            </div>
+            <button class="btn ${activeDay.testSession && activeDay.testSession.score >= 80 ? 'btn-success' : 'btn-outline'} btn-sm" onclick="event.stopPropagation();navigate('test')">
+              ${activeDay.testSession && activeDay.testSession.score >= 80 ? ICONS.check : 'اختبر'}
+            </button>
+          </div>
+          <div class="task-card ${activeDay.dayEvaluation ? 'completed' : ''}" onclick="navigate('day', ${activeIdx})">
+            <div class="task-icon gold">${ICONS.star}</div>
+            <div class="task-info">
+              <div class="task-title">قيّم يومك</div>
+              <div class="task-desc">${activeDay.dayEvaluation ? `آخر تقييم: ${toAr(activeDay.dayEvaluation.final)}/100` : 'سجّل تقييمك الشامل'}</div>
+            </div>
+            <button class="btn ${activeDay.dayEvaluation ? 'btn-success' : 'btn-outline'} btn-sm" onclick="event.stopPropagation();navigate('day', ${activeIdx})">
+              ${activeDay.dayEvaluation ? ICONS.check : 'قيّم'}
+            </button>
+          </div>
         </div>
       ` : ''}
 
@@ -556,33 +602,6 @@ function renderDashboard() {
         </div>
       </div>
 
-      <!-- بطاقات الإحصائيات -->
-      <div class="grid grid-4 slide-up" style="margin-top:var(--space-4)">
-        ${renderStatCard(ICONS.book, 'الآيات المحفوظة', toAr(stats.memorizedVerses), 'success')}
-        ${renderStatCard(ICONS.award, 'السور المكتملة', toAr(stats.completedSurahs), 'gold')}
-        ${renderStatCard(ICONS.list, 'الاختبارات', toAr(stats.testCount), 'primary')}
-        ${renderStatCard(ICONS.trend, 'نسبة الالتزام', `${toAr(stats.commitmentRate)}%`, stats.commitmentRate >= 70 ? 'success' : stats.commitmentRate >= 50 ? 'warning' : 'danger')}
-      </div>
-
-      <!-- متوسط التقييمات -->
-      ${(stats.avgMemorizeScore > 0 || stats.avgReviewScore > 0 || stats.avgTestScore > 0) ? `
-        <div class="card slide-up" style="margin-top:var(--space-4)">
-          <div class="card-pad">
-            <h3 class="text-base font-bold flex items-center gap-2 mb-3">${ICONS.sparkles} متوسط تقييماتك</h3>
-            ${stats.avgMemorizeScore > 0 ? renderScoreRow('متوسط الحفظ', stats.avgMemorizeScore) : ''}
-            ${stats.avgReviewScore > 0 ? renderScoreRow('متوسط المراجعة', stats.avgReviewScore) : ''}
-            ${stats.avgTestScore > 0 ? renderScoreRow('متوسط الاختبارات', stats.avgTestScore) : ''}
-            <div class="pt-3 mt-3 border-t">
-              <div class="flex justify-between mb-2">
-                <span class="text-sm font-semibold">التقييم الشامل</span>
-                <span class="text-2xl font-extrabold ${scoreColor(overallScore)}">${toAr(overallScore)}</span>
-              </div>
-              <div class="progress"><div class="progress-bar" style="width:${overallScore}%"></div></div>
-            </div>
-          </div>
-        </div>
-      ` : ''}
-
       <!-- باقٍ على نهاية الخطة -->
       <div class="card card-premium slide-up" style="margin-top:var(--space-4)">
         <div class="card-pad flex justify-between items-center">
@@ -590,30 +609,8 @@ function renderDashboard() {
             <div class="text-sm" style="opacity:0.85;margin-bottom:4px">باقٍ على نهاية خطتك</div>
             <div class="text-2xl font-extrabold">${formatDuration(stats.daysRemaining)}</div>
           </div>
-          <div style="color:var(--light-gold);opacity:0.6">${ICONS.calendar.replace('class="icon"', 'class="icon" style="width:40px;height:40px"')}</div>
+          <div style="color:var(--gold-light);opacity:0.7">${ICONS.calendar.replace('class="icon"', 'class="icon" style="width:36px;height:36px"')}</div>
         </div>
-      </div>
-
-      <!-- روابط سريعة للإنجازات -->
-      <div class="grid grid-2 slide-up" style="margin-top:var(--space-4)">
-        <button class="card card-pressable" onclick="navigate('achievements')" style="border:none;text-align:right;cursor:pointer;font-family:inherit;color:inherit">
-          <div class="card-pad flex items-center gap-3">
-            <div class="task-icon gold">${ICONS.award.replace('class="icon"', 'class="icon icon-lg"')}</div>
-            <div>
-              <div class="font-bold text-sm" style="color:var(--fg)">الإنجازات</div>
-              <div class="text-xs text-muted">شاراتك ومكافآتك</div>
-            </div>
-          </div>
-        </button>
-        <button class="card card-pressable" onclick="navigate('reports')" style="border:none;text-align:right;cursor:pointer;font-family:inherit;color:inherit">
-          <div class="card-pad flex items-center gap-3">
-            <div class="task-icon">${ICONS.chart.replace('class="icon"', 'class="icon icon-lg"')}</div>
-            <div>
-              <div class="font-bold text-sm" style="color:var(--fg)">التقارير</div>
-              <div class="text-xs text-muted">تقارير أدائك المفصلة</div>
-            </div>
-          </div>
-        </button>
       </div>
 
       <!-- اقتراحات ذكية -->
@@ -622,7 +619,7 @@ function renderDashboard() {
           <div class="card-pad">
             <h3 class="text-base font-bold flex items-center gap-2 mb-3">${ICONS.sparkles} اقتراحات ذكية</h3>
             ${state.suggestions.slice(0, 3).map(s => `
-              <div class="flex items-start gap-3 p-3 mb-2" style="border-radius:var(--radius-md);border:1px solid ${s.severity === 'warning' ? 'rgba(217,119,6,0.3)' : s.severity === 'success' ? 'rgba(22,163,74,0.3)' : 'rgba(23,107,85,0.2)'};background:${s.severity === 'warning' ? 'var(--warning-soft)' : s.severity === 'success' ? 'var(--success-soft)' : 'var(--primary-light)'}">
+              <div class="flex items-start gap-3 p-3 mb-2" style="border-radius:var(--radius-md);border:1px solid ${s.severity === 'warning' ? 'var(--warning-soft)' : s.severity === 'success' ? 'var(--success-soft)' : 'var(--primary-light)'};background:${s.severity === 'warning' ? 'var(--warning-soft)' : s.severity === 'success' ? 'var(--success-soft)' : 'var(--primary-light)'}">
                 <div class="flex-1 text-sm">${esc(s.message)}</div>
                 <button class="btn btn-sm btn-ghost" onclick="clearSuggestion('${s.id}')">حسنًا</button>
               </div>
@@ -637,7 +634,7 @@ function renderDashboard() {
           <div class="card-pad">
             <div class="flex justify-between items-center mb-3">
               <h3 class="text-base font-bold flex items-center gap-2">${ICONS.alert} آيات تحتاج إلى مراجعة</h3>
-              <button class="btn btn-sm btn-ghost" onclick="navigate('mistakes')">عرض الكل ${ICONS.chevron_left}</button>
+              <button class="btn btn-sm btn-ghost" onclick="navigate('mistakes')">عرض الكل ${ICONS.chevronLeft}</button>
             </div>
             ${unresolvedMistakes.slice(0, 3).map(m => `
               <div class="flex justify-between items-center p-3" style="background:var(--secondary-bg);border-radius:var(--radius-md);margin-bottom:8px;font-size:13px">
@@ -651,6 +648,28 @@ function renderDashboard() {
       ` : ''}
     </div>
   `;
+}
+
+// ================== آخر موضع قراءة - Last Reading Position ==================
+function getLastReadingPosition() {
+  try {
+    const data = localStorage.getItem('rafiq_last_position');
+    if (!data) return null;
+    const pos = JSON.parse(data);
+    const meta = getSurahMeta(pos.surah);
+    return { ...pos, surahName: meta ? meta.name : '' };
+  } catch (e) { return null; }
+}
+
+function saveLastReadingPosition(surah, ayah) {
+  try {
+    localStorage.setItem('rafiq_last_position', JSON.stringify({ surah, ayah, date: new Date().toISOString() }));
+  } catch (e) {}
+}
+
+function openQuranReader(surah, ayah) {
+  app_quranReader = { surah, ayah: ayah || 1, scroll: true };
+  navigate('quran-reader');
 }
 
 function renderProgressRow(label, value, color, detail) {
@@ -1888,6 +1907,1002 @@ function importJsonData(event) {
     }
   };
   reader.readAsText(file);
+}
+
+// ================== NEW PAGES GLOBALS ==================
+let app_quranReader = { surah: 1, ayah: 1, scroll: false };
+let app_quranSearchQuery = '';
+let app_adhkarTab = null;
+let app_adhkarCounters = {};
+let app_tadabburFormOpen = false;
+let app_tadabburForm = null;
+let app_notebookTab = null;
+let app_notebookFormOpen = false;
+let app_notebookForm = null;
+let app_khatmaFormOpen = false;
+let app_khatmaForm = null;
+
+// ================== MORE PAGE ==================
+function renderMore() {
+  const items = [
+    { view: 'quran', icon: 'quran', title: 'القرآن الكريم', desc: 'تصفح سور القرآن مع التلاوة' },
+    { view: 'memorize', icon: 'memorize', title: 'حفظي', desc: 'متابعة تقدم حفظك وإحصائياته' },
+    { view: 'review', icon: 'review', title: 'مراجعتي', desc: 'مراجعة ما حفظته وتثبيته' },
+    { view: 'test', icon: 'quiz', title: 'اختبر حفظي', desc: 'اختبارات سريعة على المحفوظ' },
+    { view: 'tajweed', icon: 'tajweed', title: 'التجويد', desc: 'أحكام التجويد مع الأمثلة' },
+    { view: 'adhkar', icon: 'adhkar', title: 'الأذكار', desc: 'أذكار الصباح والمساء وغيرها' },
+    { view: 'tadabbur', icon: 'tadabbur', title: 'التدبر', desc: 'تدبر آيات القرآن الكريم' },
+    { view: 'notebook', icon: 'notebook', title: 'دفتر القرآن', desc: 'ملاحظاتك وتأملاتك وآياتك المؤثرة' },
+    { view: 'khatma', icon: 'khatma', title: 'الختمة', desc: 'متابعة ختماتك للقرآن الكريم' },
+    { view: 'achievements', icon: 'achievements', title: 'الإنجازات', desc: 'إنجازاتك في رحلة الحفظ' },
+    { view: 'reports', icon: 'reports', title: 'التقارير', desc: 'تقارير تقدمك الأسبوعية والشهرية' },
+  ];
+  return `
+    <div class="container-app py-4" style="padding-bottom:24px">
+      <button class="flex items-center gap-1 text-sm text-muted mb-4" style="background:none;border:none;cursor:pointer;color:var(--muted-fg);font-family:inherit" onclick="navigate('dashboard')">${ICONS.arrow_right} رجوع</button>
+      <div class="flex items-center gap-2 mb-1">${ICONS.grid}<h1 class="text-xl font-bold">المزيد</h1></div>
+      <p class="text-sm text-muted mb-4">جميع الأقسام في مكان واحد</p>
+      ${items.map(item => `
+        <button class="more-list-item" onclick="navigate('${item.view}')">
+          <div class="more-list-item-icon">${ICONS[item.icon] || ICONS.book}</div>
+          <div class="more-list-item-text">
+            <div class="more-list-item-title">${item.title}</div>
+            <div class="more-list-item-desc">${item.desc}</div>
+          </div>
+          ${ICONS.chevronLeft}
+        </button>
+      `).join('')}
+      <button class="more-list-item" onclick="openSettings()">
+        <div class="more-list-item-icon gold">${ICONS.settings}</div>
+        <div class="more-list-item-text">
+          <div class="more-list-item-title">الإعدادات</div>
+          <div class="more-list-item-desc">تعديل بياناتك وخطتك</div>
+        </div>
+        ${ICONS.chevronLeft}
+      </button>
+    </div>
+  `;
+}
+
+// ================== QURAN LIST & READER ==================
+function renderQuranList() {
+  const query = app_quranSearchQuery || '';
+  const surahs = searchSurahs(query);
+  return `
+    <div class="container-app py-4" style="padding-bottom:24px">
+      <button class="flex items-center gap-1 text-sm text-muted mb-4" style="background:none;border:none;cursor:pointer;color:var(--muted-fg);font-family:inherit" onclick="navigate('dashboard')">${ICONS.arrow_right} رجوع</button>
+      <div class="flex items-center gap-2 mb-1">${ICONS.quran}<h1 class="text-xl font-bold">القرآن الكريم</h1></div>
+      <p class="text-sm text-muted mb-4">${toAr(SURAH_META.length)} سورة • اضغط على أي سورة لقراءتها</p>
+      <div class="search-input-wrap">
+        <span class="search-input-icon">${ICONS.search}</span>
+        <input type="text" class="search-input" placeholder="ابحث عن سورة بالاسم أو الرقم..." value="${esc(query)}" oninput="searchSurahsInput(this.value)" />
+      </div>
+      ${surahs.length === 0 ? `
+        <div class="card" style="border-style:dashed"><div class="card-pad text-center py-8">
+          ${ICONS.empty}
+          <p class="font-semibold mt-3">لا توجد نتائج</p>
+          <p class="text-sm text-muted mt-1">جرّب كلمة بحث أخرى</p>
+        </div></div>
+      ` : ''}
+      ${surahs.map(s => {
+        const memProgress = getSurahMemorizationProgress(s.number);
+        return `
+          <button class="more-list-item" onclick="openQuranReader(${s.number}, 1)">
+            <div class="more-list-item-icon gold" style="font-weight:700;font-size:14px">${toAr(s.number)}</div>
+            <div class="more-list-item-text">
+              <div class="more-list-item-title" style="font-family:var(--font-quran)">${esc(s.name)}</div>
+              <div class="more-list-item-desc">${toAr(s.ayahCount)} آية • ${s.revelationType === 'meccan' ? 'مكية' : 'مدنية'}${memProgress > 0 ? ` • محفوظ ${toAr(memProgress)}%` : ''}</div>
+            </div>
+            ${ICONS.chevronLeft}
+          </button>
+        `;
+      }).join('')}
+    </div>
+  `;
+}
+
+function searchSurahs(query) {
+  if (!query || !query.trim()) return SURAH_META;
+  const q = query.trim();
+  const qLower = q.toLowerCase();
+  return SURAH_META.filter(s =>
+    s.name.includes(q) ||
+    String(s.number).includes(q) ||
+    (s.englishName || '').toLowerCase().includes(qLower)
+  );
+}
+
+function searchSurahsInput(value) {
+  app_quranSearchQuery = value;
+  render();
+  setTimeout(() => {
+    const i = document.querySelector('.search-input');
+    if (i) { i.focus(); const len = i.value.length; i.setSelectionRange(len, len); }
+  }, 0);
+}
+
+function getSurahMemorizationProgress(surah) {
+  if (!state.plan) return 0;
+  const meta = getSurahMeta(surah);
+  if (!meta) return 0;
+  let memorized = 0;
+  for (const d of state.plan.days) {
+    if (d.surahNumber === surah && d.memorizeSession && d.memorizeSession.completed) {
+      memorized += d.memorizeSession.versesMemorized || 0;
+    }
+  }
+  return meta.ayahCount > 0 ? Math.min(100, Math.round((memorized / meta.ayahCount) * 100)) : 0;
+}
+
+function renderQuranReader() {
+  if (!app_quranReader || !app_quranReader.surah) {
+    app_quranReader = { surah: 1, ayah: 1, scroll: false };
+  }
+  const surahNum = app_quranReader.surah;
+  const meta = getSurahMeta(surahNum);
+  if (!meta) return `<div class="container-app py-4 text-center"><p class="text-muted">السورة غير موجودة</p><button class="btn btn-primary mt-4" onclick="navigate('quran')">رجوع للسور</button></div>`;
+
+  const verses = [];
+  for (let a = 1; a <= meta.ayahCount; a++) {
+    const text = getAyahText(surahNum, a);
+    if (text) verses.push({ ayah: a, text });
+  }
+
+  saveLastReadingPosition(surahNum, app_quranReader.ayah || 1);
+
+  const showBismillah = surahNum !== 1 && surahNum !== 9;
+
+  if (app_quranReader.scroll) {
+    const targetAyah = app_quranReader.ayah || 1;
+    setTimeout(() => {
+      const el = document.getElementById('ayah-' + targetAyah);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      app_quranReader.scroll = false;
+    }, 150);
+  }
+
+  return `
+    <div class="container-app py-4" style="padding-bottom:120px">
+      <div class="flex items-center justify-between mb-4">
+        <button class="flex items-center gap-1 text-sm text-muted" style="background:none;border:none;cursor:pointer;color:var(--muted-fg);font-family:inherit" onclick="navigate('quran')">${ICONS.arrow_right} السور</button>
+        <div class="flex gap-1">
+          <button class="btn btn-outline btn-sm" ${surahNum <= 1 ? 'disabled' : ''} onclick="openQuranReader(${surahNum - 1}, 1)">${ICONS.chevronRight} السابقة</button>
+          <button class="btn btn-outline btn-sm" ${surahNum >= 114 ? 'disabled' : ''} onclick="openQuranReader(${surahNum + 1}, 1)">التالية ${ICONS.chevronLeft}</button>
+        </div>
+      </div>
+      <div class="card mb-4">
+        <div class="card-pad text-center">
+          <div class="text-xs text-muted">سورة رقم ${toAr(surahNum)}</div>
+          <h1 class="text-2xl font-bold mt-1" style="font-family:var(--font-quran);color:var(--gold-deep)">${esc(meta.name)}</h1>
+          <div class="text-sm text-muted mt-1">${toAr(meta.ayahCount)} آية • ${meta.revelationType === 'meccan' ? 'مكية' : 'مدنية'}</div>
+          <button class="btn btn-gold btn-block mt-3" onclick="playSurahFull(${surahNum})">
+            ${ICONS.play}
+            <span>تشغيل السورة كاملة</span>
+          </button>
+        </div>
+      </div>
+      ${showBismillah ? `<div class="bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>` : ''}
+      <div class="card">
+        <div class="card-pad">
+          <div class="verse-list font-quran text-right">
+            ${verses.map(v => `
+              <div class="verse-item" id="ayah-${v.ayah}" style="cursor:pointer;padding:10px 4px;border-radius:8px;transition:background 0.2s" onclick="toggleAyahTools(${v.ayah})">
+                <span class="verse-num">${toAr(v.ayah)}</span>
+                <p class="verse-text">${esc(v.text)}</p>
+                <div id="ayah-tools-${v.ayah}" style="display:none;flex-direction:row;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:12px;padding-top:12px;border-top:1px dashed var(--border-soft)">
+                  <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();playSurahAyah(${surahNum}, ${v.ayah})">${ICONS.play} تشغيل</button>
+                  <button class="btn btn-outline btn-sm" onclick="event.stopPropagation();copyAyah(${surahNum}, ${v.ayah})">${ICONS.copy} نسخ</button>
+                  <button class="btn btn-outline btn-sm" onclick="event.stopPropagation();addToReviewFromReader(${surahNum}, ${v.ayah})">${ICONS.bookmark} للمراجعة</button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function toggleAyahTools(ayah) {
+  const el = document.getElementById('ayah-tools-' + ayah);
+  if (el) el.style.display = el.style.display === 'none' ? 'flex' : 'none';
+}
+
+function playSurahAyah(surah, ayah) {
+  playAyah(surah, ayah);
+  toast('جاري تشغيل الآية', 'info');
+}
+
+function copyAyah(surah, ayah) {
+  const text = getAyahText(surah, ayah);
+  const meta = getSurahMeta(surah);
+  if (!text) { toast('لا يوجد نص للآية', 'error'); return; }
+  const fullText = `${text} ﴿${toAr(ayah)}﴾\n— ${meta ? meta.name : ''}`;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(fullText).then(() => toast('تم نسخ الآية', 'success')).catch(() => fallbackCopy(fullText));
+  } else {
+    fallbackCopy(fullText);
+  }
+}
+
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); toast('تم نسخ الآية', 'success'); }
+  catch (e) { toast('تعذر النسخ', 'error'); }
+  document.body.removeChild(ta);
+}
+
+function addToReviewFromReader(surah, ayah) {
+  const existing = state.mistakes.find(m => m.surah === surah && m.ayah === ayah && !m.resolved);
+  if (existing) { toast('الآية موجودة مسبقًا في قائمة المراجعة', 'info'); return; }
+  const meta = getSurahMeta(surah);
+  state.mistakes.push({
+    id: uid('m'), surah, surahName: meta ? meta.name : '', ayah, text: '',
+    firstErrorDate: new Date().toISOString(), lastErrorDate: new Date().toISOString(),
+    errorCount: 0, lastResult: 0, reviewCount: 0, stability: 3, resolved: false,
+  });
+  saveState();
+  toast('تمت إضافة الآية لقائمة المراجعة', 'success');
+}
+
+// ================== TAJWEED ==================
+function renderTajweed() {
+  const byCategory = {};
+  const categoryOrder = [];
+  for (const rule of TAJWEED_RULES) {
+    if (!byCategory[rule.category]) { byCategory[rule.category] = []; categoryOrder.push(rule.category); }
+    byCategory[rule.category].push(rule);
+  }
+  return `
+    <div class="container-app py-4" style="padding-bottom:24px">
+      <button class="flex items-center gap-1 text-sm text-muted mb-4" style="background:none;border:none;cursor:pointer;color:var(--muted-fg);font-family:inherit" onclick="navigate('dashboard')">${ICONS.arrow_right} رجوع</button>
+      <div class="flex items-center gap-2 mb-1">${ICONS.tajweed}<h1 class="text-xl font-bold">أحكام التجويد</h1></div>
+      <p class="text-sm text-muted mb-4">${toAr(TAJWEED_RULES.length)} قاعدة تجويدية في ${toAr(categoryOrder.length)} فئات</p>
+      ${categoryOrder.map(category => `
+        <div class="flex items-center gap-2 mt-6 mb-3">
+          <span class="badge badge-gold">${toAr(byCategory[category].length)}</span>
+          <h2 class="text-base font-bold" style="color:var(--gold-deep)">${esc(category)}</h2>
+        </div>
+        ${byCategory[category].map(r => `
+          <div class="tajweed-card">
+            <div class="tajweed-card-title">${ICONS.mic}<span>${esc(r.title)}</span></div>
+            <div class="tajweed-card-section">
+              <div class="tajweed-card-section-label">التعريف</div>
+              <div class="tajweed-card-section-text">${esc(r.definition)}</div>
+            </div>
+            <div class="tajweed-card-section">
+              <div class="tajweed-card-section-label">المثال</div>
+              <div class="tajweed-card-section-text quran">${esc(r.example)}</div>
+            </div>
+            <div class="tajweed-card-section">
+              <div class="tajweed-card-section-label">ملاحظة</div>
+              <div class="tajweed-card-section-text">${esc(r.note)}</div>
+            </div>
+          </div>
+        `).join('')}
+      `).join('')}
+    </div>
+  `;
+}
+
+// ================== ADHKAR ==================
+function renderAdhkar() {
+  if (!app_adhkarTab) app_adhkarTab = ADHKAR_CATEGORIES[0].id;
+  const cat = ADHKAR_CATEGORIES.find(c => c.id === app_adhkarTab) || ADHKAR_CATEGORIES[0];
+  return `
+    <div class="container-app py-4" style="padding-bottom:24px">
+      <button class="flex items-center gap-1 text-sm text-muted mb-4" style="background:none;border:none;cursor:pointer;color:var(--muted-fg);font-family:inherit" onclick="navigate('dashboard')">${ICONS.arrow_right} رجوع</button>
+      <div class="flex items-center gap-2 mb-1">${ICONS.adhkar}<h1 class="text-xl font-bold">الأذكار</h1></div>
+      <p class="text-sm text-muted mb-4">${toAr(cat.items.length)} ذكر في ${esc(cat.title)}</p>
+      <div class="tabs mb-4" style="display:flex;flex-wrap:wrap;gap:6px">
+        ${ADHKAR_CATEGORIES.map(c => `<button class="tab ${c.id === app_adhkarTab ? 'active' : ''}" onclick="app_adhkarTab='${c.id}';render()">${ICONS[c.icon] || ICONS.beads} ${c.title}</button>`).join('')}
+      </div>
+      ${cat.items.map((item, idx) => {
+        const counterKey = cat.id + '-' + idx;
+        const current = app_adhkarCounters[counterKey] || 0;
+        const isComplete = current >= item.count;
+        return `
+          <div class="zikr-card ${isComplete ? 'completed' : ''}">
+            <div class="zikr-text font-quran">${esc(item.text)}</div>
+            <div class="zikr-counter">
+              <button class="zikr-counter-btn" onclick="resetZikrCounter('${counterKey}')" aria-label="إعادة تعيين" title="إعادة تعيين">${ICONS.refresh}</button>
+              <div class="zikr-counter-display">
+                <div class="zikr-counter-current">${toAr(current)}</div>
+                <div class="zikr-counter-target">من ${toAr(item.count)}</div>
+              </div>
+              <button class="zikr-counter-btn" onclick="incrementZikrCounter('${counterKey}', ${item.count})" aria-label="زيادة" title="زيادة">${ICONS.plus}</button>
+            </div>
+            <div class="zikr-source">${esc(item.source)}</div>
+            ${isComplete ? `<div class="badge badge-gold mt-2" style="display:inline-flex;align-items:center;gap:4px">${ICONS.check} تم الإكمال</div>` : ''}
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+}
+
+function incrementZikrCounter(key, target) {
+  const cur = app_adhkarCounters[key] || 0;
+  if (cur >= target) return;
+  app_adhkarCounters[key] = cur + 1;
+  if (app_adhkarCounters[key] >= target) {
+    toast('تم إكمال هذا الذكر، تقبل الله منك', 'success');
+  }
+  render();
+}
+
+function resetZikrCounter(key) {
+  app_adhkarCounters[key] = 0;
+  render();
+}
+
+// ================== TADABBUR ==================
+function renderTadabbur() {
+  const items = loadTadabbur();
+  return `
+    <div class="container-app py-4" style="padding-bottom:24px">
+      <button class="flex items-center gap-1 text-sm text-muted mb-4" style="background:none;border:none;cursor:pointer;color:var(--muted-fg);font-family:inherit" onclick="navigate('dashboard')">${ICONS.arrow_right} رجوع</button>
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <div class="flex items-center gap-2">${ICONS.tadabbur}<h1 class="text-xl font-bold">التدبر</h1></div>
+          <p class="text-sm text-muted mt-1">${toAr(items.length)} تدبر محفوظ</p>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="openTadabburForm()">${ICONS.plus} تدبر جديد</button>
+      </div>
+      ${app_tadabburFormOpen ? renderTadabburForm() : ''}
+      ${items.length === 0 && !app_tadabburFormOpen ? `
+        <div class="card" style="border-style:dashed"><div class="card-pad text-center py-8">
+          ${ICONS.empty}
+          <p class="font-semibold mt-3">لم تضف أي تدبر بعد</p>
+          <p class="text-sm text-muted mt-1">ابدأ بتدبر آية من القرآن وسجل ما فهمته منها</p>
+          <button class="btn btn-primary mt-3" onclick="openTadabburForm()">${ICONS.plus} أضف أول تدبر</button>
+        </div></div>
+      ` : ''}
+      ${items.map(t => `
+        <div class="note-card">
+          <div class="note-card-header">
+            <span class="note-card-tag">${ICONS.book} ${esc(t.surahName)} - آية ${toAr(t.ayah)}</span>
+            <button class="icon-btn" onclick="deleteTadabbur('${t.id}')" aria-label="حذف">${ICONS.trash}</button>
+          </div>
+          ${t.verseText ? `<div class="note-card-verse">${esc(t.verseText)}</div>` : ''}
+          ${t.understanding ? `<div class="note-card-content"><strong>ما فهمته:</strong> ${esc(t.understanding)}</div>` : ''}
+          ${t.impact ? `<div class="note-card-content"><strong>ما أثر فيّ:</strong> ${esc(t.impact)}</div>` : ''}
+          ${t.application ? `<div class="note-card-content"><strong>ما سأطبقه:</strong> ${esc(t.application)}</div>` : ''}
+          ${t.dua ? `<div class="note-card-content"><strong>دعائي:</strong> ${esc(t.dua)}</div>` : ''}
+          <div class="note-card-date mt-2">${formatArabicDate(t.createdAt.slice(0, 10))}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function renderTadabburForm() {
+  if (!app_tadabburForm) {
+    app_tadabburForm = { surah: 1, ayah: 1, understanding: '', impact: '', application: '', dua: '' };
+  }
+  const f = app_tadabburForm;
+  const verseText = getAyahText(+f.surah, +f.ayah);
+  const meta = getSurahMeta(+f.surah);
+  return `
+    <div class="card mb-4"><div class="card-pad">
+      <h3 class="text-base font-bold flex items-center gap-2 mb-3">${ICONS.penTool} تدبر جديد</h3>
+      <div class="grid grid-2 mb-3">
+        <div>
+          <label class="label">السورة</label>
+          <select class="select" onchange="app_tadabburForm.surah=+this.value;app_tadabburForm.ayah=1;render()">
+            ${SURAH_META.map(s => `<option value="${s.number}" ${+f.surah === s.number ? 'selected' : ''}>${s.number}. ${s.name}</option>`).join('')}
+          </select>
+        </div>
+        <div>
+          <label class="label">الآية (من 1 إلى ${toAr(meta ? meta.ayahCount : 1)})</label>
+          <input type="number" class="input" min="1" max="${meta ? meta.ayahCount : 1}" value="${f.ayah}" onchange="app_tadabburForm.ayah=Math.max(1, +this.value || 1); render()" />
+        </div>
+      </div>
+      ${verseText ? `<div class="note-card-verse mb-3">${esc(verseText)}</div>` : ''}
+      <div class="mb-3"><label class="label">ما فهمته من الآية</label><textarea class="textarea" placeholder="فهمي للمعنى..." oninput="app_tadabburForm.understanding=this.value">${esc(f.understanding)}</textarea></div>
+      <div class="mb-3"><label class="label">ما أثر فيّ</label><textarea class="textarea" placeholder="ما لامسه قلبي..." oninput="app_tadabburForm.impact=this.value">${esc(f.impact)}</textarea></div>
+      <div class="mb-3"><label class="label">ما سأطبقه</label><textarea class="textarea" placeholder="كيف سأعمل بالآية..." oninput="app_tadabburForm.application=this.value">${esc(f.application)}</textarea></div>
+      <div class="mb-3"><label class="label">دعائي</label><textarea class="textarea" placeholder="دعائي بناءً على الآية..." oninput="app_tadabburForm.dua=this.value">${esc(f.dua)}</textarea></div>
+      <div class="flex gap-2">
+        <button class="btn btn-ghost" onclick="app_tadabburFormOpen=false;app_tadabburForm=null;render()">${ICONS.close} إلغاء</button>
+        <button class="btn btn-primary flex-1" onclick="saveTadabbur()">${ICONS.check} حفظ التدبر</button>
+      </div>
+    </div></div>
+  `;
+}
+
+function openTadabburForm() {
+  app_tadabburFormOpen = true;
+  app_tadabburForm = null;
+  render();
+}
+
+function addTadabbur() { openTadabburForm(); }
+
+function loadTadabbur() {
+  try { return JSON.parse(localStorage.getItem('rafiq_tadabbur') || '[]'); } catch (e) { return []; }
+}
+
+function saveTadabbur() {
+  const f = app_tadabburForm;
+  if (!f.understanding.trim() && !f.impact.trim() && !f.application.trim() && !f.dua.trim()) {
+    toast('الرجاء كتابة تدبر واحد على الأقل', 'error'); return;
+  }
+  const meta = getSurahMeta(+f.surah);
+  const items = loadTadabbur();
+  items.unshift({
+    id: uid('tad'), surah: +f.surah, surahName: meta ? meta.name : '', ayah: +f.ayah,
+    verseText: getAyahText(+f.surah, +f.ayah),
+    understanding: f.understanding.trim(), impact: f.impact.trim(),
+    application: f.application.trim(), dua: f.dua.trim(),
+    createdAt: new Date().toISOString(),
+  });
+  localStorage.setItem('rafiq_tadabbur', JSON.stringify(items));
+  app_tadabburFormOpen = false; app_tadabburForm = null;
+  toast('تم حفظ التدبر بنجاح', 'success');
+  render();
+}
+
+function deleteTadabbur(id) {
+  if (!confirm('هل تريد حذف هذا التدبر؟')) return;
+  const items = loadTadabbur().filter(t => t.id !== id);
+  localStorage.setItem('rafiq_tadabbur', JSON.stringify(items));
+  toast('تم حذف التدبر', 'info');
+  render();
+}
+
+// ================== NOTEBOOK ==================
+function renderNotebook() {
+  if (!app_notebookTab) app_notebookTab = QURAN_NOTE_CATEGORIES[0].id;
+  const cat = QURAN_NOTE_CATEGORIES.find(c => c.id === app_notebookTab) || QURAN_NOTE_CATEGORIES[0];
+  const items = loadNotebookItems(cat.id);
+  return `
+    <div class="container-app py-4" style="padding-bottom:24px">
+      <button class="flex items-center gap-1 text-sm text-muted mb-4" style="background:none;border:none;cursor:pointer;color:var(--muted-fg);font-family:inherit" onclick="navigate('dashboard')">${ICONS.arrow_right} رجوع</button>
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <div class="flex items-center gap-2">${ICONS.notebook}<h1 class="text-xl font-bold">دفتر القرآن</h1></div>
+          <p class="text-sm text-muted mt-1">${toAr(items.length)} عنصر في ${esc(cat.title)}</p>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="openNotebookForm('${cat.id}')">${ICONS.plus} إضافة</button>
+      </div>
+      <div class="tabs mb-4" style="display:flex;flex-wrap:wrap;gap:6px">
+        ${QURAN_NOTE_CATEGORIES.map(c => `<button class="tab ${c.id === app_notebookTab ? 'active' : ''}" onclick="app_notebookTab='${c.id}';app_notebookFormOpen=false;render()">${ICONS[c.icon] || ICONS.notebook} ${c.title}</button>`).join('')}
+      </div>
+      ${app_notebookFormOpen ? renderNotebookForm(cat.id) : ''}
+      ${items.length === 0 && !app_notebookFormOpen ? `
+        <div class="card" style="border-style:dashed"><div class="card-pad text-center py-8">
+          ${ICONS.empty}
+          <p class="font-semibold mt-3">لا توجد عناصر بعد</p>
+          <p class="text-sm text-muted mt-1">أضف أول عنصر في فئة "${esc(cat.title)}"</p>
+          <button class="btn btn-primary mt-3" onclick="openNotebookForm('${cat.id}')">${ICONS.plus} إضافة عنصر</button>
+        </div></div>
+      ` : ''}
+      ${items.map(item => `
+        <div class="note-card">
+          <div class="note-card-header">
+            <span class="note-card-tag">${ICONS[cat.icon] || ICONS.notebook} ${esc(cat.title)}</span>
+            <div class="flex gap-1">
+              <button class="icon-btn" onclick="editNotebookItem('${cat.id}', '${item.id}')" aria-label="تعديل">${ICONS.edit}</button>
+              <button class="icon-btn" onclick="deleteNotebookItem('${cat.id}', '${item.id}')" aria-label="حذف">${ICONS.trash}</button>
+            </div>
+          </div>
+          ${item.surah ? `<div class="note-card-verse">${esc(item.surahName || '')}${item.ayah ? ' - آية ' + toAr(item.ayah) : ''}${item.verseText ? ': ' + esc(item.verseText) : ''}</div>` : ''}
+          <div class="note-card-content">${esc(item.content)}</div>
+          <div class="note-card-date mt-2">${formatArabicDate(item.createdAt.slice(0, 10))}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function renderNotebookForm(categoryId) {
+  if (!app_notebookForm) {
+    app_notebookForm = { content: '', surah: '', ayah: '' };
+  }
+  const f = app_notebookForm;
+  const meta = f.surah ? getSurahMeta(+f.surah) : null;
+  const verseText = (f.surah && f.ayah) ? getAyahText(+f.surah, +f.ayah) : '';
+  return `
+    <div class="card mb-4"><div class="card-pad">
+      <h3 class="text-base font-bold flex items-center gap-2 mb-3">${ICONS.penTool} إضافة عنصر</h3>
+      <div class="grid grid-2 mb-3">
+        <div>
+          <label class="label">السورة (اختياري)</label>
+          <select class="select" onchange="app_notebookForm.surah=this.value?+this.value:'';app_notebookForm.ayah='';render()">
+            <option value="">— لا يوجد —</option>
+            ${SURAH_META.map(s => `<option value="${s.number}" ${String(f.surah) === String(s.number) ? 'selected' : ''}>${s.number}. ${s.name}</option>`).join('')}
+          </select>
+        </div>
+        <div>
+          <label class="label">الآية (اختياري)</label>
+          <input type="number" class="input" min="1" max="${meta ? meta.ayahCount : 1}" value="${f.ayah || ''}" onchange="app_notebookForm.ayah=this.value?Math.max(1, +this.value || 1):''; render()" placeholder="رقم الآية" />
+        </div>
+      </div>
+      ${verseText ? `<div class="note-card-verse mb-3">${esc(verseText)}</div>` : ''}
+      <div class="mb-3"><label class="label">المحتوى</label><textarea class="textarea" placeholder="اكتب هنا..." oninput="app_notebookForm.content=this.value" rows="4">${esc(f.content)}</textarea></div>
+      <div class="flex gap-2">
+        <button class="btn btn-ghost" onclick="app_notebookFormOpen=false;app_notebookForm=null;render()">${ICONS.close} إلغاء</button>
+        <button class="btn btn-primary flex-1" onclick="saveNotebookItem('${categoryId}')">${ICONS.check} حفظ</button>
+      </div>
+    </div></div>
+  `;
+}
+
+function openNotebookForm(categoryId) {
+  app_notebookFormOpen = true;
+  app_notebookForm = null;
+  render();
+}
+
+function addNotebookItem(category) { openNotebookForm(category); }
+
+function loadNotebookItems(categoryId) {
+  try { return JSON.parse(localStorage.getItem('rafiq_notebook_' + categoryId) || '[]'); } catch (e) { return []; }
+}
+
+function saveNotebookItem(categoryId) {
+  const f = app_notebookForm;
+  if (!f.content.trim()) { toast('الرجاء كتابة المحتوى', 'error'); return; }
+  const items = loadNotebookItems(categoryId);
+  const meta = f.surah ? getSurahMeta(+f.surah) : null;
+  items.unshift({
+    id: uid('note'), content: f.content.trim(),
+    surah: f.surah || null, surahName: meta ? meta.name : '',
+    ayah: f.ayah || null, verseText: (f.surah && f.ayah) ? getAyahText(+f.surah, +f.ayah) : '',
+    createdAt: new Date().toISOString(),
+  });
+  localStorage.setItem('rafiq_notebook_' + categoryId, JSON.stringify(items));
+  app_notebookFormOpen = false; app_notebookForm = null;
+  toast('تم حفظ العنصر بنجاح', 'success');
+  render();
+}
+
+function deleteNotebookItem(category, id) {
+  if (!confirm('هل تريد حذف هذا العنصر؟')) return;
+  const items = loadNotebookItems(category).filter(i => i.id !== id);
+  localStorage.setItem('rafiq_notebook_' + category, JSON.stringify(items));
+  toast('تم حذف العنصر', 'info');
+  render();
+}
+
+function editNotebookItem(category, id) {
+  const items = loadNotebookItems(category);
+  const item = items.find(i => i.id === id);
+  if (!item) return;
+  const remaining = items.filter(i => i.id !== id);
+  localStorage.setItem('rafiq_notebook_' + category, JSON.stringify(remaining));
+  app_notebookFormOpen = true;
+  app_notebookForm = {
+    content: item.content,
+    surah: item.surah || '',
+    ayah: item.ayah || '',
+  };
+  render();
+}
+
+// ================== KHATMA ==================
+function renderKhatma() {
+  const khatmas = loadKhatmas();
+  const today = formatDate(new Date());
+  return `
+    <div class="container-app py-4" style="padding-bottom:24px">
+      <button class="flex items-center gap-1 text-sm text-muted mb-4" style="background:none;border:none;cursor:pointer;color:var(--muted-fg);font-family:inherit" onclick="navigate('dashboard')">${ICONS.arrow_right} رجوع</button>
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <div class="flex items-center gap-2">${ICONS.khatma}<h1 class="text-xl font-bold">الختمة</h1></div>
+          <p class="text-sm text-muted mt-1">${toAr(khatmas.length)} ختمة مسجلة</p>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="openKhatmaForm()">${ICONS.plus} ختمة جديدة</button>
+      </div>
+      ${app_khatmaFormOpen ? renderKhatmaForm() : ''}
+      ${khatmas.length === 0 && !app_khatmaFormOpen ? `
+        <div class="card" style="border-style:dashed"><div class="card-pad text-center py-8">
+          ${ICONS.infinity}
+          <p class="font-semibold mt-3">لا توجد ختمات بعد</p>
+          <p class="text-sm text-muted mt-1">أنشئ ختمة جديدة وابدأ رحلتك مع القرآن كاملاً</p>
+          <button class="btn btn-primary mt-3" onclick="openKhatmaForm()">${ICONS.plus} أنشئ ختمة</button>
+        </div></div>
+      ` : ''}
+      ${khatmas.map(k => {
+        const startDate = new Date(k.startDate + 'T00:00:00');
+        const todayDate = new Date(today + 'T00:00:00');
+        const totalDays = k.totalDays || 30;
+        const elapsedDays = Math.max(0, Math.floor((todayDate - startDate) / (1000 * 60 * 60 * 24)));
+        const remainingDays = Math.max(0, totalDays - elapsedDays);
+        const progress = Math.min(100, Math.round((elapsedDays / totalDays) * 100));
+        const isComplete = k.completed || elapsedDays >= totalDays;
+        const dailyRate = Math.ceil(604 / totalDays);
+        const circumference = 2 * Math.PI * 32;
+        const dashOffset = circumference - (progress / 100) * circumference;
+        return `
+          <div class="khatma-card ${isComplete ? 'completed' : 'active'}">
+            <div class="flex items-start gap-4">
+              <svg class="khatma-progress-ring" viewBox="0 0 80 80" aria-hidden="true">
+                <circle cx="40" cy="40" r="32" fill="none" stroke="var(--secondary-bg)" stroke-width="6"/>
+                <circle cx="40" cy="40" r="32" fill="none" stroke="${isComplete ? 'var(--gold)' : 'var(--primary)'}" stroke-width="6"
+                        stroke-linecap="round" stroke-dasharray="${circumference}" stroke-dashoffset="${dashOffset}"
+                        transform="rotate(-90 40 40)"/>
+                <text x="40" y="44" text-anchor="middle" fill="${isComplete ? 'var(--gold-deep)' : 'var(--primary)'}" font-size="14" font-weight="700">${toAr(progress)}%</text>
+              </svg>
+              <div class="flex-1" style="min-width:0">
+                <div class="flex justify-between items-start gap-2">
+                  <div style="min-width:0">
+                    <div class="font-bold text-base">${esc(k.title)}</div>
+                    <div class="text-xs text-muted mt-1">${esc(k.typeTitle || '')}</div>
+                  </div>
+                  <button class="icon-btn" onclick="deleteKhatma('${k.id}')" aria-label="حذف">${ICONS.trash}</button>
+                </div>
+                <div class="grid grid-3 mt-3 text-xs">
+                  <div><div class="text-muted">بدأت في</div><div class="font-semibold">${formatArabicDate(k.startDate)}</div></div>
+                  <div><div class="text-muted">المدة</div><div class="font-semibold">${toAr(totalDays)} يوم</div></div>
+                  <div><div class="text-muted">المتبقي</div><div class="font-semibold">${toAr(remainingDays)} يوم</div></div>
+                </div>
+                ${!isComplete ? `<div class="bg-muted mt-3" style="border-radius:8px;padding:8px 12px;font-size:12px"><span class="text-muted">المعدل اليومي:</span> <span class="font-semibold">${toAr(dailyRate)} صفحة تقريبًا</span></div>` : `<div class="badge badge-gold mt-3" style="display:inline-flex;align-items:center;gap:4px">${ICONS.trophy} مكتملة</div>`}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+}
+
+function renderKhatmaForm() {
+  if (!app_khatmaForm) {
+    app_khatmaForm = { typeId: KHATMA_TYPES[0].id, startDate: formatDate(new Date()), totalDays: KHATMA_TYPES[0].defaultDays, title: '' };
+  }
+  const f = app_khatmaForm;
+  return `
+    <div class="card mb-4"><div class="card-pad">
+      <h3 class="text-base font-bold flex items-center gap-2 mb-3">${ICONS.infinity} ختمة جديدة</h3>
+      <div class="mb-3"><label class="label">عنوان الختمة (اختياري)</label><input class="input" value="${esc(f.title)}" placeholder="مثال: ختمة رمضان" oninput="app_khatmaForm.title=this.value" /></div>
+      <div class="mb-3">
+        <label class="label">نوع الختمة</label>
+        <div class="grid grid-1">
+          ${KHATMA_TYPES.map(t => `
+            <label class="radio-card ${f.typeId === t.id ? 'checked' : ''}" style="padding:10px">
+              <input type="radio" name="khatma-type" value="${t.id}" ${f.typeId === t.id ? 'checked' : ''} onchange="app_khatmaForm.typeId=this.value;app_khatmaForm.totalDays=${t.defaultDays};render()" style="display:none" />
+              <div class="flex-1">
+                <div class="font-semibold">${t.title}</div>
+                <div class="text-xs text-muted mt-1">${t.description}</div>
+                <div class="text-xs text-primary mt-1">المدة الافتراضية: ${toAr(t.defaultDays)} يوم</div>
+              </div>
+            </label>
+          `).join('')}
+        </div>
+      </div>
+      <div class="grid grid-2 mb-3">
+        <div><label class="label">تاريخ البداية</label><input type="date" class="input" value="${f.startDate}" onchange="app_khatmaForm.startDate=this.value" /></div>
+        <div><label class="label">عدد الأيام</label><input type="number" class="input" min="1" max="365" value="${f.totalDays}" onchange="app_khatmaForm.totalDays=Math.max(1, +this.value || 1)" /></div>
+      </div>
+      <div class="flex gap-2">
+        <button class="btn btn-ghost" onclick="app_khatmaFormOpen=false;app_khatmaForm=null;render()">${ICONS.close} إلغاء</button>
+        <button class="btn btn-primary flex-1" onclick="saveKhatma()">${ICONS.check} إنشاء الختمة</button>
+      </div>
+    </div></div>
+  `;
+}
+
+function openKhatmaForm() {
+  app_khatmaFormOpen = true;
+  app_khatmaForm = null;
+  render();
+}
+
+function createKhatma() { openKhatmaForm(); }
+
+function loadKhatmas() {
+  try { return JSON.parse(localStorage.getItem('rafiq_khatmas') || '[]'); } catch (e) { return []; }
+}
+
+function saveKhatma() {
+  const f = app_khatmaForm;
+  if (!f.startDate) { toast('الرجاء تحديد تاريخ البداية', 'error'); return; }
+  if (!f.totalDays || f.totalDays < 1) { toast('الرجاء تحديد عدد أيام صحيح', 'error'); return; }
+  const type = KHATMA_TYPES.find(t => t.id === f.typeId);
+  const khatmas = loadKhatmas();
+  khatmas.unshift({
+    id: uid('khatma'),
+    title: f.title.trim() || (type ? type.title : 'ختمة'),
+    typeId: f.typeId, typeTitle: type ? type.title : '',
+    startDate: f.startDate, totalDays: f.totalDays,
+    completed: false, createdAt: new Date().toISOString(),
+  });
+  localStorage.setItem('rafiq_khatmas', JSON.stringify(khatmas));
+  app_khatmaFormOpen = false; app_khatmaForm = null;
+  toast('تم إنشاء الختمة بنجاح', 'success');
+  render();
+}
+
+function deleteKhatma(id) {
+  if (!confirm('هل تريد حذف هذه الختمة؟')) return;
+  const khatmas = loadKhatmas().filter(k => k.id !== id);
+  localStorage.setItem('rafiq_khatmas', JSON.stringify(khatmas));
+  toast('تم حذف الختمة', 'info');
+  render();
+}
+
+// ================== MEMORIZE PAGE ==================
+function renderMemorizePage() {
+  const plan = state.plan;
+  if (!plan) return `<div class="container-app py-4 text-center"><p class="text-muted">لا توجد خطة</p></div>`;
+  const today = formatDate(new Date());
+  const stats = calculatePlanStats(plan, today);
+  const todayIdx = findCurrentDayIndex(plan, today);
+  const todayDay = plan.days[todayIdx];
+
+  const startWeek = Math.max(0, todayIdx - 6);
+  let weeklyVerses = 0;
+  for (let i = startWeek; i <= todayIdx; i++) {
+    const d = plan.days[i];
+    if (d && d.memorizeSession && d.memorizeSession.completed) weeklyVerses += d.memorizeSession.versesMemorized || 0;
+  }
+  const todayVerses = (todayDay && todayDay.memorizeSession) ? (todayDay.memorizeSession.versesMemorized || 0) : 0;
+  const totalPages = Math.round(stats.memorizedVerses / 15);
+  const totalJuz = Math.floor(totalPages / 20);
+  const quranCompletion = Math.round((stats.memorizedVerses / 6236) * 100);
+
+  const circumference = 2 * Math.PI * 28;
+  const dashOffset = circumference - (quranCompletion / 100) * circumference;
+
+  return `
+    <div class="container-app py-4" style="padding-bottom:24px">
+      <button class="flex items-center gap-1 text-sm text-muted mb-4" style="background:none;border:none;cursor:pointer;color:var(--muted-fg);font-family:inherit" onclick="navigate('dashboard')">${ICONS.arrow_right} رجوع</button>
+      <div class="flex items-center gap-2 mb-1">${ICONS.memorize}<h1 class="text-xl font-bold">حفظي</h1></div>
+      <p class="text-sm text-muted mb-4">متابعة تقدم حفظك للقرآن الكريم</p>
+
+      <div class="card mb-4"><div class="card-pad text-center">
+        <h3 class="text-base font-bold mb-3">نسبة إتمام القرآن</h3>
+        <svg viewBox="0 0 80 80" style="width:140px;height:140px;margin:0 auto;display:block" aria-hidden="true">
+          <circle cx="40" cy="40" r="28" fill="none" stroke="var(--secondary-bg)" stroke-width="6"/>
+          <circle cx="40" cy="40" r="28" fill="none" stroke="var(--primary)" stroke-width="6"
+                  stroke-linecap="round" stroke-dasharray="${circumference}" stroke-dashoffset="${dashOffset}"
+                  transform="rotate(-90 40 40)"/>
+          <text x="40" y="44" text-anchor="middle" fill="var(--primary)" font-size="14" font-weight="700">${toAr(quranCompletion)}%</text>
+        </svg>
+        <div class="text-sm text-muted mt-2">${toAr(stats.memorizedVerses)} آية من ${toAr(6236)} آية</div>
+      </div></div>
+
+      <div class="grid grid-3 mb-4">
+        ${renderStatCard(ICONS.book, 'اليوم', toAr(todayVerses), 'primary')}
+        ${renderStatCard(ICONS.trend, 'هذا الأسبوع', toAr(weeklyVerses), 'success')}
+        ${renderStatCard(ICONS.award, 'السور المكتملة', toAr(stats.completedSurahs), 'gold')}
+        ${renderStatCard(ICONS.layers, 'الأجزاء', toAr(totalJuz), 'warning')}
+        ${renderStatCard(ICONS.bookOpen, 'الصفحات', toAr(totalPages), 'primary')}
+        ${renderStatCard(ICONS.flame, 'الآيات المحفوظة', toAr(stats.memorizedVerses), 'success')}
+      </div>
+
+      <div class="card mb-4"><div class="card-pad">
+        <h3 class="text-base font-bold flex items-center gap-2 mb-3">${ICONS.chart} تقدم الحفظ</h3>
+        ${renderProgressRow('نسبة إتمام القرآن', quranCompletion, 'var(--primary)', `${toAr(stats.memorizedVerses)} / ${toAr(6236)} آية`)}
+        ${renderProgressRow('تقدم خطتك', stats.memorizationProgress, 'var(--success)', `${toAr(stats.memorizedVerses)} / ${toAr(stats.totalVerses)} آية`)}
+        ${renderProgressRow('نسبة المراجعة', stats.reviewProgress, 'var(--secondary)')}
+      </div></div>
+
+      <div class="card"><div class="card-pad">
+        <h3 class="text-base font-bold flex items-center gap-2 mb-3">${ICONS.settings} إعدادات الحفظ</h3>
+        <div class="grid grid-2 mb-3">
+          <div>
+            <div class="text-xs text-muted">عدد الآيات يوميًا</div>
+            <div class="font-bold text-lg">${plan.config.dailyAmount === 'auto' ? 'تلقائي' : toAr(plan.config.dailyAmount)}</div>
+          </div>
+          <div>
+            <div class="text-xs text-muted">نمط الخطة</div>
+            <div class="font-bold text-lg">${state.user.mode === 'memorize_review' ? 'حفظ + مراجعة' : 'حفظ فقط'}</div>
+          </div>
+          <div>
+            <div class="text-xs text-muted">${ICONS.clock} وقت الحفظ</div>
+            <div class="font-bold text-lg">${state.user.preferredMemorizeTime ? formatArabicTime(state.user.preferredMemorizeTime) : 'غير محدد'}</div>
+          </div>
+          <div>
+            <div class="text-xs text-muted">${ICONS.clock} وقت المراجعة</div>
+            <div class="font-bold text-lg">${state.user.preferredReviewTime ? formatArabicTime(state.user.preferredReviewTime) : 'غير محدد'}</div>
+          </div>
+        </div>
+        <div class="bg-muted mt-2" style="border-radius:8px;padding:12px;font-size:13px">
+          <div class="text-xs text-muted mb-2">أيام الحفظ الأسبوعية</div>
+          <div class="flex flex-wrap gap-1">
+            ${[{d:6,l:'السبت'},{d:0,l:'الأحد'},{d:1,l:'الإثنين'},{d:2,l:'الثلاثاء'},{d:3,l:'الأربعاء'},{d:4,l:'الخميس'},{d:5,l:'الجمعة'}].map(dy => {
+              const isRest = (state.user.restDayOfWeek || []).includes(dy.d);
+              return `<span class="badge ${isRest ? 'badge-warning' : 'badge-primary'}" style="font-size:11px">${dy.l}${isRest ? ' (راحة)' : ''}</span>`;
+            }).join('')}
+          </div>
+        </div>
+        <button class="btn btn-outline btn-block mt-3" onclick="openSettings()">${ICONS.edit} تعديل الإعدادات</button>
+      </div></div>
+    </div>
+  `;
+}
+
+// ================== REVIEW PAGE ==================
+function renderReviewPage() {
+  const plan = state.plan;
+  if (!plan) return `<div class="container-app py-4 text-center"><p class="text-muted">لا توجد خطة</p></div>`;
+  const today = formatDate(new Date());
+  const todayIdx = findCurrentDayIndex(plan, today);
+  const todayDay = plan.days[todayIdx];
+  const todayReview = (todayDay && todayDay.reviewRange) || null;
+
+  const lateReviews = plan.days.filter(d =>
+    d.reviewRange && !d.reviewSession && !d.isRestDay && d.date < today
+  );
+
+  const memorizedSurahs = new Map();
+  for (const d of plan.days) {
+    if (d.memorizeSession && d.memorizeSession.completed) {
+      if (!memorizedSurahs.has(d.surahNumber)) {
+        memorizedSurahs.set(d.surahNumber, { surah: d.surahNumber, name: d.surahName, fromAyah: d.fromAyah, toAyah: d.toAyah });
+      } else {
+        const ex = memorizedSurahs.get(d.surahNumber);
+        ex.toAyah = Math.max(ex.toAyah, d.toAyah);
+        ex.fromAyah = Math.min(ex.fromAyah, d.fromAyah);
+      }
+    }
+  }
+
+  const unresolvedMistakes = state.mistakes.filter(m => !m.resolved);
+  const smartMsg = getSmartReviewMessage(lateReviews.length, unresolvedMistakes.length, memorizedSurahs.size);
+
+  return `
+    <div class="container-app py-4" style="padding-bottom:24px">
+      <button class="flex items-center gap-1 text-sm text-muted mb-4" style="background:none;border:none;cursor:pointer;color:var(--muted-fg);font-family:inherit" onclick="navigate('dashboard')">${ICONS.arrow_right} رجوع</button>
+      <div class="flex items-center gap-2 mb-1">${ICONS.review}<h1 class="text-xl font-bold">مراجعتي</h1></div>
+      <p class="text-sm text-muted mb-4">راجع ما حفظته لتثبيته في ذهنك</p>
+
+      ${todayReview ? `
+        <div class="card mb-4" style="background:linear-gradient(135deg, var(--primary-light), var(--card));border-color:var(--primary)">
+          <div class="card-pad">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="badge badge-primary">${ICONS.star} مراجعة اليوم</span>
+            </div>
+            <div class="font-bold text-base mb-2">${esc(todayReview)}</div>
+            ${(todayDay && todayDay.reviewSession) ? `<span class="badge badge-gold">${ICONS.check} تمت المراجعة</span>` : `<button class="btn btn-primary btn-sm mt-2" onclick="navigate('day', ${todayIdx})">${ICONS.play} ابدأ المراجعة</button>`}
+          </div>
+        </div>
+      ` : ''}
+
+      ${lateReviews.length > 0 ? `
+        <div class="card mb-4" style="background:rgba(217,119,6,0.06);border-color:rgba(217,119,6,0.3)">
+          <div class="card-pad">
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="text-base font-bold flex items-center gap-2">${ICONS.alert} مراجعة متأخرة</h3>
+              <span class="badge badge-warning">${toAr(lateReviews.length)}</span>
+            </div>
+            <p class="text-sm text-muted mb-3">لديك ${toAr(lateReviews.length)} ${lateReviews.length === 1 ? 'مراجعة' : 'مراجعات'} فات وقتها</p>
+            ${lateReviews.slice(0, 5).map(d => {
+              const idx = plan.days.findIndex(dd => dd.id === d.id);
+              return `
+                <button class="more-list-item" onclick="navigate('day', ${idx})">
+                  <div class="more-list-item-icon gold">${ICONS.review}</div>
+                  <div class="more-list-item-text">
+                    <div class="more-list-item-title">${esc(d.reviewRange)}</div>
+                    <div class="more-list-item-desc">تاريخ المراجعة: ${formatArabicDate(d.date)}</div>
+                  </div>
+                  ${ICONS.chevronLeft}
+                </button>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      ` : ''}
+
+      ${unresolvedMistakes.length > 0 ? `
+        <div class="card mb-4">
+          <div class="card-pad">
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="text-base font-bold flex items-center gap-2">${ICONS.alert} آيات تحتاج مراجعة</h3>
+              <span class="badge badge-danger">${toAr(unresolvedMistakes.length)}</span>
+            </div>
+            <p class="text-sm text-muted mb-3">آيات أخطأت فيها سابقًا وتحتاج لإعادة المراجعة</p>
+            <div class="flex gap-2">
+              <button class="btn btn-outline btn-block" onclick="navigate('mistakes')">${ICONS.list} عرض كل الآيات</button>
+              <button class="btn btn-primary btn-block" onclick="navigate('test'); setTimeout(()=>startTest('mistakes'), 100)">${ICONS.quiz} اختبرها</button>
+            </div>
+          </div>
+        </div>
+      ` : ''}
+
+      <div class="card mb-4"><div class="card-pad">
+        <h3 class="text-base font-bold flex items-center gap-2 mb-3">${ICONS.book} مراجعة حسب السورة</h3>
+        ${memorizedSurahs.size === 0 ? `<p class="text-sm text-muted">لم تحفظ أي سورة بعد</p>` : `
+          ${Array.from(memorizedSurahs.values()).map(s => `
+            <button class="more-list-item" onclick="openQuranReader(${s.surah}, ${s.fromAyah})">
+              <div class="more-list-item-icon">${ICONS.book}</div>
+              <div class="more-list-item-text">
+                <div class="more-list-item-title" style="font-family:var(--font-quran)">${esc(s.name)}</div>
+                <div class="more-list-item-desc">الآيات ${toAr(s.fromAyah)} - ${toAr(s.toAyah)}</div>
+              </div>
+              ${ICONS.chevronLeft}
+            </button>
+          `).join('')}
+        `}
+      </div></div>
+
+      <div class="card" style="background:linear-gradient(135deg, var(--gold-light-bg), var(--card));border-color:var(--gold)">
+        <div class="card-pad">
+          <div class="flex items-start gap-3">
+            <div class="more-list-item-icon gold">${ICONS.sparkles}</div>
+            <div class="flex-1">
+              <div class="font-bold text-base mb-1">تذكير ذكي للمراجعة</div>
+              <p class="text-sm text-muted">${smartMsg}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function getSmartReviewMessage(lateCount, mistakesCount, memorizedCount) {
+  if (lateCount > 0) return `لديك ${toAr(lateCount)} ${lateCount === 1 ? 'مراجعة متأخرة' : 'مراجعات متأخرة'}. ابدأ بها الآن قبل تراكمها.`;
+  if (mistakesCount > 0) return `لديك ${toAr(mistakesCount)} آية تحتاج إعادة مراجعة. اختبرها لتثبيتها.`;
+  if (memorizedCount === 0) return `لم تبدأ الحفظ بعد. ابدأ بحفظ سورة صغيرة وستظهر هنا للمراجعة.`;
+  return `ما شاء الله، أنت مواكب مع مراجعاتك. استمر على هذا الالتزام.`;
+}
+
+// ================== AUDIO PLAYER UI ==================
+function updateAudioPlayerUI(audioState) {
+  const el = document.getElementById('audio-player-fab');
+  if (!el) return;
+  if (!audioState || !audioState.currentSurah || !audioState.currentAyah) {
+    el.classList.remove('visible');
+    el.innerHTML = '';
+    return;
+  }
+  const meta = getSurahMeta(audioState.currentSurah);
+  const progress = audioState.duration > 0 ? Math.min(100, (audioState.currentTime / audioState.duration) * 100) : 0;
+  const reciterName = audioState.reciterName || (RECITERS[audioState.reciter] ? RECITERS[audioState.reciter].name : '');
+  el.classList.add('visible');
+  el.innerHTML = `
+    <div class="audio-player-header">
+      <div class="audio-player-icon ${audioState.isPlaying ? 'playing' : ''}">${audioState.isPlaying ? ICONS.pause : ICONS.play}</div>
+      <div class="audio-player-info">
+        <div class="audio-player-title">${meta ? esc(meta.name) : ''} - آية ${toAr(audioState.currentAyah)}</div>
+        <div class="audio-player-reciter">${esc(reciterName)}</div>
+      </div>
+      <button class="audio-player-close" onclick="stopAudio()" aria-label="إغلاق">${ICONS.close}</button>
+    </div>
+    <div class="audio-player-progress" onclick="seekAudioToProgress(event)">
+      <div class="audio-player-progress-bar" style="width:${progress}%"></div>
+    </div>
+    <div class="audio-player-time">
+      <span>${formatAudioTime(audioState.currentTime)}</span>
+      <span>${formatAudioTime(audioState.duration)}</span>
+    </div>
+    <div class="audio-player-controls">
+      <button class="audio-player-btn" onclick="prevAyah()" aria-label="السابقة">${ICONS.prev}</button>
+      <button class="audio-player-btn play-btn" onclick="togglePlayPause()" aria-label="تشغيل/إيقاف">${audioState.isPlaying ? ICONS.pause : ICONS.play}</button>
+      <button class="audio-player-btn" onclick="nextAyah()" aria-label="التالية">${ICONS.next}</button>
+      <button class="audio-player-btn ${audioState.repeat > 1 ? 'active' : ''}" onclick="cycleRepeat()" aria-label="تكرار">${ICONS.repeat}${audioState.repeat > 1 ? `<span style="font-size:10px;margin-right:2px">${toAr(audioState.repeat)}</span>` : ''}</button>
+    </div>
+  `;
+}
+
+function seekAudioToProgress(event) {
+  const bar = event.currentTarget;
+  const rect = bar.getBoundingClientRect();
+  const isRTL = document.documentElement.dir === 'rtl';
+  let pct;
+  if (isRTL) {
+    pct = (rect.right - event.clientX) / rect.width;
+  } else {
+    pct = (event.clientX - rect.left) / rect.width;
+  }
+  pct = Math.max(0, Math.min(1, pct));
+  const st = getAudioState();
+  if (st.duration > 0) seekAudio(pct * st.duration);
+}
+
+function cycleRepeat() {
+  const cur = getAudioState().repeat;
+  const next = cur >= 5 ? 1 : cur + 1;
+  setRepeat(next);
+  toast(next === 1 ? 'إيقاف التكرار' : `التكرار: ${toAr(next)} مرات`, 'info');
 }
 
 // ================== INIT ==================
