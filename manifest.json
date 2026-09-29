@@ -1,0 +1,29 @@
+{
+  "name": "رفيق القرآن | Quran Companion",
+  "short_name": "رفيق القرآن",
+  "description": "تطبيق إسلامي هادئ واحترافي: القرآن أولاً، ثم الورد، ثم التدبر، ثم بقية احتياجات المسلم اليومية.",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait-primary",
+  "background_color": "#FAF9F7",
+  "theme_color": "#FAF9F7",
+  "categories": ["education", "books", "lifestyle", "religion"],
+  "icons": [
+    {
+      "src": "assets/logo-1.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/ui-image-1.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

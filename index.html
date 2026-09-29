@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0" />
+<meta name="description" content="رفيق القرآن | Quran Companion — تطبيق إسلامي هادئ واحترافي: القرآن أولاً، ثم الورد، ثم التدبر، ثم بقية احتياجات المسلم اليومية." />
+<meta name="theme-color" content="#FAF9F7" id="meta-theme-color" />
+<meta name="author" content="Amir Anwar" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="رفيق القرآن" />
+<meta name="mobile-web-app-capable" content="yes" />
+
+<link rel="icon" type="image/png" href="assets/ui-image-1.png">
+<link rel="apple-touch-icon" href="assets/logo-1.png">
+<link rel="manifest" href="manifest.json">
+
+<title>رفيق القرآن | Quran Companion</title>
+
+<!-- Fonts: IBM Plex Sans Arabic (UI) + Amiri Quran (Quran fallback; KFGQPC can be added locally later) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Cairo:wght@400;500;600;700;800&family=Amiri:wght@400;700&family=Amiri+Quran&display=swap" rel="stylesheet">
+
+<!-- Modular CSS (spec section 3 — no single monolithic file) -->
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/navigation.css">
+<link rel="stylesheet" href="css/home.css">
+<link rel="stylesheet" href="css/quran.css">
+<link rel="stylesheet" href="css/audio.css">
+</head>
+<body>
+
+<!-- App loader (initial paint) -->
+<div id="app-loader" aria-label="جاري تحضير التطبيق" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--bg);z-index:9999;flex-direction:column;gap:16px">
+  <div style="width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg,var(--c-blue) 0%,var(--c-cyan) 100%);display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--font-quran);font-size:32px;font-weight:700;box-shadow:var(--shadow-blue)">ر ق</div>
+  <div style="color:var(--fg-muted);font-size:14px">جاري تحضير التطبيق</div>
+  <div style="width:120px;height:3px;background:var(--bg-subtle);border-radius:999px;overflow:hidden">
+    <div style="height:100%;width:40%;background:var(--quran-color);border-radius:inherit;animation:loader 1.4s ease-in-out infinite"></div>
+  </div>
+</div>
+<style>
+@keyframes loader {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(250%); }
+}
+</style>
+
+<div id="app"></div>
+<div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+<!-- ES Module entry (spec section 3: modular architecture) -->
+<script type="module" src="js/app.js"></script>
+
+<script>
+  // Hide loader once module has had a chance to bootstrap
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      const loader = document.getElementById('app-loader');
+      if (loader) {
+        loader.style.transition = 'opacity 0.3s ease';
+        loader.style.opacity = '0';
+        setTimeout(() => loader.remove(), 320);
+      }
+    }, 600);
+  });
+</script>
+
+<!-- Legacy scripts are intentionally NOT loaded. They remain on disk as
+     reference for incremental migration (spec section 2, 103).
+     Old code: js/app-data.js, js/app-ui.js, js/quran-audio.js -->
+</body>
+</html>
