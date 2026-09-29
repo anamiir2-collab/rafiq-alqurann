@@ -11,7 +11,7 @@
    Versioning (spec section 75): bump CACHE_VERSION on each deploy
    ===================================================================== */
 
-const CACHE_VERSION = 'rafiq-alquran-v2.1';
+const CACHE_VERSION = 'rafiq-alquran-v2.2';
 const SHELL_CACHE = `${CACHE_VERSION}-shell`;
 const DATA_CACHE = `${CACHE_VERSION}-data`;
 const AUDIO_CACHE = `${CACHE_VERSION}-audio`;
@@ -77,6 +77,14 @@ const SHELL_ASSETS = [
   './data/duas/duas.json',
   './data/hadith/hadith.json',
   './css/extras.css',
+  './css/wird.css',
+  './js/today.js',
+  './js/universal-search.js',
+  './js/notifications.js',
+  './js/audio/listening.js',
+  './js/hifz/sammuali.js',
+  './js/prayer/learn-prayer.js',
+  './js/prayer/istikhara.js',
   './assets/logo-1.png',
   './assets/ui-image-1.png',
 ];
