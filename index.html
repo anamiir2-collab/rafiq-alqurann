@@ -29,7 +29,14 @@
 <link rel="stylesheet" href="css/navigation.css">
 <link rel="stylesheet" href="css/home.css">
 <link rel="stylesheet" href="css/quran.css">
+<link rel="stylesheet" href="css/tajweed.css">
+<link rel="stylesheet" href="css/search.css">
 <link rel="stylesheet" href="css/audio.css">
+<link rel="stylesheet" href="css/tasbeeh.css">
+<link rel="stylesheet" href="css/adhkar.css">
+<link rel="stylesheet" href="css/prayer-qibla.css">
+<link rel="stylesheet" href="css/names.css">
+<link rel="stylesheet" href="css/calendar-names.css">
 </head>
 <body>
 
@@ -53,6 +60,19 @@
 
 <!-- ES Module entry (spec section 3: modular architecture) -->
 <script type="module" src="js/app.js"></script>
+
+<!-- Service Worker registration (spec section 31, 66 — PWA offline) -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').then((reg) => {
+        console.log('[SW] registered with scope:', reg.scope);
+        // Check for updates every hour
+        setInterval(() => reg.update(), 60 * 60 * 1000);
+      }).catch((err) => console.warn('[SW] registration failed:', err));
+    });
+  }
+</script>
 
 <script>
   // Hide loader once module has had a chance to bootstrap
