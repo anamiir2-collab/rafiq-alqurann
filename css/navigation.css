@@ -1,0 +1,175 @@
+/* =====================================================================
+   Bottom Navigation — 5 items per spec section 22
+   الرئيسية / القرآن / الورد / التدبر / المزيد
+   ===================================================================== */
+
+.bottomnav {
+  position: fixed;
+  bottom: 0;
+  left: 0; right: 0;
+  z-index: 800;
+  background: color-mix(in srgb, var(--card) 86%, transparent);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-top: 1px solid var(--hairline);
+  padding-bottom: var(--safe-area-bottom);
+  padding-top: 6px;
+}
+
+.bottomnav-inner {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--sp-2);
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0;
+  height: calc(var(--bottomnav-h) - 6px);
+  align-items: stretch;
+}
+
+.nav-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 6px 4px;
+  border-radius: var(--radius-md);
+  color: var(--fg-muted);
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1;
+  position: relative;
+  transition: color var(--dur-fast) var(--ease-standard),
+              background var(--dur-fast) var(--ease-standard);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.nav-btn .nav-icon {
+  width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform var(--dur-base) var(--ease-spring);
+}
+
+.nav-btn .nav-icon svg {
+  width: 22px; height: 22px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.nav-btn .nav-label {
+  font-size: 10px;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.nav-btn:hover { color: var(--fg); }
+
+.nav-btn.active {
+  color: var(--quran-color);
+}
+.nav-btn.active .nav-icon {
+  transform: translateY(-1px) scale(1.06);
+}
+.nav-btn.active .nav-icon::after {
+  content: '';
+  position: absolute;
+  top: -7px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28px; height: 4px;
+  border-radius: var(--radius-pill);
+  background: var(--quran-color);
+  opacity: 0.85;
+}
+
+/* Variant colors per section (spec section 8 — balance the palette) */
+.nav-btn[data-color="quran"].active   { color: var(--quran-color); }
+.nav-btn[data-color="quran"].active .nav-icon::after { background: var(--quran-color); }
+
+.nav-btn[data-color="wird"].active    { color: var(--action-color); }
+.nav-btn[data-color="wird"].active .nav-icon::after { background: var(--action-color); }
+
+.nav-btn[data-color="tadabbur"].active{ color: var(--reflect-color); }
+.nav-btn[data-color="tadabbur"].active .nav-icon::after { background: var(--reflect-color); }
+
+.nav-btn[data-color="more"].active    { color: var(--remind-color); }
+.nav-btn[data-color="more"].active .nav-icon::after { background: var(--remind-color); }
+
+/* Reduced motion (spec section 96) */
+@media (prefers-reduced-motion: reduce) {
+  .nav-btn .nav-icon { transition: none; }
+  .nav-btn:active { transform: none; }
+}
+
+/* ===== Top bar ===== */
+.topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 800;
+  background: color-mix(in srgb, var(--card) 86%, transparent);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid var(--hairline);
+  padding-top: var(--safe-area-top);
+}
+
+.topbar-inner {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--sp-4);
+  height: var(--topbar-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+}
+
+.topbar-title {
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  color: var(--fg-strong);
+  letter-spacing: -0.01em;
+}
+.topbar-sub {
+  font-size: var(--fs-xs);
+  color: var(--fg-muted);
+  margin-top: 2px;
+}
+
+.topbar-actions {
+  display: flex; gap: var(--sp-1);
+  align-items: center;
+}
+
+/* ===== Page transitions (spec section 63) ===== */
+.page {
+  animation: page-in var(--dur-base) var(--ease-decel);
+}
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .page { animation: none; }
+}
+
+/* ===== Section header ===== */
+.section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin: var(--sp-6) 0 var(--sp-3);
+  gap: var(--sp-3);
+}
+.section-header h2 {
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.section-header .section-action {
+  font-size: var(--fs-sm);
+  color: var(--quran-color);
+  font-weight: 600;
+}

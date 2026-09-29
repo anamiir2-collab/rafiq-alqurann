@@ -1,0 +1,17 @@
+{
+  "source": "Existing rafiq-alquran/js/app-data.js (SURAH_META + QURAN_FULL_TEXT)",
+  "verifiedOn": "2026-09-30",
+  "verification": {
+    "surahCount": 114,
+    "totalAyahs": 6236,
+    "noDuplicates": true,
+    "noMissing": true,
+    "sequentialAyahs": true,
+    "uthmaniScript": true
+  },
+  "files": {
+    "surahs.json": "114 surah metadata records",
+    "quran.json": "Full Uthmani Quran text by surah:ayah"
+  },
+  "note": "No AI generation. Text preserved verbatim from the original verified dataset."
+}

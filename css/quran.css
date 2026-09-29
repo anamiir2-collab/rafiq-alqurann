@@ -1,0 +1,364 @@
+/* =====================================================================
+   Quran Reader & Index — spec sections 11, 13, 19, 20
+   Uthmani text + decorative ayah numbers + highlighting + safe area
+   ===================================================================== */
+
+/* ===== Surah index (spec section 19) ===== */
+.surah-index-search {
+  position: sticky;
+  top: calc(var(--topbar-h) + var(--safe-area-top));
+  z-index: 50;
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: var(--sp-3) 0;
+  margin-bottom: var(--sp-3);
+}
+.surah-index-search .input {
+  background: var(--card);
+  border-radius: var(--radius-pill);
+  padding-block: 10px;
+  padding-inline: 16px 44px;
+}
+.search-wrap { position: relative; }
+.search-wrap .search-icon {
+  position: absolute;
+  inset-inline-end: 14px;
+  top: 50%; transform: translateY(-50%);
+  color: var(--fg-subtle);
+  pointer-events: none;
+}
+
+.surah-row {
+  display: flex; align-items: center; gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--card);
+  border-bottom: 1px solid var(--hairline);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-standard);
+  text-decoration: none;
+  color: inherit;
+}
+.surah-row:active { background: var(--bg-subtle); }
+.surah-row:first-child { border-top-left-radius: var(--radius-lg); border-top-right-radius: var(--radius-lg); }
+.surah-row:last-child  { border-bottom-left-radius: var(--radius-lg); border-bottom-right-radius: var(--radius-lg); border-bottom: none; }
+
+.surah-row .surah-num {
+  flex: 0 0 auto;
+  width: 42px; height: 42px;
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--c-blue) 14%, transparent);
+  color: var(--quran-color);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700;
+  font-size: var(--fs-md);
+  position: relative;
+}
+.surah-row .surah-num::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px solid color-mix(in srgb, var(--c-blue) 40%, transparent);
+  border-radius: var(--radius-sm);
+  pointer-events: none;
+}
+.surah-row .surah-body { flex: 1; min-width: 0; }
+.surah-row .surah-name {
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  color: var(--fg);
+  font-family: var(--font-quran);
+  line-height: 1.3;
+}
+.surah-row .surah-meta {
+  font-size: var(--fs-xs);
+  color: var(--fg-muted);
+  margin-top: 2px;
+  display: flex; gap: var(--sp-2); align-items: center;
+}
+.surah-row .surah-meta .dot {
+  width: 3px; height: 3px;
+  background: var(--fg-subtle);
+  border-radius: 50%;
+}
+.surah-row .surah-trail {
+  flex: 0 0 auto;
+  color: var(--fg-subtle);
+}
+
+/* ===== Quran reader (spec section 13) ===== */
+.reader-header {
+  background: var(--card);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-5) var(--sp-5) var(--sp-4);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--hairline);
+  margin-bottom: var(--sp-4);
+  text-align: center;
+  position: relative;
+}
+.reader-header .surah-title {
+  font-family: var(--font-quran);
+  font-size: var(--fs-3xl);
+  font-weight: 700;
+  color: var(--fg-strong);
+  line-height: 1.2;
+  margin: 0;
+}
+.reader-header .surah-subtitle {
+  font-size: var(--fs-sm);
+  color: var(--fg-muted);
+  margin-top: 4px;
+  display: inline-flex; align-items: center; gap: var(--sp-2);
+}
+.reader-header .surah-subtitle .dot {
+  width: 3px; height: 3px;
+  background: var(--fg-subtle);
+  border-radius: 50%;
+}
+
+/* Bismillah — only shown for surahs except 1 (Fatiha, where it's ayah 1) and 9 (Tawba, which has no bismillah) */
+.bismillah {
+  text-align: center;
+  font-family: var(--font-quran);
+  font-size: calc(var(--quran-font-size) * 1.1);
+  color: var(--fg-strong);
+  padding: var(--sp-6) var(--sp-4) var(--sp-4);
+  margin-bottom: var(--sp-2);
+  letter-spacing: 0;
+  line-height: 1.8;
+}
+
+/* ===== Ayah text container ===== */
+.ayah-text {
+  font-family: var(--font-quran);
+  font-size: var(--quran-font-size);
+  line-height: var(--quran-line-height);
+  color: var(--fg-strong);
+  text-align: justify;
+  text-align-last: center;
+  letter-spacing: var(--quran-letter-spacing);
+  padding: var(--sp-6) var(--sp-4);
+  word-spacing: 0.05em;
+}
+
+/* ===== Ayah word (tappable — spec section 15) ===== */
+.ayah-word {
+  cursor: pointer;
+  position: relative;
+  display: inline;
+  padding: 0 2px;
+  border-radius: 4px;
+  transition: background var(--dur-fast) var(--ease-standard),
+              color var(--dur-fast) var(--ease-standard);
+  -webkit-tap-highlight-color: transparent;
+}
+.ayah-word:hover { background: color-mix(in srgb, var(--c-blue) 12%, transparent); }
+.ayah-word:active { background: color-mix(in srgb, var(--c-blue) 22%, transparent); }
+
+.ayah-word.highlighted {
+  background: color-mix(in srgb, var(--c-cyan) 32%, transparent);
+  color: var(--fg-strong);
+  border-radius: 6px;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--c-cyan) 50%, transparent);
+}
+
+.ayah-word.playing {
+  background: color-mix(in srgb, var(--c-blue) 36%, transparent);
+  color: var(--fg-strong);
+  border-radius: 6px;
+  animation: pulse-play 1.6s var(--ease-standard) infinite;
+}
+@keyframes pulse-play {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--c-blue) 50%, transparent); }
+  50%      { box-shadow: 0 0 0 6px color-mix(in srgb, var(--c-blue) 0%, transparent); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ayah-word.playing { animation: none; }
+}
+
+/* ===== Ayah number (decorative — spec section 13: "أرقام الآيات بتصميم زخرفي") ===== */
+.ayah-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px; height: 32px;
+  margin: 0 4px;
+  vertical-align: middle;
+  position: relative;
+  color: var(--quran-color);
+  font-family: var(--font-ui);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  transform: translateY(-4px);
+}
+.ayah-num::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--c-blue) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--c-blue) 38%, transparent);
+  border-radius: 50% 8px 50% 8px / 50% 8px 50% 8px;
+  transform: rotate(45deg);
+  z-index: -1;
+}
+.ayah-num span {
+  font-family: var(--font-ui);
+  font-feature-settings: 'tnum';
+}
+
+/* ===== Per-ayah row (continuous text style — closer to mushaf) ===== */
+.ayah-row {
+  background: var(--card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--hairline);
+  box-shadow: var(--shadow-xs);
+  margin-bottom: var(--sp-3);
+  overflow: hidden;
+  transition: box-shadow var(--dur-base) var(--ease-standard);
+}
+.ayah-row.active {
+  box-shadow: var(--shadow-md), 0 0 0 1px color-mix(in srgb, var(--c-blue) 50%, transparent);
+}
+
+.ayah-row .ayah-text {
+  padding: var(--sp-5) var(--sp-5) var(--sp-4);
+}
+
+.ayah-row .ayah-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: var(--sp-2) var(--sp-3) var(--sp-3);
+  gap: var(--sp-2);
+  border-top: 1px solid var(--hairline);
+}
+.ayah-row .ayah-footer .ayah-num {
+  transform: none;
+  width: auto; height: auto;
+  margin: 0;
+}
+.ayah-row .ayah-footer .ayah-num::before { display: none; }
+
+.ayah-actions {
+  display: flex; gap: 2px;
+}
+.ayah-action-btn {
+  width: 36px; height: 36px;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--fg-muted);
+  border-radius: var(--radius-pill);
+  transition: background var(--dur-fast) var(--ease-standard),
+              color var(--dur-fast) var(--ease-standard);
+}
+.ayah-action-btn:hover { background: var(--bg-subtle); color: var(--fg); }
+.ayah-action-btn.active { color: var(--remind-color); }
+.ayah-action-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+
+/* ===== Reader controls (font size, line height, etc.) ===== */
+.reader-controls {
+  background: var(--card);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-3) var(--sp-4);
+  border: 1px solid var(--hairline);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-4);
+  position: sticky;
+  top: calc(var(--topbar-h) + var(--safe-area-top) + var(--sp-3));
+  z-index: 40;
+}
+.reader-controls .control-group {
+  display: flex; align-items: center; gap: var(--sp-1);
+}
+.reader-controls .control-btn {
+  width: 36px; height: 36px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: var(--radius-sm);
+  color: var(--fg-muted);
+  font-weight: 700;
+  transition: background var(--dur-fast) var(--ease-standard);
+}
+.reader-controls .control-btn:hover { background: var(--bg-subtle); color: var(--fg); }
+.reader-controls .control-btn.active { background: var(--quran-color); color: var(--fg-on-color); }
+.reader-controls .control-value {
+  font-size: var(--fs-sm);
+  color: var(--fg-muted);
+  min-width: 30px;
+  text-align: center;
+}
+
+/* ===== Bottom sheet (spec section 15 — word tap) ===== */
+.bottom-sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay);
+  z-index: 9000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-sheet) var(--ease-standard);
+}
+.bottom-sheet-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.bottom-sheet {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: var(--card);
+  border-top-left-radius: var(--radius-xl);
+  border-top-right-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  z-index: 9001;
+  max-height: 85vh;
+  overflow-y: auto;
+  transform: translateY(100%);
+  transition: transform var(--dur-sheet) var(--ease-decel);
+  padding-bottom: calc(var(--safe-area-bottom) + var(--sp-4));
+  padding-top: var(--sp-2);
+}
+.bottom-sheet.open { transform: translateY(0); }
+.bottom-sheet::before {
+  content: '';
+  display: block;
+  width: 40px; height: 4px;
+  background: var(--border-strong);
+  border-radius: var(--radius-pill);
+  margin: 6px auto var(--sp-4);
+}
+
+.sheet-header { padding: 0 var(--sp-5) var(--sp-3); }
+.sheet-title {
+  font-family: var(--font-quran);
+  font-size: var(--fs-2xl);
+  font-weight: 700;
+  color: var(--fg-strong);
+  text-align: center;
+  line-height: 1.4;
+}
+.sheet-subtitle {
+  font-size: var(--fs-sm);
+  color: var(--fg-muted);
+  text-align: center;
+  margin-top: 4px;
+}
+.sheet-body { padding: 0 var(--sp-5) var(--sp-4); }
+.sheet-actions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--sp-2);
+  padding: 0 var(--sp-5) var(--sp-3);
+}
+.sheet-action {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: var(--sp-3) var(--sp-2);
+  border-radius: var(--radius-md);
+  background: var(--bg-subtle);
+  color: var(--fg);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  transition: background var(--dur-fast) var(--ease-standard),
+              transform var(--dur-fast) var(--ease-standard);
+  text-align: center;
+}
+.sheet-action:active { transform: scale(0.96); background: var(--card-2); }
+.sheet-action svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+.sheet-action.active { color: var(--remind-color); }

@@ -1,0 +1,105 @@
+/* =====================================================================
+   Audio player bar — persistent, with queue + autoplay (spec section 16)
+   Sits above bottom nav when active.
+   ===================================================================== */
+
+.audio-bar {
+  position: fixed;
+  bottom: calc(var(--bottomnav-h) + var(--safe-area-bottom) + var(--sp-2));
+  left: 50%;
+  transform: translateX(-50%) translateY(120%);
+  width: calc(100% - var(--sp-4) * 2);
+  max-width: calc(var(--container-max) - var(--sp-4) * 2);
+  background: var(--card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border);
+  padding: var(--sp-3) var(--sp-4);
+  z-index: 700;
+  display: flex; align-items: center; gap: var(--sp-3);
+  transition: transform var(--dur-sheet) var(--ease-spring);
+  overflow: hidden;
+}
+.audio-bar.open { transform: translateX(-50%) translateY(0); }
+
+.audio-bar .audio-bar-info {
+  flex: 1; min-width: 0;
+}
+.audio-bar .audio-bar-surah {
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--fg);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.audio-bar .audio-bar-reciter {
+  font-size: var(--fs-xs);
+  color: var(--fg-muted);
+  margin-top: 1px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.audio-bar .audio-bar-controls {
+  display: flex; align-items: center; gap: 2px;
+  flex: 0 0 auto;
+}
+.audio-bar .audio-bar-btn {
+  width: 36px; height: 36px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: var(--radius-pill);
+  color: var(--fg);
+  transition: background var(--dur-fast) var(--ease-standard);
+}
+.audio-bar .audio-bar-btn:hover { background: var(--bg-subtle); }
+.audio-bar .audio-bar-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+.audio-bar .audio-bar-btn.play {
+  width: 42px; height: 42px;
+  background: var(--quran-color);
+  color: var(--fg-on-color);
+  box-shadow: var(--shadow-blue);
+}
+.audio-bar .audio-bar-btn.play:hover { filter: brightness(1.05); background: var(--quran-color); }
+.audio-bar .audio-bar-btn.play svg { fill: currentColor; stroke: none; }
+
+.audio-bar .audio-bar-progress {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--bg-subtle);
+}
+.audio-bar .audio-bar-progress-bar {
+  height: 100%;
+  background: var(--quran-color);
+  border-inline-start-radius: var(--radius-pill);
+  border-inline-end-radius: var(--radius-pill);
+  transition: width 200ms linear;
+}
+
+/* ===== Reciter picker (sheet) ===== */
+.reciter-list { padding: 0 var(--sp-4) var(--sp-4); }
+.reciter-row {
+  display: flex; align-items: center; gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-standard);
+}
+.reciter-row:active { background: var(--bg-subtle); }
+.reciter-row.selected { background: color-mix(in srgb, var(--c-blue) 14%, transparent); }
+.reciter-row .reciter-icon {
+  flex: 0 0 auto;
+  width: 40px; height: 40px;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--c-blue) 14%, transparent);
+  color: var(--quran-color);
+  display: flex; align-items: center; justify-content: center;
+}
+.reciter-row .reciter-icon svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+.reciter-row .reciter-info { flex: 1; }
+.reciter-row .reciter-name { font-weight: 600; color: var(--fg); }
+.reciter-row .reciter-style { font-size: var(--fs-xs); color: var(--fg-muted); margin-top: 2px; }
+.reciter-row .reciter-check {
+  color: var(--quran-color);
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease-standard);
+}
+.reciter-row.selected .reciter-check { opacity: 1; }

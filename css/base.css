@@ -1,0 +1,156 @@
+/* =====================================================================
+   رفيق القرآن | Quran Companion — Base styles
+   Reset + typography primitives + container. iOS-like, mobile-first.
+   ===================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  direction: rtl;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-ui);
+  font-size: var(--fs-md);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overscroll-behavior-y: none;
+}
+
+/* Reserve space for topbar + bottomnav so content never hides */
+body.has-topbar    { padding-top: calc(var(--topbar-h) + var(--safe-area-top)); }
+body.has-bottomnav { padding-bottom: calc(var(--bottomnav-h) + var(--safe-area-bottom) + 12px); }
+
+img, svg { display: block; max-width: 100%; }
+img { height: auto; }
+button, input, textarea, select { font: inherit; color: inherit; }
+button { background: none; border: none; padding: 0; cursor: pointer; }
+a { color: var(--quran-color); text-decoration: none; }
+a:active { opacity: 0.6; }
+
+/* ===== Typography ===== */
+.h1, h1 { font-size: var(--fs-3xl); font-weight: 700; line-height: 1.25; letter-spacing: -0.01em; margin: 0; }
+.h2, h2 { font-size: var(--fs-2xl); font-weight: 700; line-height: 1.3;  margin: 0; }
+.h3, h3 { font-size: var(--fs-xl);  font-weight: 600; line-height: 1.35; margin: 0; }
+.h4, h4 { font-size: var(--fs-lg);  font-weight: 600; line-height: 1.4;  margin: 0; }
+.text-xs   { font-size: var(--fs-xs); }
+.text-sm   { font-size: var(--fs-sm); }
+.text-md   { font-size: var(--fs-md); }
+.text-lg   { font-size: var(--fs-lg); }
+.text-xl   { font-size: var(--fs-xl); }
+.text-2xl  { font-size: var(--fs-2xl); }
+.text-3xl  { font-size: var(--fs-3xl); }
+.text-muted   { color: var(--fg-muted); }
+.text-subtle  { color: var(--fg-subtle); }
+.text-strong  { color: var(--fg-strong); font-weight: 600; }
+.text-quran   { color: var(--quran-color); }
+.text-action  { color: var(--action-color); }
+.text-remind  { color: var(--remind-color); }
+.text-reflect { color: var(--reflect-color); }
+.text-center  { text-align: center; }
+.text-right   { text-align: right; }
+.text-left    { text-align: left; }
+.font-bold    { font-weight: 700; }
+.font-semi    { font-weight: 600; }
+.font-medium  { font-weight: 500; }
+.font-normal  { font-weight: 400; }
+.font-quran   { font-family: var(--font-quran); font-feature-settings: 'calt','liga'; }
+.font-mono    { font-family: var(--font-mono); }
+
+/* ===== Container ===== */
+.container-app {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--sp-4);
+}
+
+/* ===== Layout helpers ===== */
+.flex { display: flex; }
+.inline-flex { display: inline-flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.items-start { align-items: flex-start; }
+.items-end { align-items: flex-end; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.justify-end { justify-content: flex-end; }
+.flex-1 { flex: 1; }
+.flex-wrap { flex-wrap: wrap; }
+.gap-1 { gap: var(--sp-1); }
+.gap-2 { gap: var(--sp-2); }
+.gap-3 { gap: var(--sp-3); }
+.gap-4 { gap: var(--sp-4); }
+.gap-5 { gap: var(--sp-5); }
+.gap-6 { gap: var(--sp-6); }
+.grid { display: grid; }
+.grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+
+/* ===== Spacing helpers ===== */
+.m-0 { margin: 0; }
+.mt-1{margin-top:var(--sp-1)} .mt-2{margin-top:var(--sp-2)} .mt-3{margin-top:var(--sp-3)}
+.mt-4{margin-top:var(--sp-4)} .mt-5{margin-top:var(--sp-5)} .mt-6{margin-top:var(--sp-6)}
+.mt-8{margin-top:var(--sp-8)}
+.mb-1{margin-bottom:var(--sp-1)} .mb-2{margin-bottom:var(--sp-2)} .mb-3{margin-bottom:var(--sp-3)}
+.mb-4{margin-bottom:var(--sp-4)} .mb-5{margin-bottom:var(--sp-5)} .mb-6{margin-bottom:var(--sp-6)}
+.mb-8{margin-bottom:var(--sp-8)}
+.p-2{padding:var(--sp-2)} .p-3{padding:var(--sp-3)} .p-4{padding:var(--sp-4)}
+.p-5{padding:var(--sp-5)} .p-6{padding:var(--sp-6)}
+.px-4{padding-inline:var(--sp-4)} .py-3{padding-block:var(--sp-3)}
+.py-4{padding-block:var(--sp-4)}
+
+/* ===== Misc ===== */
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+.hidden { display: none !important; }
+.invisible { visibility: hidden; }
+.truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.rounded-sm { border-radius: var(--radius-sm); }
+.rounded-md { border-radius: var(--radius-md); }
+.rounded-lg { border-radius: var(--radius-lg); }
+.rounded-pill { border-radius: var(--radius-pill); }
+.border { border: 1px solid var(--border); }
+.border-t { border-top: 1px solid var(--hairline); }
+.border-b { border-bottom: 1px solid var(--hairline); }
+
+/* ===== Scrollbar (subtle, iOS-like) ===== */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--fg-subtle); }
+
+/* ===== Selection ===== */
+::selection { background: var(--c-blue); color: var(--fg-on-color); }
+
+/* ===== Focus (accessibility — spec section 64) ===== */
+:focus-visible {
+  outline: 2px solid var(--quran-color);
+  outline-offset: 2px;
+  border-radius: var(--radius-xs);
+}
+
+/* ===== Reduced motion (spec section 63, 96) ===== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
