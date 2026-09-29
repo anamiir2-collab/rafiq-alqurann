@@ -11,7 +11,7 @@
    Versioning (spec section 75): bump CACHE_VERSION on each deploy
    ===================================================================== */
 
-const CACHE_VERSION = 'rafiq-alquran-v2.0';
+const CACHE_VERSION = 'rafiq-alquran-v2.1';
 const SHELL_CACHE = `${CACHE_VERSION}-shell`;
 const DATA_CACHE = `${CACHE_VERSION}-data`;
 const AUDIO_CACHE = `${CACHE_VERSION}-audio`;
@@ -56,11 +56,27 @@ const SHELL_ASSETS = [
   './js/qibla/qibla.js',
   './js/names/names-of-allah.js',
   './js/calendar/hijri-calendar.js',
+  './js/favorites.js',
+  './js/duas/duas.js',
+  './js/hadith/hadith.js',
+  './js/ramadan/friday.js',
+  './js/ramadan/ramadan.js',
+  './js/ramadan/hajj.js',
+  './js/ramadan/fasting.js',
+  './js/seerah/seerah.js',
+  './js/prophets/prophets.js',
+  './js/quran/tafsir.js',
+  './js/sources.js',
+  './js/about.js',
+  './js/hifz/hifz.js',
   './components/icons.js',
   './components/bottom-nav.js',
   './components/bottom-sheet.js',
   './components/toast.js',
   './data/names-of-allah/names.json',
+  './data/duas/duas.json',
+  './data/hadith/hadith.json',
+  './css/extras.css',
   './assets/logo-1.png',
   './assets/ui-image-1.png',
 ];

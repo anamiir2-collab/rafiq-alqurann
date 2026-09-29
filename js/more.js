@@ -18,27 +18,29 @@ const MORE_ITEMS = [
   // الأذكار والأدعية
   { section: 'الأذكار والأدعية' },
   { label: 'الأذكار',          icon: Icons.adhkar,   path: '/more/adhkar',   color: 'remind', status: 'ready' },
-  { label: 'الأدعية',          icon: Icons.dua,      path: '/more/duas',     color: 'remind', status: 'soon' },
+  { label: 'الأدعية',          icon: Icons.dua,      path: '/more/duas',     color: 'remind', status: 'ready' },
   { label: 'المسبحة',          icon: Icons.tasbeeh,  path: '/more/tasbeeh',  color: 'remind', status: 'ready' },
 
   // المعرفة
   { section: 'المعرفة' },
   { label: 'أسماء الله الحسنى', icon: Icons.names,   path: '/more/names',    color: 'reflect',status: 'ready' },
-  { label: 'الأحاديث',          icon: Icons.hadith,  path: '/more/hadith',   color: 'quran',  status: 'soon' },
-  { label: 'السيرة النبوية',    icon: Icons.seerah,  path: '/more/seerah',   color: 'reflect',status: 'soon' },
-  { label: 'قصص الأنبياء',      icon: Icons.prophets,path: '/more/prophets', color: 'reflect',status: 'soon' },
+  { label: 'الأحاديث',          icon: Icons.hadith,  path: '/more/hadith',   color: 'quran',  status: 'ready' },
+  { label: 'السيرة النبوية',    icon: Icons.seerah,  path: '/more/seerah',   color: 'reflect',status: 'ready' },
+  { label: 'قصص الأنبياء',      icon: Icons.prophets,path: '/more/prophets', color: 'reflect',status: 'ready' },
+  { label: 'التفسير',           icon: Icons.book,    path: '/more/tafsir',   color: 'quran',  status: 'ready' },
 
   // المناسبات
   { section: 'المناسبات والتقويم' },
   { label: 'التقويم الهجري',    icon: Icons.calendar,path: '/more/calendar', color: 'quran',  status: 'ready' },
-  { label: 'يوم الجمعة',        icon: Icons.book,    path: '/more/friday',   color: 'quran',  status: 'soon' },
-  { label: 'رمضان',             icon: Icons.ramadan, path: '/more/ramadan',  color: 'remind', status: 'soon' },
-  { label: 'الحج والعمرة',      icon: Icons.hajj,    path: '/more/hajj',     color: 'quran',  status: 'soon' },
-  { label: 'صيام التطوع',       icon: Icons.fasting, path: '/more/fasting',  color: 'remind', status: 'soon' },
+  { label: 'يوم الجمعة',        icon: Icons.book,    path: '/more/friday',   color: 'quran',  status: 'ready' },
+  { label: 'رمضان',             icon: Icons.ramadan, path: '/more/ramadan',  color: 'remind', status: 'ready' },
+  { label: 'الحج والعمرة',      icon: Icons.hajj,    path: '/more/hajj',     color: 'quran',  status: 'ready' },
+  { label: 'صيام التطوع',       icon: Icons.fasting, path: '/more/fasting',  color: 'remind', status: 'ready' },
 
   // التطبيق
   { section: 'التطبيق' },
-  { label: 'المحفوظات والمفضلة', icon: Icons.bookmark, path: '/more/favorites', color: 'quran', status: 'soon' },
+  { label: 'المحفوظات والمفضلة', icon: Icons.bookmark, path: '/more/favorites', color: 'quran', status: 'ready' },
+  { label: 'حفظ ومراجعة',        icon: Icons.book,    path: '/hifz',          color: 'quran', status: 'ready' },
   { label: 'الإعدادات',          icon: Icons.settings, path: '/settings',       color: 'quran', status: 'ready' },
   { label: 'المصادر',            icon: Icons.info,     path: '/more/sources',   color: 'quran', status: 'ready' },
   { label: 'عن التطبيق',         icon: Icons.info,     path: '/about',          color: 'quran', status: 'ready' },

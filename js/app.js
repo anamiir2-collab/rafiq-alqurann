@@ -17,6 +17,7 @@ import { initAudio } from './audio/audio-player.js';
 import { renderHome } from './home.js';
 import { renderSurahIndex, renderSurahReader } from './quran/reader.js';
 import { renderSearch } from './quran/search.js';
+import { renderTafsir, fetchTafsir } from './quran/tafsir.js';
 import { renderWird } from './wird/wird.js';
 import { renderTadabbur } from './tadabbur/tadabbur.js';
 import { renderMore } from './more.js';
@@ -27,6 +28,18 @@ import { renderPrayerTimes } from './prayer/prayer-times.js';
 import { renderQibla } from './qibla/qibla.js';
 import { renderNames } from './names/names-of-allah.js';
 import { renderCalendar } from './calendar/hijri-calendar.js';
+import { renderFavorites } from './favorites.js';
+import { renderDuas } from './duas/duas.js';
+import { renderHadith } from './hadith/hadith.js';
+import { renderFriday } from './ramadan/friday.js';
+import { renderRamadan } from './ramadan/ramadan.js';
+import { renderHajj } from './ramadan/hajj.js';
+import { renderFasting } from './ramadan/fasting.js';
+import { renderSeerah } from './seerah/seerah.js';
+import { renderProphets, renderProphetDetail } from './prophets/prophets.js';
+import { renderSources } from './sources.js';
+import { renderAbout } from './about.js';
+import { renderHifz } from './hifz/hifz.js';
 
 /* ============ Top bar ============ */
 function renderTopbar(title = '', subtitle = '') {
@@ -106,31 +119,24 @@ registerRoute('/more/qibla',    withChrome(renderQibla,     { title: 'القبل
 registerRoute('/more/names',    withChrome(renderNames,     { title: 'أسماء الله الحسنى', subtitle: '٩٩ اسمًا' }));
 registerRoute('/more/calendar', withChrome(renderCalendar,  { title: 'التقويم الهجري', subtitle: '' }));
 
-// Legacy hifz — bridge to existing functionality (preserves spec section 2: don't delete working features)
-registerRoute('/hifz', async (container) => {
-  document.body.className = 'has-topbar has-bottomnav';
-  container.innerHTML = renderTopbar('حفظ ومراجعة', 'خطتك ومحفوظاتك') + `<main id="page-main"></main>` + renderBottomNav();
-  const main = container.querySelector('#page-main');
-  main.innerHTML = `
-    <div class="container-app page">
-      <div class="card card-pad-lg text-center" style="padding:48px 24px">
-        <div style="width:72px;height:72px;margin:0 auto 16px;border-radius:50%;background:color-mix(in srgb,var(--c-blue) 14%,transparent);color:var(--quran-color);display:flex;align-items:center;justify-content:center">
-          ${Icons.book}
-        </div>
-        <h3 class="h3">قسم الحفظ والمراجعة</h3>
-        <p class="text-muted mt-2" style="font-size:14px;line-height:1.7;max-width:380px;margin-inline:auto">
-          يتم حاليًا ترحيل نظام الحفظ الحالي إلى البنية الجديدة.
-          سيتوفر بإذن الله: خطط الحفظ، اختبارات، تتبع الأخطاء، التقييم الذاتي، الإنجازات.
-        </p>
-        <p class="text-subtle mt-4" style="font-size:12px">
-          ميزات الحفظ الحالية محفوظة في الكود وستُدمج تدريجيًا.
-        </p>
-      </div>
-    </div>
-  `;
-});
+// Phase 14 routes — content sections
+registerRoute('/more/duas',     withChrome(renderDuas,      { title: 'الأدعية', subtitle: '' }));
+registerRoute('/more/hadith',   withChrome(renderHadith,    { title: 'الأحاديث', subtitle: '' }));
+registerRoute('/more/friday',   withChrome(renderFriday,    { title: 'يوم الجمعة', subtitle: '' }));
+registerRoute('/more/ramadan',  withChrome(renderRamadan,   { title: 'رمضان', subtitle: '' }));
+registerRoute('/more/hajj',     withChrome(renderHajj,      { title: 'الحج والعمرة', subtitle: '' }));
+registerRoute('/more/fasting',  withChrome(renderFasting,   { title: 'صيام التطوع', subtitle: '' }));
+registerRoute('/more/seerah',   withChrome(renderSeerah,    { title: 'السيرة النبوية', subtitle: '' }));
+registerRoute('/more/prophets', withChrome(renderProphets,  { title: 'قصص الأنبياء', subtitle: '' }));
+registerRoute('/more/prophets/:prophetId', withChrome(renderProphetDetail, { title: 'قصص الأنبياء', subtitle: '' }));
+registerRoute('/more/tafsir',   withChrome(renderTafsir,    { title: 'التفسير', subtitle: 'من المصادر الموثوقة' }));
+registerRoute('/more/tafsir/:surah/:ayah', withChrome(renderTafsir, { title: 'التفسير', subtitle: '' }));
+registerRoute('/more/favorites', withChrome(renderFavorites, { title: 'المحفوظات والمفضلة', subtitle: '' }));
+registerRoute('/more/sources',  withChrome(renderSources,   { title: 'المصادر', subtitle: '' }));
+registerRoute('/about',         withChrome(renderAbout,     { title: 'عن التطبيق', subtitle: '' }));
+registerRoute('/hifz',          withChrome(renderHifz,      { title: 'حفظ ومراجعة', subtitle: 'خطتك ومحفوظاتك' }));
 
-/* Catch-all 404 → home */
+// Catch-all 404 → home
 registerRoute('/404', (container) => { navigate('/'); });
 
 /* ============ Bootstrap ============ */
