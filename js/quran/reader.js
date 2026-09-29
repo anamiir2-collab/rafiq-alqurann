@@ -78,7 +78,10 @@ export async function renderSurahIndex(container) {
                 ${isLast ? `<span class="dot"></span><span class="badge badge-quran">آخر قراءة</span>` : ''}
               </div>
             </div>
-            <div class="surah-trail">${Icons.chevronLeft}</div>
+            <div class="surah-trail">
+              <button class="surah-play-btn" data-surah="${s.number}" aria-label="تشغيل السورة" onclick="event.preventDefault(); event.stopPropagation(); window.__playSurah?.(${s.number})">${Icons.play}</button>
+              <div class="surah-chevron">${Icons.chevronLeft}</div>
+            </div>
           </a>
         `;
       }).join('');

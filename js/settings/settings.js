@@ -23,7 +23,7 @@ export function renderSettings(container) {
       <div class="divider-label">المظهر</div>
       <div class="list">
         <div class="row" style="cursor:default">
-          <div class="row-icon" style="width:38px;height:38px;border-radius:var(--radius-md);background:var(--bg-subtle);color:var(--fg);display:flex;align-items:center;justify-content:center">
+          <div class="row-icon" style="width:44px;height:44px;border-radius:var(--radius-md);background:color-mix(in srgb,var(--c-blue) 14%,transparent);color:var(--quran-color);display:flex;align-items:center;justify-content:center">
             ${Icons.sun}
           </div>
           <div class="row-body">
@@ -31,11 +31,11 @@ export function renderSettings(container) {
             <div class="row-sub">فاتح / داكن / تلقائي</div>
           </div>
           <div class="row-trail">
-            <select class="select" id="theme-select" style="width:auto">
-              <option value="light" ${settings.theme==='light'?'selected':''}>فاتح</option>
-              <option value="dark"  ${settings.theme==='dark' ?'selected':''}>داكن</option>
-              <option value="system"${settings.theme==='system'?'selected':''}>تلقائي</option>
-            </select>
+            <div class="segmented" id="theme-segmented">
+              <button class="segmented-btn ${settings.theme==='light'?'active':''}" data-theme="light">فاتح</button>
+              <button class="segmented-btn ${settings.theme==='dark'?'active':''}" data-theme="dark">داكن</button>
+              <button class="segmented-btn ${settings.theme==='system'?'active':''}" data-theme="system">تلقائي</button>
+            </div>
           </div>
         </div>
       </div>
@@ -77,9 +77,9 @@ export function renderSettings(container) {
             <div class="row-sub">تلوين أحكام التجويد</div>
           </div>
           <div class="row-trail">
-            <label class="switch" style="position:relative;display:inline-block;width:44px;height:24px">
-              <input type="checkbox" id="tajweed-toggle" ${s.quran.showTajweed?'checked':''} style="opacity:0;width:0;height:0">
-              <span class="slider" style="position:absolute;inset:0;background:var(--border-strong);border-radius:999px;transition:0.2s"></span>
+            <label class="switch">
+              <input type="checkbox" id="tajweed-toggle" ${s.quran.showTajweed?'checked':''}>
+              <span class="slider"></span>
             </label>
           </div>
         </div>
@@ -106,9 +106,9 @@ export function renderSettings(container) {
             <div class="row-sub">${audio.speed || 1}×</div>
           </div>
           <div class="row-trail">
-            <select class="select" id="speed-select" style="width:auto">
-              ${[0.5,0.75,1,1.25,1.5,2].map(sp => `<option value="${sp}" ${audio.speed==sp?'selected':''}>${sp}×</option>`).join('')}
-            </select>
+            <div class="segmented" id="speed-segmented">
+              ${[0.75,1,1.25,1.5].map(sp => `<button class="segmented-btn ${audio.speed==sp?'active':''}" data-speed="${sp}">${sp}×</button>`).join('')}
+            </div>
           </div>
         </div>
         <div class="row" style="cursor:default">
@@ -120,9 +120,9 @@ export function renderSettings(container) {
             <div class="row-sub">ينتقل للآية التالية</div>
           </div>
           <div class="row-trail">
-            <label class="switch" style="position:relative;display:inline-block;width:44px;height:24px">
-              <input type="checkbox" id="autoplay-toggle" ${audio.autoplay!==false?'checked':''} style="opacity:0;width:0;height:0">
-              <span class="slider" style="position:absolute;inset:0;background:var(--border-strong);border-radius:999px;transition:0.2s"></span>
+            <label class="switch">
+              <input type="checkbox" id="autoplay-toggle" ${audio.autoplay!==false?'checked':''}>
+              <span class="slider"></span>
             </label>
           </div>
         </div>
@@ -171,12 +171,16 @@ export function renderSettings(container) {
 }
 
 function wireSettings(container) {
-  // Theme
-  const themeSelect = container.querySelector('#theme-select');
-  themeSelect.onchange = () => {
-    State.setSlice('settings', { theme: themeSelect.value });
-    applyTheme(themeSelect.value);
-  };
+  // Theme - segmented control
+  container.querySelectorAll('#theme-segmented .segmented-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const theme = btn.getAttribute('data-theme');
+      State.setSlice('settings', { theme });
+      applyTheme(theme);
+      container.querySelectorAll('#theme-segmented .segmented-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
 
   // Font size
   let { fontSize, lineHeight } = State.getSlice('quran');
@@ -195,10 +199,18 @@ function wireSettings(container) {
     import('../audio/audio-player.js').then(m => m.openReciterPicker());
   });
 
-  // Speed
-  container.querySelector('#speed-select').onchange = (e) => {
-    setSpeed(parseFloat(e.target.value));
-  };
+  // Speed - segmented control
+  container.querySelectorAll('#speed-segmented .segmented-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const sp = parseFloat(btn.getAttribute('data-speed'));
+      setSpeed(sp);
+      container.querySelectorAll('#speed-segmented .segmented-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      // Update row-sub display
+      const rowSub = btn.closest('.row')?.querySelector('.row-sub');
+      if (rowSub) rowSub.textContent = `${sp}×`;
+    });
+  });
 
   // Autoplay
   container.querySelector('#autoplay-toggle').onchange = (e) => {
@@ -210,16 +222,6 @@ function wireSettings(container) {
     State.setSlice('quran', { showTajweed: e.target.checked });
     toast(e.target.checked ? 'تم تفعيل التجويد' : 'تم إيقاف التجويد', 'info');
   };
-
-  // Toggle switch visual
-  container.querySelectorAll('input[type=checkbox]').forEach(cb => {
-    const update = () => {
-      const slider = cb.nextElementSibling;
-      slider.style.background = cb.checked ? 'var(--quran-color)' : 'var(--border-strong)';
-    };
-    update();
-    cb.addEventListener('change', update);
-  });
 
   // Export
   container.querySelector('#export-btn').onclick = async () => {

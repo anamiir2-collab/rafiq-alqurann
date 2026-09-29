@@ -157,6 +157,12 @@ export function setSpeed(s) {
 }
 export function setAutoplay(v) { State.setSlice('audio', { autoplay: !!v }); }
 
+/* Play full surah (from surah index page) */
+export async function playSurah(surah) {
+  if (!surah) return;
+  await playAyah(Number(surah), 1);
+}
+
 /* ============ Internal: queue / autoplay ============ */
 async function onAyahEnded() {
   const audio = State.getSlice('audio');
@@ -199,7 +205,10 @@ function showAudioBar() {
   if (!audioBarEl) {
     audioBarEl = document.createElement('div');
     audioBarEl.className = 'audio-bar';
+    audioBarEl.setAttribute('role', 'button');
+    audioBarEl.setAttribute('aria-label', 'مشغل القرآن - اضغط للفتح الكامل');
     audioBarEl.innerHTML = `
+      <div class="audio-bar-art" id="audio-bar-art">${Icons.speaker}</div>
       <div class="audio-bar-info">
         <div class="audio-bar-surah" id="audio-bar-surah"></div>
         <div class="audio-bar-reciter" id="audio-bar-reciter"></div>
@@ -208,24 +217,46 @@ function showAudioBar() {
         <button class="audio-bar-btn" id="audio-prev" aria-label="السابق">${Icons.prev}</button>
         <button class="audio-bar-btn play" id="audio-play" aria-label="تشغيل/إيقاف">${Icons.pause}</button>
         <button class="audio-bar-btn" id="audio-next" aria-label="التالي">${Icons.next}</button>
-        <button class="audio-bar-btn" id="audio-reciter" aria-label="القارئ">${Icons.speaker}</button>
       </div>
       <div class="audio-bar-progress"><div class="audio-bar-progress-bar" id="audio-progress" style="width:0"></div></div>
     `;
     document.body.appendChild(audioBarEl);
 
-    audioBarEl.querySelector('#audio-play').addEventListener('click', () => {
+    // Click on bar (except controls) opens full player
+    audioBarEl.addEventListener('click', (e) => {
+      if (e.target.closest('.audio-bar-btn') || e.target.closest('.audio-bar-art')) {
+        // Let specific handlers take over
+        if (e.target.closest('.audio-bar-art')) {
+          e.stopPropagation();
+          openFullPlayer();
+        }
+        return;
+      }
+      openFullPlayer();
+    });
+
+    audioBarEl.querySelector('#audio-play').addEventListener('click', (e) => {
+      e.stopPropagation();
       if (audioEl.paused) resume(); else pause();
     });
-    audioBarEl.querySelector('#audio-prev').addEventListener('click', previous);
-    audioBarEl.querySelector('#audio-next').addEventListener('click', next);
-    audioBarEl.querySelector('#audio-reciter').addEventListener('click', openReciterPicker);
+    audioBarEl.querySelector('#audio-prev').addEventListener('click', (e) => {
+      e.stopPropagation();
+      previous();
+    });
+    audioBarEl.querySelector('#audio-next').addEventListener('click', (e) => {
+      e.stopPropagation();
+      next();
+    });
+
+    // Add art icon click to also open reciter picker via long press / double click - keep simple for now
   }
+  document.body.classList.add('audio-visible');
   requestAnimationFrame(() => audioBarEl.classList.add('open'));
   updateBar();
 }
 
 function hideAudioBar() {
+  document.body.classList.remove('audio-visible');
   if (audioBarEl) audioBarEl.classList.remove('open');
 }
 
@@ -238,6 +269,139 @@ function updateBar() {
     meta ? `${meta.name} • آية ${toAr(currentAyah)}` : '';
   audioBarEl.querySelector('#audio-bar-reciter').textContent = reciter.name;
   audioBarEl.querySelector('#audio-play').innerHTML = isPlayingFlag ? Icons.pause : Icons.play;
+  const art = audioBarEl.querySelector('#audio-bar-art');
+  if (art) {
+    art.classList.toggle('playing', isPlayingFlag);
+  }
+}
+
+/* ============ Full Player Sheet ============ */
+function openFullPlayer() {
+  const audio = State.getSlice('audio');
+  const meta = getSurahMeta(currentSurah);
+  const reciter = getReciter(audio.reciter);
+
+  if (!meta) return;
+
+  const currentTime = audioEl ? audioEl.currentTime : 0;
+  const duration = audioEl ? (audioEl.duration || 0) : 0;
+  const progressPct = duration > 0 ? (currentTime / duration) * 100 : 0;
+
+  const body = `
+    <div class="audio-full-player">
+      <div class="player-art ${isPlayingFlag ? 'playing' : ''}" id="player-art">
+        ${Icons.speaker}
+      </div>
+      <div class="player-title">${meta.name}</div>
+      <div class="player-subtitle">${reciter.name} • آية ${toAr(currentAyah)}</div>
+
+      <div class="player-progress">
+        <div class="player-progress-bar-bg">
+          <div class="player-progress-bar" id="player-progress" style="width:${progressPct}%"></div>
+        </div>
+        <div class="player-times">
+          <span id="player-current-time">${formatTime(currentTime)}</span>
+          <span id="player-duration">${formatTime(duration)}</span>
+        </div>
+      </div>
+
+      <div class="player-controls">
+        <button class="player-btn" id="player-prev" aria-label="السابق">${Icons.prev}</button>
+        <button class="player-btn play" id="player-play" aria-label="تشغيل/إيقاف">${isPlayingFlag ? Icons.pause : Icons.play}</button>
+        <button class="player-btn" id="player-next" aria-label="التالي">${Icons.next}</button>
+      </div>
+
+      <div class="player-controls" style="margin-top:var(--sp-3)">
+        <button class="player-btn ${audio.repeat === 'one' ? 'active' : ''}" id="player-repeat-one" aria-label="تكرار آية">${Icons.repeatOne}</button>
+        <button class="player-btn ${audio.repeat === 'all' ? 'active' : ''}" id="player-repeat-all" aria-label="تكرار السورة">${Icons.repeat}</button>
+        <button class="player-btn" id="player-speed" aria-label="السرعة">${audio.speed || 1}×</button>
+        <button class="player-btn" id="player-reciter" aria-label="اختيار القارئ">${Icons.speaker}</button>
+      </div>
+    </div>
+  `;
+
+  openSheet({
+    title: 'المشغل',
+    body,
+  });
+
+  // Wire up full player controls
+  setTimeout(() => {
+    const playBtn = document.getElementById('player-play');
+    if (playBtn) {
+      playBtn.addEventListener('click', () => {
+        if (audioEl.paused) resume(); else pause();
+        playBtn.innerHTML = audioEl.paused ? Icons.play : Icons.pause;
+        const art = document.getElementById('player-art');
+        if (art) art.classList.toggle('playing', !audioEl.paused);
+      });
+    }
+    document.getElementById('player-prev')?.addEventListener('click', previous);
+    document.getElementById('player-next')?.addEventListener('click', next);
+
+    document.getElementById('player-repeat-one')?.addEventListener('click', (e) => {
+      const cur = State.getSlice('audio').repeat;
+      const next = cur === 'one' ? 'off' : 'one';
+      setRepeat(next);
+      e.currentTarget.classList.toggle('active', next === 'one');
+      document.getElementById('player-repeat-all')?.classList.remove('active');
+    });
+
+    document.getElementById('player-repeat-all')?.addEventListener('click', (e) => {
+      const cur = State.getSlice('audio').repeat;
+      const next = cur === 'all' ? 'off' : 'all';
+      setRepeat(next);
+      e.currentTarget.classList.toggle('active', next === 'all');
+      document.getElementById('player-repeat-one')?.classList.remove('active');
+    });
+
+    document.getElementById('player-reciter')?.addEventListener('click', () => {
+      closeSheet();
+      setTimeout(openReciterPicker, 300);
+    });
+
+    document.getElementById('player-speed')?.addEventListener('click', (e) => {
+      const cur = State.getSlice('audio').speed || 1;
+      const speeds = [0.5, 0.75, 1, 1.25, 1.5, 2];
+      const idx = speeds.indexOf(cur);
+      const nextSpeed = speeds[(idx + 1) % speeds.length];
+      setSpeed(nextSpeed);
+      e.currentTarget.textContent = `${nextSpeed}×`;
+    });
+
+    // Start full player progress updater
+    startFullPlayerProgress();
+  }, 100);
+}
+
+let fullPlayerProgressTimer = null;
+function startFullPlayerProgress() {
+  stopFullPlayerProgress();
+  fullPlayerProgressTimer = setInterval(() => {
+    if (!audioEl) return;
+    const progress = document.getElementById('player-progress');
+    const currentTime = document.getElementById('player-current-time');
+    const duration = document.getElementById('player-duration');
+    if (progress && audioEl.duration) {
+      const pct = (audioEl.currentTime / audioEl.duration) * 100;
+      progress.style.width = `${pct}%`;
+    }
+    if (currentTime) currentTime.textContent = formatTime(audioEl.currentTime);
+    if (duration && audioEl.duration) duration.textContent = formatTime(audioEl.duration);
+  }, 250);
+}
+function stopFullPlayerProgress() {
+  if (fullPlayerProgressTimer) {
+    clearInterval(fullPlayerProgressTimer);
+    fullPlayerProgressTimer = null;
+  }
+}
+
+function formatTime(seconds) {
+  if (!seconds || !isFinite(seconds)) return '0:00';
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return `${m}:${s < 10 ? '0' : ''}${s}`;
 }
 
 function startProgressTimer() {
@@ -290,6 +454,7 @@ export function openReciterPicker() {
 
 /* ============ Expose for inline handlers ============ */
 window.__playAyah = (surah, ayah) => playAyah(Number(surah), Number(ayah));
+window.__playSurah = (surah) => playSurah(surah);
 window.__openReciterPicker = openReciterPicker;
 
 /* ============ Helpers ============ */

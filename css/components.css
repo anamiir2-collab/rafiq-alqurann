@@ -1,65 +1,86 @@
 /* =====================================================================
-   Components — iOS-like cards, buttons, sheets, lists, etc.
-   Spec sections 7, 9, 61, 62.
+   Components v3 — Premium iOS-like cards, buttons, sheets, lists
    ===================================================================== */
 
-/* ===== Card (spec section 61: cards for main info) ===== */
+/* ===== Card — primary building block ===== */
 .card {
   background: var(--card);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
   border: 1px solid var(--hairline);
   overflow: hidden;
+  position: relative;
 }
 .card-pad { padding: var(--sp-5); }
 .card-pad-sm { padding: var(--sp-4); }
 .card-pad-lg { padding: var(--sp-6); }
-.card-hover { transition: transform var(--dur-fast) var(--ease-standard), box-shadow var(--dur-fast) var(--ease-standard); }
-.card-hover:active { transform: scale(0.98); }
+.card-pad-xl { padding: var(--sp-8); }
+
+.card-elevated {
+  box-shadow: var(--shadow-md);
+}
+.card-floating {
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--hairline);
+}
+
+.card-hover {
+  transition: transform var(--dur-fast) var(--ease-standard),
+              box-shadow var(--dur-fast) var(--ease-standard);
+  -webkit-tap-highlight-color: transparent;
+}
+.card-hover:active { transform: scale(0.985); }
 
 @media (hover: hover) {
-  .card-hover:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+  .card-hover:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
 }
 
-/* Glass effect (spec section 7: limited glass) */
+/* Glass effect (subtle blur — used for nav and floating elements) */
 .card-glass {
-  background: color-mix(in srgb, var(--card) 80%, transparent);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid color-mix(in srgb, var(--fg) 8%, transparent);
+  background: color-mix(in srgb, var(--card) 78%, transparent);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid color-mix(in srgb, var(--fg) 6%, transparent);
 }
 
-/* ===== Buttons ===== */
+/* ===== Buttons (iOS-style) ===== */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: var(--sp-2);
-  padding: 12px 20px;
+  padding: 14px 22px;
   border-radius: var(--radius-pill);
   border: 1px solid transparent;
   font-family: inherit;
   font-size: var(--fs-md);
-  font-weight: 600;
+  font-weight: var(--fw-semi);
   line-height: 1;
   cursor: pointer;
+  min-height: 48px;
   transition: transform var(--dur-fast) var(--ease-standard),
               background var(--dur-fast) var(--ease-standard),
               box-shadow var(--dur-fast) var(--ease-standard),
-              opacity var(--dur-fast) var(--ease-standard);
+              opacity var(--dur-fast) var(--ease-standard),
+              filter var(--dur-fast) var(--ease-standard);
   -webkit-tap-highlight-color: transparent;
   user-select: none;
+  letter-spacing: -0.005em;
 }
-.btn:active { transform: scale(0.96); }
-.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn:active { transform: scale(0.97); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
 .btn-primary {
   background: var(--quran-color);
   color: var(--fg-on-color);
   box-shadow: var(--shadow-blue);
 }
-.btn-primary:hover { filter: brightness(1.05); }
+.btn-primary:hover { filter: brightness(1.04); }
 
 .btn-action {
   background: var(--action-color);
   color: var(--fg-on-color);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-remind {
@@ -72,6 +93,12 @@
   background: var(--reflect-color);
   color: var(--fg-on-color);
   box-shadow: var(--shadow-purple);
+}
+
+.btn-gold {
+  background: linear-gradient(135deg, var(--c-gold) 0%, color-mix(in srgb, var(--c-gold) 85%, #B8945A) 100%);
+  color: var(--fg-on-color);
+  box-shadow: var(--shadow-gold);
 }
 
 .btn-outline {
@@ -87,66 +114,97 @@
 }
 .btn-ghost:hover { background: var(--bg-subtle); }
 
+.btn-soft {
+  background: color-mix(in srgb, var(--quran-color) 14%, transparent);
+  color: var(--quran-color);
+}
+.btn-soft:hover { background: color-mix(in srgb, var(--quran-color) 22%, transparent); }
+
 .btn-danger {
   background: transparent;
-  color: #C53030;
+  color: #D64545;
 }
-.btn-danger:hover { background: rgba(197, 48, 48, 0.08); }
+.btn-danger:hover { background: rgba(214, 69, 69, 0.08); }
 
-.btn-sm { padding: 8px 14px; font-size: var(--fs-sm); }
-.btn-lg { padding: 16px 28px; font-size: var(--fs-lg); }
+.btn-sm { padding: 9px 16px; font-size: var(--fs-sm); min-height: 36px; }
+.btn-lg { padding: 17px 30px; font-size: var(--fs-lg); min-height: 56px; }
 .btn-block { width: 100%; }
 .btn-icon {
   width: 44px; height: 44px; padding: 0;
   border-radius: var(--radius-pill);
   display: inline-flex; align-items: center; justify-content: center;
   background: transparent; color: var(--fg);
+  transition: background var(--dur-fast) var(--ease-standard),
+              transform var(--dur-fast) var(--ease-standard);
+  flex-shrink: 0;
 }
-.btn-icon:active { background: var(--bg-subtle); }
+.btn-icon:active { background: var(--bg-subtle); transform: scale(0.94); }
+.btn-icon svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 
-/* ===== Inputs (spec section 64) ===== */
+/* Icon button with background */
+.btn-icon-filled {
+  background: var(--bg-subtle);
+  color: var(--fg);
+}
+.btn-icon-filled:active { background: var(--border); }
+
+/* ===== Inputs ===== */
 .input, .textarea, .select {
   width: 100%;
-  padding: 12px 16px;
+  padding: 14px 18px;
   border-radius: var(--radius-md);
   border: 1px solid var(--border);
   background: var(--card);
   color: var(--fg);
   font-family: inherit;
   font-size: var(--fs-md);
+  font-weight: var(--fw-regular);
   transition: border-color var(--dur-fast) var(--ease-standard),
-              box-shadow var(--dur-fast) var(--ease-standard);
+              box-shadow var(--dur-fast) var(--ease-standard),
+              background var(--dur-fast) var(--ease-standard);
   -webkit-appearance: none;
   appearance: none;
+  min-height: 48px;
 }
 .input:focus, .textarea:focus, .select:focus {
   outline: none;
   border-color: var(--quran-color);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--quran-color) 22%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--quran-color) 16%, transparent);
 }
-.textarea { resize: vertical; min-height: 96px; line-height: 1.6; }
+.textarea { resize: vertical; min-height: 96px; line-height: 1.7; }
 .label {
-  display: block; font-size: var(--fs-sm); font-weight: 600;
+  display: block; font-size: var(--fs-sm); font-weight: var(--fw-semi);
   margin-bottom: var(--sp-2); color: var(--fg);
+  letter-spacing: -0.005em;
+}
+
+/* Search input — special style with icon */
+.input-search {
+  padding-inline: 48px 18px;
+}
+.input-search-rtl {
+  padding-inline: 18px 48px;
 }
 
 /* ===== Badge / chip ===== */
 .badge {
   display: inline-flex; align-items: center; gap: 4px;
-  padding: 3px 10px;
+  padding: 4px 12px;
   border-radius: var(--radius-pill);
   font-size: var(--fs-xs);
-  font-weight: 600;
+  font-weight: var(--fw-semi);
   background: var(--bg-subtle);
   color: var(--fg-muted);
   border: 1px solid var(--hairline);
+  line-height: 1.4;
 }
-.badge-quran  { background: color-mix(in srgb, var(--c-blue) 16%, transparent); color: var(--quran-color); border-color: transparent; }
-.badge-action { background: color-mix(in srgb, var(--c-cyan) 16%, transparent); color: var(--action-color); border-color: transparent; }
-.badge-remind { background: color-mix(in srgb, var(--c-pink) 20%, transparent); color: var(--remind-color); border-color: transparent; }
-.badge-reflect{ background: color-mix(in srgb, var(--c-purple) 18%, transparent); color: var(--reflect-color); border-color: transparent; }
+.badge-quran  { background: color-mix(in srgb, var(--c-blue) 14%, transparent); color: var(--quran-color); border-color: transparent; }
+.badge-action { background: color-mix(in srgb, var(--c-cyan) 14%, transparent); color: var(--action-color); border-color: transparent; }
+.badge-remind { background: color-mix(in srgb, var(--c-pink) 18%, transparent); color: var(--remind-color); border-color: transparent; }
+.badge-reflect{ background: color-mix(in srgb, var(--c-purple) 16%, transparent); color: var(--reflect-color); border-color: transparent; }
+.badge-gold   { background: color-mix(in srgb, var(--c-gold) 16%, transparent); color: var(--gold-color); border-color: transparent; }
 
-/* ===== Row (spec section 61: rows for lists) ===== */
+/* ===== Row — list item inside a card ===== */
 .row {
   display: flex; align-items: center; gap: var(--sp-3);
   padding: var(--sp-4) var(--sp-5);
@@ -154,13 +212,16 @@
   border-bottom: 1px solid var(--hairline);
   cursor: pointer;
   transition: background var(--dur-fast) var(--ease-standard);
+  min-height: 64px;
+  text-decoration: none;
+  color: inherit;
 }
+.row:active { background: var(--bg-subtle); }
 .row:first-child { border-top-left-radius: var(--radius-lg); border-top-right-radius: var(--radius-lg); }
 .row:last-child  { border-bottom-left-radius: var(--radius-lg); border-bottom-right-radius: var(--radius-lg); border-bottom: none; }
-.row:active { background: var(--bg-subtle); }
 .row-icon { flex: 0 0 auto; }
 .row-body { flex: 1; min-width: 0; }
-.row-title { font-weight: 600; font-size: var(--fs-md); color: var(--fg); }
+.row-title { font-weight: var(--fw-semi); font-size: var(--fs-md); color: var(--fg); letter-spacing: -0.005em; }
 .row-sub { font-size: var(--fs-sm); color: var(--fg-muted); margin-top: 2px; }
 .row-trail { flex: 0 0 auto; color: var(--fg-subtle); }
 
@@ -189,8 +250,14 @@
 .progress-bar.action { background: var(--action-color); }
 .progress-bar.remind { background: var(--remind-color); }
 .progress-bar.reflect{ background: var(--reflect-color); }
+.progress-bar.gold  { background: var(--gold-color); }
 
-/* ===== Toast (spec section 61) ===== */
+/* Larger progress with rounded pill style */
+.progress-thick {
+  height: 10px;
+}
+
+/* ===== Toast ===== */
 .toast-container {
   position: fixed;
   top: calc(var(--safe-area-top) + 16px);
@@ -204,20 +271,20 @@
 .toast {
   background: var(--fg-strong);
   color: var(--bg);
-  padding: 10px 18px;
+  padding: 12px 20px;
   border-radius: var(--radius-pill);
   box-shadow: var(--shadow-lg);
   font-size: var(--fs-sm);
-  font-weight: 500;
+  font-weight: var(--fw-semi);
   animation: toast-in var(--dur-base) var(--ease-spring);
   pointer-events: auto;
   max-width: 100%;
 }
-.toast.error   { background: #C53030; color: white; }
+.toast.error   { background: #D64545; color: white; }
 .toast.success { background: #2F855A; color: white; }
 .toast.info    { background: var(--quran-color); color: var(--fg-on-color); }
 @keyframes toast-in {
-  from { opacity: 0; transform: translateY(-12px) scale(0.95); }
+  from { opacity: 0; transform: translateY(-16px) scale(0.92); }
   to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
@@ -228,21 +295,22 @@
   color: var(--fg-muted);
 }
 .empty-state-icon {
-  width: 64px; height: 64px;
-  margin: 0 auto var(--sp-4);
+  width: 80px; height: 80px;
+  margin: 0 auto var(--sp-5);
   background: var(--bg-subtle);
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-xl);
   display: flex; align-items: center; justify-content: center;
   color: var(--fg-subtle);
 }
-.empty-state-title { font-size: var(--fs-lg); font-weight: 600; color: var(--fg); margin-bottom: var(--sp-2); }
+.empty-state-icon svg { width: 32px; height: 32px; stroke: currentColor; fill: none; stroke-width: 1.6; }
+.empty-state-title { font-size: var(--fs-lg); font-weight: var(--fw-semi); color: var(--fg); margin-bottom: var(--sp-2); }
 .empty-state-text  { font-size: var(--fs-sm); color: var(--fg-muted); }
 
 /* ===== Skeleton (loading) ===== */
 .skeleton {
   background: linear-gradient(90deg, var(--bg-subtle) 0%, var(--card-2) 50%, var(--bg-subtle) 100%);
   background-size: 200% 100%;
-  animation: skeleton 1.4s ease-in-out infinite;
+  animation: skeleton 1.6s ease-in-out infinite;
   border-radius: var(--radius-sm);
 }
 @keyframes skeleton {
@@ -254,14 +322,154 @@
 .divider { height: 1px; background: var(--hairline); border: 0; margin: var(--sp-4) 0; }
 .divider-label {
   display: flex; align-items: center; gap: var(--sp-3);
-  margin: var(--sp-5) 0;
+  margin: var(--sp-6) 0 var(--sp-3);
   color: var(--fg-subtle);
   font-size: var(--fs-xs);
-  font-weight: 600;
+  font-weight: var(--fw-bold);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
 }
 .divider-label::before,
 .divider-label::after {
   content: ''; flex: 1; height: 1px; background: var(--hairline);
+}
+
+/* ===== Segmented control (iOS-style) ===== */
+.segmented {
+  display: inline-flex;
+  background: var(--bg-subtle);
+  border-radius: var(--radius-pill);
+  padding: 3px;
+  gap: 2px;
+  position: relative;
+  max-width: 100%;
+  overflow: hidden;
+}
+.segmented-btn {
+  padding: 7px 12px;
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semi);
+  color: var(--fg-muted);
+  background: transparent;
+  transition: all var(--dur-base) var(--ease-standard);
+  cursor: pointer;
+  border: none;
+  white-space: nowrap;
+  min-height: 32px;
+}
+.segmented-btn.active {
+  background: var(--card);
+  color: var(--fg-strong);
+  box-shadow: var(--shadow-xs);
+}
+
+/* Compact segmented for settings */
+.segmented.compact .segmented-btn {
+  padding: 6px 10px;
+  font-size: var(--fs-2xs);
+}
+
+@media (max-width: 380px) {
+  .segmented-btn {
+    padding: 6px 8px;
+    font-size: var(--fs-2xs);
+  }
+}
+
+/* ===== Chip (selectable) ===== */
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-subtle);
+  color: var(--fg-muted);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all var(--dur-fast) var(--ease-standard);
+  user-select: none;
+}
+.chip:active { transform: scale(0.96); }
+.chip.active {
+  background: color-mix(in srgb, var(--quran-color) 18%, transparent);
+  color: var(--quran-color);
+}
+.chip.active.remind {
+  background: color-mix(in srgb, var(--c-pink) 18%, transparent);
+  color: var(--remind-color);
+}
+
+/* ===== Switch (iOS-style) ===== */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 30px;
+  flex-shrink: 0;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.switch .slider {
+  position: absolute;
+  inset: 0;
+  background: var(--border-strong);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: background var(--dur-base) var(--ease-standard);
+}
+.switch .slider::before {
+  content: '';
+  position: absolute;
+  width: 26px; height: 26px;
+  top: 2px;
+  right: 2px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+  transition: transform var(--dur-base) var(--ease-spring);
+}
+.switch input:checked + .slider {
+  background: var(--quran-color);
+}
+.switch input:checked + .slider::before {
+  transform: translateX(-20px);
+}
+
+/* ===== Settings row icon helper ===== */
+.setting-icon {
+  width: 44px; height: 44px;
+  border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.setting-icon.quran  { background: color-mix(in srgb, var(--c-blue) 14%, transparent); color: var(--quran-color); }
+.setting-icon.action { background: color-mix(in srgb, var(--c-cyan) 14%, transparent); color: var(--action-color); }
+.setting-icon.neutral { background: var(--bg-subtle); color: var(--fg); }
+.setting-icon.danger { background: rgba(214, 69, 69, 0.1); color: #D64545; }
+.setting-icon svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ===== Pulse animation (subtle) ===== */
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.7; }
+}
+
+/* ===== Shimmer animation ===== */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ===== Stagger animation for cards ===== */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-up {
+  animation: fade-up var(--dur-base) var(--ease-decel) backwards;
 }

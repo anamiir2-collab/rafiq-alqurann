@@ -1,6 +1,6 @@
 /* =====================================================================
-   رفيق القرآن | Quran Companion — Base styles
-   Reset + typography primitives + container. iOS-like, mobile-first.
+   رفيق القرآن | Quran Companion — Base styles v3
+   iOS-inspired typography, smooth scroll, safe-area aware
    ===================================================================== */
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -10,6 +10,7 @@ html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -18,31 +19,103 @@ body {
   color: var(--fg);
   font-family: var(--font-ui);
   font-size: var(--fs-md);
-  line-height: 1.6;
+  line-height: 1.65;
+  font-weight: var(--fw-regular);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   min-height: 100vh;
   min-height: 100dvh;
   overscroll-behavior-y: none;
+  letter-spacing: -0.005em;
 }
 
-/* Reserve space for topbar + bottomnav so content never hides */
+/* Soft background gradient (subtle iOS-like feel) */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse at top, color-mix(in srgb, var(--c-blue) 6%, transparent) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom right, color-mix(in srgb, var(--c-purple) 4%, transparent) 0%, transparent 50%),
+    var(--bg);
+  pointer-events: none;
+}
+
+.theme-dark body::before,
+.theme-system.theme-dark body::before {
+  background:
+    radial-gradient(ellipse at top, color-mix(in srgb, var(--c-blue) 4%, transparent) 0%, transparent 50%),
+    var(--bg);
+}
+
+/* Reserve space for topbar + bottomnav */
 body.has-topbar    { padding-top: calc(var(--topbar-h) + var(--safe-area-top)); }
-body.has-bottomnav { padding-bottom: calc(var(--bottomnav-h) + var(--safe-area-bottom) + 12px); }
+body.has-bottomnav { padding-bottom: calc(var(--bottomnav-float) + var(--safe-area-bottom) + 60px); }
 
 img, svg { display: block; max-width: 100%; }
 img { height: auto; }
 button, input, textarea, select { font: inherit; color: inherit; }
-button { background: none; border: none; padding: 0; cursor: pointer; }
-a { color: var(--quran-color); text-decoration: none; }
-a:active { opacity: 0.6; }
+button { background: none; border: none; padding: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+a { color: var(--quran-color); text-decoration: none; transition: opacity var(--dur-fast) var(--ease-standard); }
+a:active { opacity: 0.65; }
 
-/* ===== Typography ===== */
-.h1, h1 { font-size: var(--fs-3xl); font-weight: 700; line-height: 1.25; letter-spacing: -0.01em; margin: 0; }
-.h2, h2 { font-size: var(--fs-2xl); font-weight: 700; line-height: 1.3;  margin: 0; }
-.h3, h3 { font-size: var(--fs-xl);  font-weight: 600; line-height: 1.35; margin: 0; }
-.h4, h4 { font-size: var(--fs-lg);  font-weight: 600; line-height: 1.4;  margin: 0; }
+/* ===== Typography System (iOS-style hierarchy) ===== */
+.h1, h1 {
+  font-size: var(--fs-4xl);
+  font-weight: var(--fw-bold);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  margin: 0;
+  color: var(--fg-strong);
+  font-family: var(--font-display);
+}
+.h2, h2 {
+  font-size: var(--fs-3xl);
+  font-weight: var(--fw-bold);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin: 0;
+  color: var(--fg-strong);
+  font-family: var(--font-display);
+}
+.h3, h3 {
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-semi);
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  margin: 0;
+  color: var(--fg-strong);
+  font-family: var(--font-display);
+}
+.h4, h4 {
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-semi);
+  line-height: 1.35;
+  margin: 0;
+  color: var(--fg-strong);
+  font-family: var(--font-display);
+}
+.h5, h5 {
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semi);
+  line-height: 1.4;
+  margin: 0;
+  font-family: var(--font-display);
+}
+
+/* Display text (large hero) */
+.display {
+  font-size: var(--fs-5xl);
+  font-weight: var(--fw-heavy);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--fg-strong);
+}
+
+/* Font size utilities */
+.text-2xs  { font-size: var(--fs-2xs); }
 .text-xs   { font-size: var(--fs-xs); }
 .text-sm   { font-size: var(--fs-sm); }
 .text-md   { font-size: var(--fs-md); }
@@ -50,20 +123,27 @@ a:active { opacity: 0.6; }
 .text-xl   { font-size: var(--fs-xl); }
 .text-2xl  { font-size: var(--fs-2xl); }
 .text-3xl  { font-size: var(--fs-3xl); }
+
+/* Color utilities */
 .text-muted   { color: var(--fg-muted); }
 .text-subtle  { color: var(--fg-subtle); }
-.text-strong  { color: var(--fg-strong); font-weight: 600; }
+.text-strong  { color: var(--fg-strong); }
 .text-quran   { color: var(--quran-color); }
 .text-action  { color: var(--action-color); }
 .text-remind  { color: var(--remind-color); }
 .text-reflect { color: var(--reflect-color); }
+.text-gold    { color: var(--gold-color); }
+
 .text-center  { text-align: center; }
 .text-right   { text-align: right; }
 .text-left    { text-align: left; }
-.font-bold    { font-weight: 700; }
-.font-semi    { font-weight: 600; }
-.font-medium  { font-weight: 500; }
-.font-normal  { font-weight: 400; }
+
+/* Weight utilities */
+.font-regular { font-weight: var(--fw-regular); }
+.font-medium  { font-weight: var(--fw-medium); }
+.font-semi    { font-weight: var(--fw-semi); }
+.font-bold    { font-weight: var(--fw-bold); }
+.font-heavy   { font-weight: var(--fw-heavy); }
 .font-quran   { font-family: var(--font-quran); font-feature-settings: 'calt','liga'; }
 .font-mono    { font-family: var(--font-mono); }
 
@@ -72,7 +152,7 @@ a:active { opacity: 0.6; }
   width: 100%;
   max-width: var(--container-max);
   margin-inline: auto;
-  padding-inline: var(--sp-4);
+  padding-inline: var(--sp-5);
 }
 
 /* ===== Layout helpers ===== */
@@ -93,22 +173,25 @@ a:active { opacity: 0.6; }
 .gap-4 { gap: var(--sp-4); }
 .gap-5 { gap: var(--sp-5); }
 .gap-6 { gap: var(--sp-6); }
+.gap-8 { gap: var(--sp-8); }
 .grid { display: grid; }
 .grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
 .grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
 
 /* ===== Spacing helpers ===== */
 .m-0 { margin: 0; }
 .mt-1{margin-top:var(--sp-1)} .mt-2{margin-top:var(--sp-2)} .mt-3{margin-top:var(--sp-3)}
 .mt-4{margin-top:var(--sp-4)} .mt-5{margin-top:var(--sp-5)} .mt-6{margin-top:var(--sp-6)}
-.mt-8{margin-top:var(--sp-8)}
+.mt-8{margin-top:var(--sp-8)} .mt-10{margin-top:var(--sp-10)} .mt-12{margin-top:var(--sp-12)}
 .mb-1{margin-bottom:var(--sp-1)} .mb-2{margin-bottom:var(--sp-2)} .mb-3{margin-bottom:var(--sp-3)}
 .mb-4{margin-bottom:var(--sp-4)} .mb-5{margin-bottom:var(--sp-5)} .mb-6{margin-bottom:var(--sp-6)}
 .mb-8{margin-bottom:var(--sp-8)}
 .p-2{padding:var(--sp-2)} .p-3{padding:var(--sp-3)} .p-4{padding:var(--sp-4)}
-.p-5{padding:var(--sp-5)} .p-6{padding:var(--sp-6)}
-.px-4{padding-inline:var(--sp-4)} .py-3{padding-block:var(--sp-3)}
-.py-4{padding-block:var(--sp-4)}
+.p-5{padding:var(--sp-5)} .p-6{padding:var(--sp-6)} .p-8{padding:var(--sp-8)}
+.px-4{padding-inline:var(--sp-4)} .px-5{padding-inline:var(--sp-5)}
+.py-3{padding-block:var(--sp-3)} .py-4{padding-block:var(--sp-4)} .py-5{padding-block:var(--sp-5)}
+.py-6{padding-block:var(--sp-6)}
 
 /* ===== Misc ===== */
 .sr-only {
@@ -121,9 +204,12 @@ a:active { opacity: 0.6; }
 .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.rounded-xs { border-radius: var(--radius-xs); }
 .rounded-sm { border-radius: var(--radius-sm); }
 .rounded-md { border-radius: var(--radius-md); }
 .rounded-lg { border-radius: var(--radius-lg); }
+.rounded-xl { border-radius: var(--radius-xl); }
+.rounded-2xl { border-radius: var(--radius-2xl); }
 .rounded-pill { border-radius: var(--radius-pill); }
 .border { border: 1px solid var(--border); }
 .border-t { border-top: 1px solid var(--hairline); }
@@ -132,20 +218,20 @@ a:active { opacity: 0.6; }
 /* ===== Scrollbar (subtle, iOS-like) ===== */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; opacity: 0.5; }
 ::-webkit-scrollbar-thumb:hover { background: var(--fg-subtle); }
 
 /* ===== Selection ===== */
-::selection { background: var(--c-blue); color: var(--fg-on-color); }
+::selection { background: color-mix(in srgb, var(--c-blue) 30%, transparent); color: var(--fg-strong); }
 
-/* ===== Focus (accessibility — spec section 64) ===== */
+/* ===== Focus (accessibility) ===== */
 :focus-visible {
   outline: 2px solid var(--quran-color);
   outline-offset: 2px;
   border-radius: var(--radius-xs);
 }
 
-/* ===== Reduced motion (spec section 63, 96) ===== */
+/* ===== Reduced motion ===== */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -154,3 +240,18 @@ a:active { opacity: 0.6; }
     scroll-behavior: auto !important;
   }
 }
+
+/* ===== iOS-style micro-interactions ===== */
+.tap {
+  transition: transform var(--dur-fast) var(--ease-standard);
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.tap:active { transform: scale(0.97); }
+
+.tap-card {
+  transition: transform var(--dur-fast) var(--ease-standard),
+              box-shadow var(--dur-fast) var(--ease-standard);
+  -webkit-tap-highlight-color: transparent;
+}
+.tap-card:active { transform: scale(0.985); }

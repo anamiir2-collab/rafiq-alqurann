@@ -1,30 +1,32 @@
 /* =====================================================================
-   Bottom Navigation — 5 items per spec section 22
-   الرئيسية / القرآن / الورد / التدبر / المزيد
+   Navigation v3 — Floating iOS-style Bottom Nav + Topbar
    ===================================================================== */
 
+/* ===== Floating Bottom Navigation ===== */
 .bottomnav {
   position: fixed;
-  bottom: 0;
-  left: 0; right: 0;
+  bottom: calc(var(--safe-area-bottom) + 12px);
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 800;
-  background: color-mix(in srgb, var(--card) 86%, transparent);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border-top: 1px solid var(--hairline);
-  padding-bottom: var(--safe-area-bottom);
-  padding-top: 6px;
+  width: calc(100% - var(--sp-6) * 2);
+  max-width: calc(var(--container-max) - var(--sp-8) * 2);
+  background: color-mix(in srgb, var(--card) 80%, transparent);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-lg);
+  padding: 6px;
+  transition: transform var(--dur-slow) var(--ease-spring);
 }
 
 .bottomnav-inner {
-  max-width: var(--container-max);
-  margin: 0 auto;
-  padding: 0 var(--sp-2);
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 0;
-  height: calc(var(--bottomnav-h) - 6px);
-  align-items: stretch;
+  gap: 2px;
+  height: 56px;
+  align-items: center;
 }
 
 .nav-btn {
@@ -32,23 +34,28 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 2px;
   padding: 6px 4px;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-pill);
   color: var(--fg-muted);
   font-size: 10px;
-  font-weight: 500;
+  font-weight: var(--fw-medium);
   line-height: 1;
   position: relative;
   transition: color var(--dur-fast) var(--ease-standard),
-              background var(--dur-fast) var(--ease-standard);
+              background var(--dur-base) var(--ease-standard);
   -webkit-tap-highlight-color: transparent;
+  height: 100%;
+  cursor: pointer;
 }
 
 .nav-btn .nav-icon {
-  width: 26px; height: 26px;
+  width: 28px; height: 28px;
   display: flex; align-items: center; justify-content: center;
   transition: transform var(--dur-base) var(--ease-spring);
+  border-radius: var(--radius-pill);
+  padding: 4px;
+  position: relative;
 }
 
 .nav-btn .nav-icon svg {
@@ -58,69 +65,89 @@
   stroke-width: 1.8;
   stroke-linecap: round;
   stroke-linejoin: round;
+  transition: stroke-width var(--dur-fast) var(--ease-standard);
 }
 
 .nav-btn .nav-label {
   font-size: 10px;
-  letter-spacing: 0;
+  letter-spacing: -0.005em;
   white-space: nowrap;
+  opacity: 1;
+  transition: opacity var(--dur-fast) var(--ease-standard);
 }
 
 .nav-btn:hover { color: var(--fg); }
 
+.nav-btn:active .nav-icon { transform: scale(0.92); }
+
+/* Active state — iOS pill style */
 .nav-btn.active {
+  color: var(--fg-strong);
+}
+
+.nav-btn.active .nav-icon {
+  background: color-mix(in srgb, var(--quran-color) 18%, transparent);
+  color: var(--quran-color);
+  transform: translateY(-1px) scale(1.04);
+}
+
+.nav-btn.active .nav-icon svg {
+  stroke-width: 2.2;
+}
+
+.nav-btn.active .nav-label {
+  font-weight: var(--fw-semi);
+}
+
+/* Variant colors per section */
+.nav-btn[data-color="quran"].active .nav-icon {
+  background: color-mix(in srgb, var(--c-blue) 18%, transparent);
   color: var(--quran-color);
 }
-.nav-btn.active .nav-icon {
-  transform: translateY(-1px) scale(1.06);
-}
-.nav-btn.active .nav-icon::after {
-  content: '';
-  position: absolute;
-  top: -7px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 28px; height: 4px;
-  border-radius: var(--radius-pill);
-  background: var(--quran-color);
-  opacity: 0.85;
+
+.nav-btn[data-color="wird"].active .nav-icon {
+  background: color-mix(in srgb, var(--c-cyan) 18%, transparent);
+  color: var(--action-color);
 }
 
-/* Variant colors per section (spec section 8 — balance the palette) */
-.nav-btn[data-color="quran"].active   { color: var(--quran-color); }
-.nav-btn[data-color="quran"].active .nav-icon::after { background: var(--quran-color); }
+.nav-btn[data-color="tadabbur"].active .nav-icon {
+  background: color-mix(in srgb, var(--c-purple) 18%, transparent);
+  color: var(--reflect-color);
+}
 
-.nav-btn[data-color="wird"].active    { color: var(--action-color); }
-.nav-btn[data-color="wird"].active .nav-icon::after { background: var(--action-color); }
+.nav-btn[data-color="more"].active .nav-icon {
+  background: color-mix(in srgb, var(--c-pink) 18%, transparent);
+  color: var(--remind-color);
+}
 
-.nav-btn[data-color="tadabbur"].active{ color: var(--reflect-color); }
-.nav-btn[data-color="tadabbur"].active .nav-icon::after { background: var(--reflect-color); }
+.nav-btn[data-color="quran"].active    { color: var(--quran-color); }
+.nav-btn[data-color="wird"].active     { color: var(--action-color); }
+.nav-btn[data-color="tadabbur"].active { color: var(--reflect-color); }
+.nav-btn[data-color="more"].active     { color: var(--remind-color); }
 
-.nav-btn[data-color="more"].active    { color: var(--remind-color); }
-.nav-btn[data-color="more"].active .nav-icon::after { background: var(--remind-color); }
-
-/* Reduced motion (spec section 96) */
+/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .nav-btn .nav-icon { transition: none; }
   .nav-btn:active { transform: none; }
 }
 
-/* ===== Top bar ===== */
+/* ===== Top bar (refined iOS-style) ===== */
 .topbar {
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 800;
-  background: color-mix(in srgb, var(--card) 86%, transparent);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  background: color-mix(in srgb, var(--bg) 78%, transparent);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
   border-bottom: 1px solid var(--hairline);
   padding-top: var(--safe-area-top);
+  transition: background var(--dur-base) var(--ease-standard);
 }
 
 .topbar-inner {
   max-width: var(--container-max);
   margin: 0 auto;
-  padding: 0 var(--sp-4);
+  padding: 0 var(--sp-5);
   height: var(--topbar-h);
   display: flex;
   align-items: center;
@@ -130,14 +157,17 @@
 
 .topbar-title {
   font-size: var(--fs-lg);
-  font-weight: 700;
+  font-weight: var(--fw-bold);
   color: var(--fg-strong);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
 }
 .topbar-sub {
   font-size: var(--fs-xs);
   color: var(--fg-muted);
   margin-top: 2px;
+  font-weight: var(--fw-medium);
+  letter-spacing: -0.005em;
 }
 
 .topbar-actions {
@@ -145,12 +175,12 @@
   align-items: center;
 }
 
-/* ===== Page transitions (spec section 63) ===== */
+/* Page transitions */
 .page {
   animation: page-in var(--dur-base) var(--ease-decel);
 }
 @keyframes page-in {
-  from { opacity: 0; transform: translateY(6px); }
+  from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -160,16 +190,58 @@
 /* ===== Section header ===== */
 .section-header {
   display: flex; align-items: center; justify-content: space-between;
-  margin: var(--sp-6) 0 var(--sp-3);
+  margin: var(--sp-6) 0 var(--sp-4);
   gap: var(--sp-3);
 }
 .section-header h2 {
-  font-size: var(--fs-xl);
-  font-weight: 700;
-  letter-spacing: -0.01em;
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-bold);
+  letter-spacing: -0.02em;
 }
 .section-header .section-action {
   font-size: var(--fs-sm);
   color: var(--quran-color);
-  font-weight: 600;
+  font-weight: var(--fw-semi);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ===== Sticky search header (surah index) ===== */
+.sticky-search {
+  position: sticky;
+  top: calc(var(--topbar-h) + var(--safe-area-top) + var(--sp-2));
+  z-index: 50;
+  background: color-mix(in srgb, var(--bg) 90%, transparent);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: var(--sp-3) 0;
+  margin-bottom: var(--sp-3);
+}
+
+/* ===== Hide bottom nav when audio bar opens (to avoid overlap) ===== */
+body.audio-visible .bottomnav {
+  transform: translateX(-50%) translateY(-80px);
+}
+
+@media (max-width: 380px) {
+  .bottomnav {
+    width: calc(100% - var(--sp-4) * 2);
+  }
+  .nav-btn .nav-label {
+    font-size: 9px;
+  }
+  .nav-btn .nav-icon {
+    width: 24px; height: 24px;
+  }
+  .nav-btn .nav-icon svg {
+    width: 20px; height: 20px;
+  }
+}
+
+/* ===== Desktop adjustment (centered, narrower) ===== */
+@media (min-width: 768px) {
+  .bottomnav {
+    max-width: 600px;
+  }
 }

@@ -1,7 +1,10 @@
 /* =====================================================================
-   home.js — Home screen (spec section 21, 69)
-   Quran-first: آية اليوم / متابعة القراءة / ورد اليوم /
-   الصلاة القادمة / أذكار / تدبر / حفظ ومراجعة
+   home.js v3 — Premium iPhone-style Dashboard
+   - Compact greeting with hijri date
+   - Ayah of the Day hero card
+   - Continue reading card (with progress)
+   - Service grid (4 tiles)
+   - Prayer card (compact)
    ===================================================================== */
 
 import { State } from './state.js';
@@ -60,90 +63,106 @@ export async function renderHome(container) {
   container.innerHTML = `
     <div class="page container-app">
       <div class="home-greeting">
-        <div class="greeting-hello">${greeting()}</div>
-        <div class="greeting-name">${escapeHtml(name)}</div>
-        <div class="greeting-date">
-          <span>${hijriDate()}</span>
+        <div class="greeting-text">
+          <div class="greeting-hello">${greeting()}</div>
+          <div class="greeting-name">${escapeHtml(name)}</div>
+          <div class="greeting-date">
+            <span class="hijri">${hijriDate()}</span>
+          </div>
         </div>
+        <a class="home-action-btn" href="#/search" aria-label="البحث">${Icons.search}</a>
       </div>
 
-      <div id="ayah-card-slot"></div>
+      <!-- Ayah of the Day — Hero card -->
+      <div id="ayah-card-slot">
+        <a class="ayah-card" href="#/quran/1">
+          <div class="ayah-card-label">${Icons.sparkles} آية اليوم</div>
+          <div class="ayah-card-text">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>
+          <div class="ayah-card-ref-wrap">
+            <div class="ayah-card-ref">الفاتحة • آية ١</div>
+          </div>
+        </a>
+      </div>
 
-      <a class="continue-card" href="#/today">
-        <div class="continue-icon" style="background:color-mix(in srgb,var(--c-blue) 14%,transparent);color:var(--quran-color)">${Icons.home}</div>
-        <div class="continue-body">
-          <div class="continue-title">يومي مع الله</div>
-          <div class="continue-sub">ملخص يومك + عمل خير اليوم</div>
-        </div>
-        <div style="color:var(--fg-subtle)">${Icons.chevronLeft}</div>
-      </a>
-
-      <a class="continue-card" href="#/listening">
-        <div class="continue-icon">${Icons.book}</div>
-        <div class="continue-body">
-          <div class="continue-title">الاستماع</div>
-          <div class="continue-sub">تلاوات القراء مع التتبع</div>
-        </div>
-        <div style="color:var(--fg-subtle)">${Icons.chevronLeft}</div>
-      </a>
-
-      <a class="continue-card" href="#/search">
-        <div class="continue-icon" style="background:color-mix(in srgb,var(--c-purple) 14%,transparent);color:var(--reflect-color)">${Icons.search}</div>
-        <div class="continue-body">
-          <div class="continue-title">البحث الشامل</div>
-          <div class="continue-sub">في القرآن + الأدعية + الأحاديث + الأسماء + خواطرك</div>
-        </div>
-        <div style="color:var(--fg-subtle)">${Icons.chevronLeft}</div>
-      </a>
-
-      <a class="continue-card" href="#/quran/${State.getSlice('quran').lastSurah || 1}">
+      <!-- Continue Reading — primary CTA card -->
+      <a class="continue-card quran" href="#/quran/${State.getSlice('quran').lastSurah || 1}">
         <div class="continue-icon">${Icons.book}</div>
         <div class="continue-body">
           <div class="continue-title">متابعة القراءة</div>
-          <div class="continue-sub" id="continue-sub">...</div>
-          <div class="continue-progress"><div class="continue-progress-bar" style="width:0"></div></div>
+          <div class="continue-sub" id="continue-sub">جارٍ التحميل...</div>
+          <div class="continue-progress"><div class="continue-progress-bar" id="continue-progress" style="width:0"></div></div>
         </div>
-        <div style="color:var(--fg-subtle)">${Icons.chevronLeft}</div>
+        <div class="continue-arrow">${Icons.chevronLeft}</div>
       </a>
 
+      <!-- Service Grid (4 tiles) -->
       <div class="home-grid">
         <a class="home-tile wird" href="#/wird">
           <div class="tile-icon">${Icons.wird}</div>
           <div>
             <div class="tile-title">ورد اليوم</div>
-            <div class="tile-sub">صفحات أو آيات</div>
+            <div class="tile-sub">خطة قراءة يومية</div>
           </div>
         </a>
-        <a class="home-tile remind" href="#/more">
+        <a class="home-tile remind" href="#/more/adhkar">
           <div class="tile-icon">${Icons.adhkar}</div>
           <div>
-            <div class="tile-title">أذكار</div>
+            <div class="tile-title">الأذكار</div>
             <div class="tile-sub">الصباح والمساء</div>
           </div>
         </a>
         <a class="home-tile reflect" href="#/tadabbur">
           <div class="tile-icon">${Icons.reflect}</div>
           <div>
-            <div class="tile-title">تدبر</div>
-            <div class="tile-sub">خاطرة وتأمل</div>
+            <div class="tile-title">التدبر</div>
+            <div class="tile-sub">خواطر وتأمل</div>
           </div>
         </a>
-        <a class="home-tile quran" href="#/hifz">
+        <a class="home-tile gold" href="#/hifz">
           <div class="tile-icon">${Icons.book}</div>
           <div>
             <div class="tile-title">حفظ ومراجعة</div>
-            <div class="tile-sub">خطتك ومحفوظاتك</div>
+            <div class="tile-sub">محفوظاتك وخطتك</div>
           </div>
         </a>
       </div>
 
-      <div class="prayer-card mt-4">
+      <!-- Quick links — refined cards -->
+      <a class="continue-card reflect" href="#/search">
+        <div class="continue-icon">${Icons.search}</div>
+        <div class="continue-body">
+          <div class="continue-title">البحث الشامل</div>
+          <div class="continue-sub">القرآن • الأدعية • الأحاديث • الأسماء</div>
+        </div>
+        <div class="continue-arrow">${Icons.chevronLeft}</div>
+      </a>
+
+      <a class="continue-card" href="#/today">
+        <div class="continue-icon">${Icons.home}</div>
+        <div class="continue-body">
+          <div class="continue-title">يومي مع الله</div>
+          <div class="continue-sub">ملخص اليوم + عمل خير</div>
+        </div>
+        <div class="continue-arrow">${Icons.chevronLeft}</div>
+      </a>
+
+      <a class="continue-card" href="#/listening">
+        <div class="continue-icon">${Icons.speaker}</div>
+        <div class="continue-body">
+          <div class="continue-title">الاستماع</div>
+          <div class="continue-sub">تلاوات القراء مع التتبع</div>
+        </div>
+        <div class="continue-arrow">${Icons.chevronLeft}</div>
+      </a>
+
+      <!-- Prayer card -->
+      <div class="prayer-card">
         <div class="prayer-info">
           <div class="prayer-label">الصلاة القادمة</div>
-          <div class="prayer-name">—</div>
+          <div class="prayer-name" id="prayer-name">سيتم إضافته قريبًا</div>
         </div>
-        <div class="prayer-time" id="prayer-time">
-          <div class="prayer-countdown">--:--</div>
+        <div class="prayer-time">
+          <div class="prayer-countdown" id="prayer-countdown"></div>
         </div>
       </div>
 
@@ -159,25 +178,31 @@ export async function renderHome(container) {
         <a class="ayah-card" href="#/quran/${ayah.surah}">
           <div class="ayah-card-label">${Icons.sparkles} آية اليوم</div>
           <div class="ayah-card-text">${ayah.text}</div>
-          <div class="ayah-card-ref">${ayah.surahName} • آية ${toAr(ayah.ayah)}</div>
+          <div class="ayah-card-ref-wrap">
+            <div class="ayah-card-ref">${ayah.surahName} • آية ${toAr(ayah.ayah)}</div>
+          </div>
         </a>
       `;
     }
   } catch (e) { console.warn('ayah of day failed', e); }
 
-  // Continue sub
+  // Continue sub + progress
   try {
     await loadQuran();
-    const last = State.getSlice('quran').lastSurah || 1;
+    const quranState = State.getSlice('quran');
+    const last = quranState.lastSurah || 1;
+    const lastAyah = quranState.lastAyah || 1;
     const meta = getSurahMeta(last);
     if (meta) {
-      container.querySelector('#continue-sub').textContent = `سورة ${meta.name}`;
+      const progress = Math.min(100, Math.round((lastAyah / meta.ayahCount) * 100));
+      container.querySelector('#continue-sub').textContent = `سورة ${meta.name} • آية ${toAr(lastAyah)}`;
+      container.querySelector('#continue-progress').style.width = `${progress}%`;
     }
   } catch {}
 
   // Prayer placeholder (full prayer module is later phase)
-  container.querySelector('.prayer-name').textContent = 'سيتم إضافته قريبًا';
-  container.querySelector('.prayer-countdown').textContent = '';
+  container.querySelector('#prayer-name').textContent = 'سيتم إضافته قريبًا';
+  container.querySelector('#prayer-countdown').textContent = '';
 }
 
 const AR_DIGITS = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
