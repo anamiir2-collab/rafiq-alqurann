@@ -1,0 +1,102 @@
+/* =====================================================================
+   adhkar.css — Adhkar screens styling (spec section 32)
+   ===================================================================== */
+
+.adhkar-progress-bar {
+  width: 100%;
+  height: 4px;
+  background: var(--bg-subtle);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  margin-bottom: var(--sp-4);
+}
+.adhkar-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--c-cyan), var(--c-blue));
+  border-radius: inherit;
+  transition: width var(--dur-base) var(--ease-standard);
+}
+
+.adhkar-card {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--c-blue) 12%, var(--card)) 0%, var(--card) 60%);
+  border-color: color-mix(in srgb, var(--c-blue) 25%, transparent);
+  text-align: center;
+  padding: var(--sp-6) var(--sp-5);
+  margin-bottom: var(--sp-4);
+}
+
+.adhkar-text {
+  font-family: var(--font-quran);
+  font-size: var(--fs-xl);
+  line-height: 2.0;
+  color: var(--fg-strong);
+  margin-bottom: var(--sp-4);
+}
+
+.adhkar-virtue {
+  font-size: var(--fs-sm);
+  color: var(--reflect-color);
+  background: color-mix(in srgb, var(--c-purple) 12%, transparent);
+  padding: 8px 14px;
+  border-radius: var(--radius-md);
+  margin-bottom: var(--sp-3);
+  display: inline-block;
+}
+
+.adhkar-source {
+  font-size: var(--fs-xs);
+  color: var(--fg-muted);
+  margin-bottom: var(--sp-5);
+}
+
+.adhkar-counter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-5);
+}
+
+.adhkar-count-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--card);
+  border: 1px solid var(--border);
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--fg);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--dur-fast) var(--ease-standard),
+              background var(--dur-fast) var(--ease-standard);
+}
+.adhkar-count-btn:active {
+  transform: scale(0.95);
+  background: var(--bg-subtle);
+}
+
+.adhkar-count-display {
+  text-align: center;
+  min-width: 80px;
+}
+
+.adhkar-count-current {
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--quran-color);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.adhkar-count-target {
+  font-size: var(--fs-xs);
+  color: var(--fg-muted);
+  margin-top: 4px;
+}
+
+.adhkar-actions {
+  display: flex;
+  gap: var(--sp-2);
+  justify-content: center;
+}

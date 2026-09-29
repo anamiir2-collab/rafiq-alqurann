@@ -1,0 +1,59 @@
+/* =====================================================================
+   names.css — Names of Allah styling (spec section 38)
+   ===================================================================== */
+
+.names-hero {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--c-purple) 14%, var(--card)) 0%, var(--card) 60%);
+  border-color: color-mix(in srgb, var(--c-purple) 30%, transparent);
+  margin-bottom: var(--sp-3);
+}
+
+.names-num {
+  flex: 0 0 auto;
+  width: 42px; height: 42px;
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--c-purple) 14%, transparent);
+  color: var(--reflect-color);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700;
+  font-size: var(--fs-md);
+  position: relative;
+}
+.names-num::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px solid color-mix(in srgb, var(--c-purple) 40%, transparent);
+  border-radius: var(--radius-sm);
+  pointer-events: none;
+}
+
+.names-detail {
+  padding: var(--sp-2) 0;
+}
+.names-detail-meaning {
+  font-size: var(--fs-md);
+  font-weight: 600;
+  color: var(--reflect-color);
+  text-align: center;
+  margin-bottom: var(--sp-3);
+  padding: 10px 14px;
+  background: color-mix(in srgb, var(--c-purple) 10%, transparent);
+  border-radius: var(--radius-md);
+}
+.names-detail-explain {
+  font-size: var(--fs-md);
+  color: var(--fg);
+  line-height: 1.8;
+  text-align: center;
+  margin-bottom: var(--sp-4);
+  padding: 0 var(--sp-3);
+}
+.names-detail-quote {
+  font-family: var(--font-quran);
+  font-size: var(--fs-xl);
+  color: var(--fg-strong);
+  text-align: center;
+  line-height: 1.8;
+  margin: var(--sp-3) 0 var(--sp-2);
+}

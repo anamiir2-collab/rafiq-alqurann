@@ -11,6 +11,7 @@ import { Icons } from '../../components/icons.js';
 import { openSheet } from '../../components/bottom-sheet.js';
 import { toast } from '../../components/toast.js';
 import { Storage, IDB } from '../storage.js';
+import { renderWordWithTajweed, TAJWEED_RULES } from './tajweed.js';
 
 /* ============ Surah Index ============ */
 export async function renderSurahIndex(container) {
@@ -18,7 +19,7 @@ export async function renderSurahIndex(container) {
     <div class="page container-app">
       <div class="section-header">
         <h2>القرآن الكريم</h2>
-        <span class="text-sm text-muted">١١٤ سورة</span>
+        <a href="#/quran/search" class="section-action" aria-label="بحث">${Icons.search}</a>
       </div>
       <div class="surah-index-search">
         <div class="search-wrap">
@@ -127,6 +128,8 @@ export async function renderSurahReader(container, { surah }) {
     const fontSize = quranState.fontSize || 26;
     const lineHeight = quranState.lineHeight || 2.15;
 
+    const tajweedOn = quranState.showTajweed === true;
+
     container.innerHTML = `
       <div class="page container-app" id="reader-page">
         <div class="reader-header">
@@ -151,11 +154,16 @@ export async function renderSurahReader(container, { surah }) {
             <span class="control-value" id="line-val">${toArabic(Math.round(lineHeight * 10))}</span>
             <button class="control-btn" id="line-inc" aria-label="زيادة التباعد">${Icons.plus}</button>
           </div>
+          <div class="control-group">
+            <button class="control-btn ${tajweedOn ? 'active' : ''}" id="tajweed-toggle" aria-label="التجويد" title="التجويد">${Icons.tajweed}</button>
+          </div>
         </div>
+
+        ${tajweedOn ? renderTajweedLegend() : ''}
 
         ${shouldShowBismillah(surahNum) ? `<div class="bismillah">${BISMILLAH_TEXT}</div>` : ''}
 
-        <div id="ayah-container" style="--quran-font-size:${fontSize}px;--quran-line-height:${lineHeight}">
+        <div id="ayah-container" class="${tajweedOn ? 'tajweed-on' : ''}" style="--quran-font-size:${fontSize}px;--quran-line-height:${lineHeight}">
         </div>
       </div>
     `;
@@ -181,19 +189,44 @@ export async function renderSurahReader(container, { surah }) {
   }
 }
 
+/* ============ Tajweed legend ============ */
+function renderTajweedLegend() {
+  const items = Object.values(TAJWEED_RULES).map(r => `
+    <div class="tajweed-legend-item">
+      <span class="tajweed-legend-swatch ${r.id}"></span>
+      <span>${r.label}</span>
+    </div>
+  `).join('');
+  return `
+    <div class="tajweed-legend" id="tajweed-legend">
+      <div class="tajweed-legend-header">
+        <div class="tajweed-legend-title">${Icons.tajweed} أحكام التجويد</div>
+        <span class="tajweed-legend-toggle" id="tajweed-legend-collapse">إخفاء</span>
+      </div>
+      <div class="tajweed-sample">
+        إِنَّ <span class="taj-ghunnah">ٱللَّه</span> <span class="taj-madd">غَٰفِورٌ</span> <span class="taj-qalqalah">رَحِيمٌ</span>
+      </div>
+      <div class="tajweed-legend-grid">${items}</div>
+    </div>
+  `;
+}
+
 /* ============ Ayah rendering (Uthmani text + decorative numbers) ============ */
 function renderAyahs(surahNum, ayahs, meta) {
+  const quranState = State.getSlice('quran');
+  const tajweedOn = quranState.showTajweed === true;
   const html = [];
   for (let i = 1; i <= meta.ayahCount; i++) {
     const text = ayahs[String(i)] || '';
     const words = text.split(/\s+/).filter(Boolean);
-    const wordsHtml = words.map((w, idx) =>
-      `<span class="ayah-word" data-surah="${surahNum}" data-ayah="${i}" data-word="${idx}" data-text="${escapeAttr(w)}">${w}</span>`
-    ).join(' ');
+    const wordsHtml = words.map((w, idx) => {
+      const inner = tajweedOn ? renderWordWithTajweed(w) : escapeHtml(w);
+      return `<span class="ayah-word" data-surah="${surahNum}" data-ayah="${i}" data-word="${idx}" data-text="${escapeAttr(w)}">${inner}</span>`;
+    }).join(' ');
 
     html.push(`
       <div class="ayah-row" id="ayah-${surahNum}-${i}" data-surah="${surahNum}" data-ayah="${i}">
-        <div class="ayah-text">${wordsHtml}<span class="ayah-num"><span>${toArabic(i)}</span></span></div>
+        <div class="ayah-text${tajweedOn ? ' tajweed-on' : ''}">${wordsHtml}<span class="ayah-num"><span>${toArabic(i)}</span></span></div>
         <div class="ayah-footer">
           <div class="text-xs text-muted">سورة ${meta.name} • آية ${toArabic(i)}</div>
           <div class="ayah-actions">
@@ -232,6 +265,31 @@ function wireReaderControls(container, surahNum) {
   container.querySelector('#font-dec').onclick = () => { fontSize = Math.min(48, Math.max(16, fontSize - 2)); update(); };
   container.querySelector('#line-inc').onclick = () => { lineHeight = Math.min(3.2, Math.round((lineHeight + 0.1) * 10) / 10); update(); };
   container.querySelector('#line-dec').onclick = () => { lineHeight = Math.max(1.4, Math.round((lineHeight - 0.1) * 10) / 10); update(); };
+
+  // Tajweed toggle — re-render the surah to apply/remove coloring
+  const tajBtn = container.querySelector('#tajweed-toggle');
+  if (tajBtn) {
+    tajBtn.onclick = () => {
+      const cur = State.getSlice('quran').showTajweed === true;
+      State.setSlice('quran', { showTajweed: !cur });
+      // Re-render this surah (preserves scroll position via hash)
+      const hash = location.hash;
+      location.hash = '/quran'; // trigger
+      setTimeout(() => { location.hash = hash; }, 50);
+    };
+  }
+
+  // Tajweed legend collapse
+  const legendCollapse = container.querySelector('#tajweed-legend-collapse');
+  if (legendCollapse) {
+    legendCollapse.onclick = () => {
+      const legend = container.querySelector('#tajweed-legend');
+      if (legend) {
+        legend.classList.toggle('collapsed');
+        legendCollapse.textContent = legend.classList.contains('collapsed') ? 'إظهار' : 'إخفاء';
+      }
+    };
+  }
 }
 
 /* ============ Ayah interactions (word tap → bottom sheet — spec section 15) ============ */
@@ -331,3 +389,4 @@ async function shareAyah(surahNum, ayah, text, meta) {
 const AR_DIGITS = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
 function toArabic(n) { return String(n).replace(/\d/g, d => AR_DIGITS[+d]); }
 function escapeAttr(s) { return String(s).replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+function escapeHtml(s) { return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }

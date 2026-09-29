@@ -16,10 +16,17 @@ import { initAudio } from './audio/audio-player.js';
 
 import { renderHome } from './home.js';
 import { renderSurahIndex, renderSurahReader } from './quran/reader.js';
+import { renderSearch } from './quran/search.js';
 import { renderWird } from './wird/wird.js';
 import { renderTadabbur } from './tadabbur/tadabbur.js';
 import { renderMore } from './more.js';
 import { renderSettings } from './settings/settings.js';
+import { renderTasbeeh } from './tasbeeh/tasbeeh.js';
+import { renderAdhkar, renderAdhkarCategory } from './adhkar/adhkar.js';
+import { renderPrayerTimes } from './prayer/prayer-times.js';
+import { renderQibla } from './qibla/qibla.js';
+import { renderNames } from './names/names-of-allah.js';
+import { renderCalendar } from './calendar/hijri-calendar.js';
 
 /* ============ Top bar ============ */
 function renderTopbar(title = '', subtitle = '') {
@@ -83,11 +90,21 @@ function withChrome(renderFn, { title = '', subtitle = '', needsBottomNav = true
 
 registerRoute('/', withChrome(renderHome, { title: '', subtitle: '' }));
 registerRoute('/quran', withChrome(renderSurahIndex, { title: 'القرآن الكريم', subtitle: '١١٤ سورة' }));
+registerRoute('/quran/search', withChrome(renderSearch, { title: 'البحث في القرآن', subtitle: '٦٢٣٦ آية' }));
 registerRoute('/quran/:surah', withChrome(renderSurahReader, { title: '', subtitle: '' }));
 registerRoute('/wird', withChrome(renderWird, { title: 'الورد', subtitle: 'متابعة القراءة اليومية' }));
 registerRoute('/tadabbur', withChrome(renderTadabbur, { title: 'التدبر', subtitle: 'خواطرك الشخصية' }));
 registerRoute('/more', withChrome(renderMore, { title: 'المزيد', subtitle: 'كل الأقسام' }));
 registerRoute('/settings', withChrome(renderSettings, { title: 'الإعدادات', subtitle: '' }));
+
+// Phase 11-13 routes
+registerRoute('/more/tasbeeh',  withChrome(renderTasbeeh,   { title: 'المسبحة', subtitle: '' }));
+registerRoute('/more/adhkar',   withChrome(renderAdhkar,    { title: 'الأذكار', subtitle: '' }));
+registerRoute('/more/adhkar/:categoryId', withChrome(renderAdhkarCategory, { title: 'الأذكار', subtitle: '' }));
+registerRoute('/more/prayer',   withChrome(renderPrayerTimes, { title: 'مواقيت الصلاة', subtitle: '' }));
+registerRoute('/more/qibla',    withChrome(renderQibla,     { title: 'القبلة', subtitle: '' }));
+registerRoute('/more/names',    withChrome(renderNames,     { title: 'أسماء الله الحسنى', subtitle: '٩٩ اسمًا' }));
+registerRoute('/more/calendar', withChrome(renderCalendar,  { title: 'التقويم الهجري', subtitle: '' }));
 
 // Legacy hifz — bridge to existing functionality (preserves spec section 2: don't delete working features)
 registerRoute('/hifz', async (container) => {

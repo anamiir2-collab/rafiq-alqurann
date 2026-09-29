@@ -1,0 +1,15 @@
+/* =====================================================================
+   search.css — Search results styling
+   ===================================================================== */
+
+.search-mark {
+  background: color-mix(in srgb, var(--c-pink) 40%, transparent);
+  color: var(--fg-strong);
+  padding: 0 3px;
+  border-radius: 4px;
+  font-weight: 700;
+}
+.theme-dark .search-mark,
+.theme-system .search-mark {
+  background: color-mix(in srgb, var(--c-pink) 50%, transparent);
+}

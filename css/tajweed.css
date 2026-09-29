@@ -1,0 +1,95 @@
+/* =====================================================================
+   tajweed.css — Tajweed coloring + legend (spec section 14)
+   CRITICAL: Tajweed colors are applied via CSS classes ONLY.
+   The Quran text is never modified — only wrapped in <span class="taj-X">
+   ===================================================================== */
+
+.ayah-text.tajweed-on .taj-madd     { color: var(--taj-madd);     font-weight: 600; }
+.ayah-text.tajweed-on .taj-ghunnah  { color: var(--taj-ghunnah);  font-weight: 600; }
+.ayah-text.tajweed-on .taj-qalqalah { color: var(--taj-qalqalah); font-weight: 600; }
+.ayah-text.tajweed-on .taj-idgham   { color: var(--taj-idgham);   font-weight: 600; }
+.ayah-text.tajweed-on .taj-iqlab    { color: var(--taj-iqlab);    font-weight: 600; }
+.ayah-text.tajweed-on .taj-ikhfa    { color: var(--taj-ikhfa);    font-weight: 600; }
+.ayah-text.tajweed-on .taj-idhar    { color: var(--taj-idhar);    font-weight: 600; }
+
+/* When tajweed is OFF, all spans inherit default text color (no visual change) */
+.ayah-text .taj-madd,
+.ayah-text .taj-ghunnah,
+.ayah-text .taj-qalqalah,
+.ayah-text .taj-idgham,
+.ayah-text .taj-iqlab,
+.ayah-text .taj-ikhfa,
+.ayah-text .taj-idhar { color: inherit; font-weight: inherit; }
+
+/* ===== Tajweed Legend (spec section 14: "أضف Legend صغيرة توضّح الألوان") ===== */
+.tajweed-legend {
+  background: var(--card);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-4);
+  border: 1px solid var(--hairline);
+  box-shadow: var(--shadow-xs);
+  margin-bottom: var(--sp-4);
+}
+.tajweed-legend-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: var(--sp-3);
+  gap: var(--sp-2);
+}
+.tajweed-legend-title {
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--fg);
+  display: flex; align-items: center; gap: 6px;
+}
+.tajweed-legend-toggle {
+  font-size: var(--fs-xs);
+  color: var(--quran-color);
+  font-weight: 600;
+  cursor: pointer;
+}
+.tajweed-legend-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px;
+}
+.tajweed-legend-item {
+  display: flex; align-items: center; gap: 8px;
+  font-size: var(--fs-xs);
+  color: var(--fg-muted);
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-subtle);
+}
+.tajweed-legend-swatch {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  flex: 0 0 auto;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+.tajweed-legend-swatch.madd     { background: var(--taj-madd); }
+.tajweed-legend-swatch.ghunnah  { background: var(--taj-ghunnah); }
+.tajweed-legend-swatch.qalqalah { background: var(--taj-qalqalah); }
+.tajweed-legend-swatch.idgham   { background: var(--taj-idgham); }
+.tajweed-legend-swatch.iqlab    { background: var(--taj-iqlab); }
+.tajweed-legend-swatch.ikhfa    { background: var(--taj-ikhfa); }
+.tajweed-legend-swatch.idhar    { background: var(--taj-idhar); }
+
+/* Collapsed state */
+.tajweed-legend.collapsed .tajweed-legend-grid { display: none; }
+
+/* Sample text in legend */
+.tajweed-sample {
+  font-family: var(--font-quran);
+  font-size: var(--fs-lg);
+  text-align: center;
+  padding: var(--sp-3) 0 var(--sp-2);
+  color: var(--fg-strong);
+  line-height: 2;
+}
+.tajweed-sample .taj-madd     { color: var(--taj-madd);     font-weight: 700; }
+.tajweed-sample .taj-ghunnah  { color: var(--taj-ghunnah);  font-weight: 700; }
+.tajweed-sample .taj-qalqalah { color: var(--taj-qalqalah); font-weight: 700; }
+.tajweed-sample .taj-idgham   { color: var(--taj-idgham);   font-weight: 700; }
+.tajweed-sample .taj-iqlab    { color: var(--taj-iqlab);    font-weight: 700; }
+.tajweed-sample .taj-ikhfa    { color: var(--taj-ikhfa);    font-weight: 700; }
+.tajweed-sample .taj-idhar    { color: var(--taj-idhar);    font-weight: 700; }

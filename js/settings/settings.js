@@ -205,10 +205,10 @@ function wireSettings(container) {
     setAutoplay(e.target.checked);
   };
 
-  // Tajweed toggle (UI only for now — phase 6 will implement)
+  // Tajweed toggle — actually applies now (phase 6)
   container.querySelector('#tajweed-toggle').onchange = (e) => {
     State.setSlice('quran', { showTajweed: e.target.checked });
-    toast('سيتم تفعيل التجويد في المرحلة القادمة', 'info');
+    toast(e.target.checked ? 'تم تفعيل التجويد' : 'تم إيقاف التجويد', 'info');
   };
 
   // Toggle switch visual

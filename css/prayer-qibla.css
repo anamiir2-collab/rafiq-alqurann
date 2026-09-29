@@ -1,0 +1,104 @@
+/* =====================================================================
+   prayer-qibla.css — Prayer & Qibla screens (spec sections 34, 36)
+   ===================================================================== */
+
+/* ===== Prayer Next Card ===== */
+.prayer-next {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--c-cyan) 16%, var(--card)) 0%, var(--card) 60%);
+  border-color: color-mix(in srgb, var(--c-cyan) 30%, transparent);
+  text-align: center;
+  padding: var(--sp-6) var(--sp-5);
+}
+.prayer-next-label {
+  font-size: var(--fs-xs);
+  color: var(--fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+}
+.prayer-next-name {
+  font-size: var(--fs-3xl);
+  font-weight: 700;
+  color: var(--fg-strong);
+  margin: var(--sp-2) 0;
+}
+.prayer-next-time {
+  font-size: var(--fs-lg);
+  color: var(--action-color);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.prayer-next-countdown {
+  margin-top: var(--sp-3);
+  padding: 6px 16px;
+  background: color-mix(in srgb, var(--c-cyan) 20%, transparent);
+  color: var(--action-color);
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  display: inline-block;
+  font-variant-numeric: tabular-nums;
+}
+
+.prayer-location {
+  text-align: center;
+}
+
+/* ===== Qibla Compass ===== */
+.qibla-compass-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-5);
+}
+
+.qibla-compass {
+  width: 280px;
+  height: 280px;
+  position: relative;
+  transition: transform 0.1s linear;
+}
+
+.qibla-needle {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.3s var(--ease-standard);
+}
+
+.qibla-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-3);
+  width: 100%;
+  max-width: 320px;
+}
+
+.qibla-bearing {
+  background: var(--card);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-4);
+  text-align: center;
+}
+.qibla-bearing-label {
+  font-size: var(--fs-xs);
+  color: var(--fg-muted);
+  font-weight: 600;
+}
+.qibla-bearing-value {
+  font-size: var(--fs-2xl);
+  font-weight: 700;
+  color: var(--quran-color);
+  margin: 4px 0;
+  font-variant-numeric: tabular-nums;
+}
+.qibla-bearing-sub {
+  font-size: var(--fs-xs);
+  color: var(--fg-subtle);
+}
+
+.qibla-status {
+  width: 100%;
+  max-width: 320px;
+  text-align: center;
+}

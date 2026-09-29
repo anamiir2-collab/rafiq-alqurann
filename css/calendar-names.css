@@ -1,0 +1,45 @@
+/* =====================================================================
+   calendar-names.css — Calendar & Names styles
+   ===================================================================== */
+
+/* ===== Calendar ===== */
+.cal-today {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--c-blue) 14%, var(--card)) 0%, var(--card) 60%);
+  border-color: color-mix(in srgb, var(--c-blue) 30%, transparent);
+  padding: var(--sp-6) var(--sp-5);
+  margin-bottom: var(--sp-4);
+}
+.cal-day-name {
+  font-size: var(--fs-sm);
+  color: var(--fg-muted);
+  font-weight: 600;
+}
+.cal-hijri {
+  font-size: var(--fs-2xl);
+  font-weight: 700;
+  color: var(--fg-strong);
+  margin: var(--sp-2) 0 4px;
+  line-height: 1.4;
+}
+.cal-gregorian {
+  font-size: var(--fs-sm);
+  color: var(--fg-muted);
+}
+.cal-occasion-banner {
+  margin-top: var(--sp-4);
+  padding: var(--sp-4);
+  background: color-mix(in srgb, var(--c-blue) 14%, transparent);
+  border-radius: var(--radius-md);
+  border: 1px solid color-mix(in srgb, var(--c-blue) 30%, transparent);
+}
+.cal-occasion-title {
+  font-weight: 700;
+  color: var(--quran-color);
+  font-size: var(--fs-md);
+  margin-bottom: 4px;
+}
+.cal-occasion-desc {
+  font-size: var(--fs-xs);
+  color: var(--fg-muted);
+  line-height: 1.7;
+}

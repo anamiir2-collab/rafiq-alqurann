@@ -9,28 +9,28 @@ import { Icons } from '../components/icons.js';
 const MORE_ITEMS = [
   // الصلاة و العبادة
   { section: 'الصلاة والعبادة' },
-  { label: 'مواقيت الصلاة', icon: Icons.prayer,   path: '/more/prayer',    color: 'quran',  status: 'soon' },
-  { label: 'القبلة',          icon: Icons.qibla,    path: '/more/qibla',     color: 'quran',  status: 'soon' },
+  { label: 'مواقيت الصلاة', icon: Icons.prayer,   path: '/more/prayer',    color: 'quran',  status: 'ready' },
+  { label: 'القبلة',          icon: Icons.qibla,    path: '/more/qibla',     color: 'quran',  status: 'ready' },
   { label: 'تعليم الصلاة',    icon: Icons.book,     path: '/more/learn-prayer', color: 'quran', status: 'soon' },
   { label: 'تعليم الوضوء',    icon: Icons.book,     path: '/more/wudu',     color: 'quran',  status: 'soon' },
   { label: 'الاستخارة',       icon: Icons.reflect,  path: '/more/istikhara',color: 'reflect',status: 'soon' },
 
   // الأذكار والأدعية
   { section: 'الأذكار والأدعية' },
-  { label: 'الأذكار',          icon: Icons.adhkar,   path: '/more/adhkar',   color: 'remind', status: 'soon' },
+  { label: 'الأذكار',          icon: Icons.adhkar,   path: '/more/adhkar',   color: 'remind', status: 'ready' },
   { label: 'الأدعية',          icon: Icons.dua,      path: '/more/duas',     color: 'remind', status: 'soon' },
-  { label: 'المسبحة',          icon: Icons.tasbeeh,  path: '/more/tasbeeh',  color: 'remind', status: 'soon' },
+  { label: 'المسبحة',          icon: Icons.tasbeeh,  path: '/more/tasbeeh',  color: 'remind', status: 'ready' },
 
   // المعرفة
   { section: 'المعرفة' },
-  { label: 'أسماء الله الحسنى', icon: Icons.names,   path: '/more/names',    color: 'reflect',status: 'soon' },
+  { label: 'أسماء الله الحسنى', icon: Icons.names,   path: '/more/names',    color: 'reflect',status: 'ready' },
   { label: 'الأحاديث',          icon: Icons.hadith,  path: '/more/hadith',   color: 'quran',  status: 'soon' },
   { label: 'السيرة النبوية',    icon: Icons.seerah,  path: '/more/seerah',   color: 'reflect',status: 'soon' },
   { label: 'قصص الأنبياء',      icon: Icons.prophets,path: '/more/prophets', color: 'reflect',status: 'soon' },
 
   // المناسبات
   { section: 'المناسبات والتقويم' },
-  { label: 'التقويم الهجري',    icon: Icons.calendar,path: '/more/calendar', color: 'quran',  status: 'soon' },
+  { label: 'التقويم الهجري',    icon: Icons.calendar,path: '/more/calendar', color: 'quran',  status: 'ready' },
   { label: 'يوم الجمعة',        icon: Icons.book,    path: '/more/friday',   color: 'quran',  status: 'soon' },
   { label: 'رمضان',             icon: Icons.ramadan, path: '/more/ramadan',  color: 'remind', status: 'soon' },
   { label: 'الحج والعمرة',      icon: Icons.hajj,    path: '/more/hajj',     color: 'quran',  status: 'soon' },

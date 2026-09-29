@@ -1,0 +1,76 @@
+/* =====================================================================
+   tasbeeh.css — Tasbeeh counter styles (spec section 33)
+   ===================================================================== */
+
+.tasbeeh-display {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--c-cyan) 16%, var(--card)) 0%, var(--card) 60%);
+  border-color: color-mix(in srgb, var(--c-cyan) 30%, transparent);
+  margin-bottom: var(--sp-4);
+  padding: var(--sp-6) var(--sp-5);
+}
+
+.tasbeeh-current-dhikr {
+  font-family: var(--font-quran);
+  font-size: var(--fs-xl);
+  color: var(--fg-strong);
+  line-height: 1.6;
+  margin-bottom: var(--sp-3);
+}
+
+.tasbeeh-count {
+  font-size: 72px;
+  font-weight: 700;
+  color: var(--action-color);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  margin: var(--sp-2) 0 var(--sp-3);
+}
+
+.tasbeeh-progress {
+  width: 80%;
+  margin: 0 auto var(--sp-3);
+  height: 6px;
+  background: var(--bg-subtle);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+.tasbeeh-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--c-cyan), var(--c-blue));
+  border-radius: inherit;
+  transition: width var(--dur-base) var(--ease-standard);
+}
+
+.tasbeeh-meta {
+  font-size: var(--fs-xs);
+  color: var(--fg-muted);
+  margin-bottom: var(--sp-4);
+}
+
+.tasbeeh-tap {
+  display: block;
+  width: 100%;
+  padding: var(--sp-5) var(--sp-4);
+  border-radius: var(--radius-lg);
+  background: var(--action-color);
+  color: var(--fg-on-color);
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  transition: transform var(--dur-fast) var(--ease-standard),
+              box-shadow var(--dur-fast) var(--ease-standard);
+  -webkit-tap-highlight-color: transparent;
+}
+.tasbeeh-tap:active {
+  transform: scale(0.97);
+  box-shadow: var(--shadow-sm);
+}
+
+.tasbeeh-actions {
+  margin-top: var(--sp-3);
+  display: flex;
+  justify-content: center;
+  gap: var(--sp-2);
+}
