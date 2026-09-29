@@ -40,6 +40,13 @@ import { renderProphets, renderProphetDetail } from './prophets/prophets.js';
 import { renderSources } from './sources.js';
 import { renderAbout } from './about.js';
 import { renderHifz } from './hifz/hifz.js';
+import { renderSammuali } from './hifz/sammuali.js';
+import { renderToday } from './today.js';
+import { renderListening } from './audio/listening.js';
+import { renderLearnPrayer } from './prayer/learn-prayer.js';
+import { renderIstikhara } from './prayer/istikhara.js';
+import { renderUniversalSearch } from './universal-search.js';
+import { renderNotifications } from './notifications.js';
 
 /* ============ Top bar ============ */
 function renderTopbar(title = '', subtitle = '') {
@@ -135,6 +142,17 @@ registerRoute('/more/favorites', withChrome(renderFavorites, { title: 'المح�
 registerRoute('/more/sources',  withChrome(renderSources,   { title: 'المصادر', subtitle: '' }));
 registerRoute('/about',         withChrome(renderAbout,     { title: 'عن التطبيق', subtitle: '' }));
 registerRoute('/hifz',          withChrome(renderHifz,      { title: 'حفظ ومراجعة', subtitle: 'خطتك ومحفوظاتك' }));
+
+// Phase 15 routes — final features
+registerRoute('/today',         withChrome(renderToday,     { title: 'يومي مع الله', subtitle: 'ملخص اليوم' }));
+registerRoute('/listening',     withChrome(renderListening, { title: 'الاستماع', subtitle: 'تلاوات القراء' }));
+registerRoute('/sammuali',      withChrome(renderSammuali,  { title: 'سمّعلي', subtitle: 'تدريب الحفظ' }));
+registerRoute('/search',        withChrome(renderUniversalSearch, { title: 'البحث الشامل', subtitle: '' }));
+registerRoute('/notifications', withChrome(renderNotifications, { title: 'الإشعارات', subtitle: '' }));
+registerRoute('/more/learn-prayer/:section', withChrome(renderLearnPrayer, { title: 'تعليم الصلاة', subtitle: '' }));
+registerRoute('/more/learn-prayer', withChrome((c) => renderLearnPrayer(c, { section: 'salah' }), { title: 'تعليم الصلاة', subtitle: '' }));
+registerRoute('/more/wudu',     withChrome((c) => renderLearnPrayer(c, { section: 'wudu' }), { title: 'تعليم الوضوء', subtitle: '' }));
+registerRoute('/more/istikhara', withChrome(renderIstikhara, { title: 'الاستخارة', subtitle: '' }));
 
 // Catch-all 404 → home
 registerRoute('/404', (container) => { navigate('/'); });

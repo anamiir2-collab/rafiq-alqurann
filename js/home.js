@@ -69,6 +69,33 @@ export async function renderHome(container) {
 
       <div id="ayah-card-slot"></div>
 
+      <a class="continue-card" href="#/today">
+        <div class="continue-icon" style="background:color-mix(in srgb,var(--c-blue) 14%,transparent);color:var(--quran-color)">${Icons.home}</div>
+        <div class="continue-body">
+          <div class="continue-title">يومي مع الله</div>
+          <div class="continue-sub">ملخص يومك + عمل خير اليوم</div>
+        </div>
+        <div style="color:var(--fg-subtle)">${Icons.chevronLeft}</div>
+      </a>
+
+      <a class="continue-card" href="#/listening">
+        <div class="continue-icon">${Icons.book}</div>
+        <div class="continue-body">
+          <div class="continue-title">الاستماع</div>
+          <div class="continue-sub">تلاوات القراء مع التتبع</div>
+        </div>
+        <div style="color:var(--fg-subtle)">${Icons.chevronLeft}</div>
+      </a>
+
+      <a class="continue-card" href="#/search">
+        <div class="continue-icon" style="background:color-mix(in srgb,var(--c-purple) 14%,transparent);color:var(--reflect-color)">${Icons.search}</div>
+        <div class="continue-body">
+          <div class="continue-title">البحث الشامل</div>
+          <div class="continue-sub">في القرآن + الأدعية + الأحاديث + الأسماء + خواطرك</div>
+        </div>
+        <div style="color:var(--fg-subtle)">${Icons.chevronLeft}</div>
+      </a>
+
       <a class="continue-card" href="#/quran/${State.getSlice('quran').lastSurah || 1}">
         <div class="continue-icon">${Icons.book}</div>
         <div class="continue-body">

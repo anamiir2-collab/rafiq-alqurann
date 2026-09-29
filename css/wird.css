@@ -1,0 +1,61 @@
+/* =====================================================================
+   wird.css — Wird styles (spec section 24, 25)
+   ===================================================================== */
+
+.wird-day-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  gap: 6px;
+  margin-top: var(--sp-3);
+}
+
+.wird-day-chip {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: var(--radius-md);
+  background: var(--card);
+  border: 1px solid var(--hairline);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: var(--fg-muted);
+  font-weight: 700;
+  font-size: var(--fs-sm);
+  transition: all var(--dur-fast) var(--ease-standard);
+}
+
+.wird-day-chip:active { transform: scale(0.96); }
+
+.wird-day-chip.done {
+  background: color-mix(in srgb, #2F855A 14%, transparent);
+  border-color: color-mix(in srgb, #2F855A 30%, transparent);
+  color: #2F855A;
+}
+
+.wird-day-chip.current {
+  background: var(--action-color);
+  color: var(--fg-on-color);
+  border-color: var(--action-color);
+  box-shadow: var(--shadow-md);
+}
+
+.wird-day-chip.current.done {
+  background: #2F855A;
+  border-color: #2F855A;
+  color: white;
+}
+
+.wird-day-check {
+  position: absolute;
+  top: 2px;
+  inset-inline-end: 2px;
+  width: 14px;
+  height: 14px;
+  color: #2F855A;
+}
+.wird-day-check svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+
+.wird-day-num {
+  font-variant-numeric: tabular-nums;
+}

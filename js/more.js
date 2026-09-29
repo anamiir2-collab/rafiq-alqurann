@@ -11,9 +11,9 @@ const MORE_ITEMS = [
   { section: 'الصلاة والعبادة' },
   { label: 'مواقيت الصلاة', icon: Icons.prayer,   path: '/more/prayer',    color: 'quran',  status: 'ready' },
   { label: 'القبلة',          icon: Icons.qibla,    path: '/more/qibla',     color: 'quran',  status: 'ready' },
-  { label: 'تعليم الصلاة',    icon: Icons.book,     path: '/more/learn-prayer', color: 'quran', status: 'soon' },
-  { label: 'تعليم الوضوء',    icon: Icons.book,     path: '/more/wudu',     color: 'quran',  status: 'soon' },
-  { label: 'الاستخارة',       icon: Icons.reflect,  path: '/more/istikhara',color: 'reflect',status: 'soon' },
+  { label: 'تعليم الصلاة',    icon: Icons.book,     path: '/more/learn-prayer', color: 'quran', status: 'ready' },
+  { label: 'تعليم الوضوء',    icon: Icons.book,     path: '/more/wudu',     color: 'quran',  status: 'ready' },
+  { label: 'الاستخارة',       icon: Icons.reflect,  path: '/more/istikhara',color: 'reflect',status: 'ready' },
 
   // الأذكار والأدعية
   { section: 'الأذكار والأدعية' },
@@ -36,6 +36,14 @@ const MORE_ITEMS = [
   { label: 'رمضان',             icon: Icons.ramadan, path: '/more/ramadan',  color: 'remind', status: 'ready' },
   { label: 'الحج والعمرة',      icon: Icons.hajj,    path: '/more/hajj',     color: 'quran',  status: 'ready' },
   { label: 'صيام التطوع',       icon: Icons.fasting, path: '/more/fasting',  color: 'remind', status: 'ready' },
+
+  // أدوات إضافية
+  { section: 'أدوات إضافية' },
+  { label: 'يومي مع الله',       icon: Icons.home,    path: '/today',         color: 'quran',  status: 'ready' },
+  { label: 'الاستماع',          icon: Icons.speaker, path: '/listening',     color: 'action', status: 'ready' },
+  { label: 'سمّعلي (تدريب الحفظ)', icon: Icons.speaker, path: '/sammuali',   color: 'action', status: 'ready' },
+  { label: 'البحث الشامل',       icon: Icons.search,  path: '/search',        color: 'quran',  status: 'ready' },
+  { label: 'الإشعارات',         icon: Icons.info,    path: '/notifications', color: 'remind', status: 'ready' },
 
   // التطبيق
   { section: 'التطبيق' },
