@@ -23,7 +23,7 @@ export function renderSettings(container) {
       <div class="divider-label">المظهر</div>
       <div class="list">
         <div class="row" style="cursor:default">
-          <div class="row-icon" style="width:44px;height:44px;border-radius:var(--radius-md);background:color-mix(in srgb,var(--c-blue) 14%,transparent);color:var(--quran-color);display:flex;align-items:center;justify-content:center">
+          <div class="row-icon" style="width:44px;height:44px;border-radius:var(--radius-md);background:color-mix(in srgb,var(--c-primary) 14%,transparent);color:var(--quran-color);display:flex;align-items:center;justify-content:center">
             ${Icons.sun}
           </div>
           <div class="row-body">
@@ -43,7 +43,7 @@ export function renderSettings(container) {
       <div class="divider-label">القراءة</div>
       <div class="list">
         <div class="row" style="cursor:default">
-          <div class="row-icon" style="width:38px;height:38px;border-radius:var(--radius-md);background:color-mix(in srgb,var(--c-blue) 14%,transparent);color:var(--quran-color);display:flex;align-items:center;justify-content:center">
+          <div class="row-icon" style="width:38px;height:38px;border-radius:var(--radius-md);background:color-mix(in srgb,var(--c-primary) 14%,transparent);color:var(--quran-color);display:flex;align-items:center;justify-content:center">
             ${Icons.fontSize}
           </div>
           <div class="row-body">
@@ -56,7 +56,7 @@ export function renderSettings(container) {
           </div>
         </div>
         <div class="row" style="cursor:default">
-          <div class="row-icon" style="width:38px;height:38px;border-radius:var(--radius-md);background:color-mix(in srgb,var(--c-blue) 14%,transparent);color:var(--quran-color);display:flex;align-items:center;justify-content:center">
+          <div class="row-icon" style="width:38px;height:38px;border-radius:var(--radius-md);background:color-mix(in srgb,var(--c-primary) 14%,transparent);color:var(--quran-color);display:flex;align-items:center;justify-content:center">
             ${Icons.textSpacing}
           </div>
           <div class="row-body">
@@ -69,7 +69,7 @@ export function renderSettings(container) {
           </div>
         </div>
         <div class="row" style="cursor:default">
-          <div class="row-icon" style="width:38px;height:38px;border-radius:var(--radius-md);background:color-mix(in srgb,var(--c-blue) 14%,transparent);color:var(--quran-color);display:flex;align-items:center;justify-content:center">
+          <div class="row-icon" style="width:38px;height:38px;border-radius:var(--radius-md);background:color-mix(in srgb,var(--c-primary) 14%,transparent);color:var(--quran-color);display:flex;align-items:center;justify-content:center">
             ${Icons.tajweed}
           </div>
           <div class="row-body">
@@ -88,7 +88,7 @@ export function renderSettings(container) {
       <div class="divider-label">الصوت</div>
       <div class="list">
         <a class="row" href="#" id="reciter-row">
-          <div class="row-icon" style="width:38px;height:38px;border-radius:var(--radius-md);background:color-mix(in srgb,var(--c-blue) 14%,transparent);color:var(--quran-color);display:flex;align-items:center;justify-content:center">
+          <div class="row-icon" style="width:38px;height:38px;border-radius:var(--radius-md);background:color-mix(in srgb,var(--c-primary) 14%,transparent);color:var(--quran-color);display:flex;align-items:center;justify-content:center">
             ${Icons.speaker}
           </div>
           <div class="row-body">
@@ -98,7 +98,7 @@ export function renderSettings(container) {
           <div class="row-trail">${Icons.chevronLeft}</div>
         </a>
         <div class="row" style="cursor:default">
-          <div class="row-icon" style="width:38px;height:38px;border-radius:var(--radius-md);background:color-mix(in srgb,var(--c-blue) 14%,transparent);color:var(--quran-color);display:flex;align-items:center;justify-content:center">
+          <div class="row-icon" style="width:38px;height:38px;border-radius:var(--radius-md);background:color-mix(in srgb,var(--c-primary) 14%,transparent);color:var(--quran-color);display:flex;align-items:center;justify-content:center">
             ${Icons.speed}
           </div>
           <div class="row-body">
@@ -112,7 +112,7 @@ export function renderSettings(container) {
           </div>
         </div>
         <div class="row" style="cursor:default">
-          <div class="row-icon" style="width:38px;height:38px;border-radius:var(--radius-md);background:color-mix(in srgb,var(--c-blue) 14%,transparent);color:var(--quran-color);display:flex;align-items:center;justify-content:center">
+          <div class="row-icon" style="width:38px;height:38px;border-radius:var(--radius-md);background:color-mix(in srgb,var(--c-primary) 14%,transparent);color:var(--quran-color);display:flex;align-items:center;justify-content:center">
             ${Icons.play}
           </div>
           <div class="row-body">

@@ -30,23 +30,22 @@ body {
   letter-spacing: -0.005em;
 }
 
-/* Soft background gradient (subtle iOS-like feel) */
+/* Soft background gradient (subtle sage & gold tints) */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
   z-index: -1;
   background:
-    radial-gradient(ellipse at top, color-mix(in srgb, var(--c-blue) 6%, transparent) 0%, transparent 50%),
-    radial-gradient(ellipse at bottom right, color-mix(in srgb, var(--c-purple) 4%, transparent) 0%, transparent 50%),
+    radial-gradient(ellipse at top, color-mix(in srgb, var(--c-primary) 5%, transparent) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom right, color-mix(in srgb, var(--c-gold) 3%, transparent) 0%, transparent 50%),
     var(--bg);
   pointer-events: none;
 }
 
-.theme-dark body::before,
-.theme-system.theme-dark body::before {
+.theme-dark body::before {
   background:
-    radial-gradient(ellipse at top, color-mix(in srgb, var(--c-blue) 4%, transparent) 0%, transparent 50%),
+    radial-gradient(ellipse at top, color-mix(in srgb, var(--c-primary) 4%, transparent) 0%, transparent 50%),
     var(--bg);
 }
 
@@ -127,12 +126,13 @@ a:active { opacity: 0.65; }
 /* Color utilities */
 .text-muted   { color: var(--fg-muted); }
 .text-subtle  { color: var(--fg-subtle); }
-.text-strong  { color: var(--fg-strong); }
+.text-strong  { color: var(--fg-strong); font-weight: var(--fw-semi); }
 .text-quran   { color: var(--quran-color); }
 .text-action  { color: var(--action-color); }
 .text-remind  { color: var(--remind-color); }
 .text-reflect { color: var(--reflect-color); }
 .text-gold    { color: var(--gold-color); }
+.text-primary { color: var(--c-primary); }
 
 .text-center  { text-align: center; }
 .text-right   { text-align: right; }
@@ -222,7 +222,7 @@ a:active { opacity: 0.65; }
 ::-webkit-scrollbar-thumb:hover { background: var(--fg-subtle); }
 
 /* ===== Selection ===== */
-::selection { background: color-mix(in srgb, var(--c-blue) 30%, transparent); color: var(--fg-strong); }
+::selection { background: color-mix(in srgb, var(--c-primary) 25%, transparent); color: var(--fg-strong); }
 
 /* ===== Focus (accessibility) ===== */
 :focus-visible {

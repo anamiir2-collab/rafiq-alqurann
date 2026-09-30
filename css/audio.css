@@ -29,11 +29,12 @@
   flex: 0 0 auto;
   width: 48px; height: 48px;
   border-radius: var(--radius-md);
-  background: linear-gradient(135deg, var(--c-blue) 0%, var(--c-purple) 100%);
+  background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-emerald) 100%);
   display: flex; align-items: center; justify-content: center;
-  color: var(--fg-on-color);
+  color: var(--fg-on-primary);
   position: relative;
   overflow: hidden;
+  flex-shrink: 0;
 }
 .audio-bar .audio-bar-art svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.8; }
 .audio-bar .audio-bar-art.playing svg {
@@ -82,7 +83,7 @@
 .audio-bar .audio-bar-btn.play {
   width: 44px; height: 44px;
   background: var(--quran-color);
-  color: var(--fg-on-color);
+  color: var(--fg-on-primary);
   box-shadow: var(--shadow-blue);
 }
 .audio-bar .audio-bar-btn.play:hover { filter: brightness(1.04); background: var(--quran-color); }
@@ -97,7 +98,7 @@
 }
 .audio-bar .audio-bar-progress-bar {
   height: 100%;
-  background: linear-gradient(90deg, var(--quran-color), color-mix(in srgb, var(--quran-color) 70%, var(--c-purple)));
+  background: linear-gradient(90deg, var(--quran-color), color-mix(in srgb, var(--quran-color) 70%, var(--c-secondary))));
   border-inline-start-radius: var(--radius-pill);
   border-inline-end-radius: var(--radius-pill);
   transition: width 250ms linear;
@@ -111,9 +112,9 @@
   width: 220px; height: 220px;
   margin: var(--sp-5) auto var(--sp-6);
   border-radius: var(--radius-2xl);
-  background: linear-gradient(135deg, var(--c-blue) 0%, var(--c-purple) 50%, var(--c-pink) 100%);
+  background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-emerald) 50%, var(--c-secondary) 100%);
   display: flex; align-items: center; justify-content: center;
-  color: var(--fg-on-color);
+  color: var(--fg-on-primary);
   box-shadow: var(--shadow-xl), var(--shadow-blue);
   position: relative;
   overflow: hidden;
@@ -207,13 +208,13 @@
 .audio-full-player .player-btn:active { transform: scale(0.92); }
 .audio-full-player .player-btn.active {
   color: var(--quran-color);
-  background: color-mix(in srgb, var(--c-blue) 16%, transparent);
+  background: color-mix(in srgb, var(--c-primary) 14%, transparent);
 }
 .audio-full-player .player-btn svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .audio-full-player .player-btn.play {
   width: 76px; height: 76px;
   background: var(--quran-color);
-  color: var(--fg-on-color);
+  color: var(--fg-on-primary);
   box-shadow: var(--shadow-blue);
 }
 .audio-full-player .player-btn.play svg { fill: currentColor; stroke: none; width: 30px; height: 30px; }
@@ -230,14 +231,14 @@
 }
 .reciter-row:active { background: var(--bg-subtle); transform: scale(0.99); }
 .reciter-row.selected {
-  background: color-mix(in srgb, var(--c-blue) 12%, transparent);
-  border: 1px solid color-mix(in srgb, var(--c-blue) 30%, transparent);
+  background: color-mix(in srgb, var(--c-primary) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--c-primary) 28%, transparent);
 }
 .reciter-row .reciter-icon {
   flex: 0 0 auto;
   width: 48px; height: 48px;
   border-radius: var(--radius-pill);
-  background: linear-gradient(135deg, color-mix(in srgb, var(--c-blue) 16%, transparent), color-mix(in srgb, var(--c-purple) 12%, transparent));
+  background: linear-gradient(135deg, color-mix(in srgb, var(--c-primary) 14%, transparent), color-mix(in srgb, var(--c-secondary) 10%, transparent));
   color: var(--quran-color);
   display: flex; align-items: center; justify-content: center;
 }

@@ -71,28 +71,28 @@
 .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
 .btn-primary {
-  background: var(--quran-color);
-  color: var(--fg-on-color);
-  box-shadow: var(--shadow-blue);
+  background: var(--c-primary);
+  color: var(--fg-on-primary);
+  box-shadow: var(--shadow-primary);
 }
-.btn-primary:hover { filter: brightness(1.04); }
+.btn-primary:hover { filter: brightness(1.05); }
 
 .btn-action {
-  background: var(--action-color);
-  color: var(--fg-on-color);
+  background: var(--c-emerald);
+  color: var(--fg-on-primary);
   box-shadow: var(--shadow-sm);
 }
 
 .btn-remind {
-  background: var(--remind-color);
+  background: var(--c-clay);
   color: var(--fg-on-color);
-  box-shadow: var(--shadow-pink);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-reflect {
-  background: var(--reflect-color);
-  color: var(--fg-on-color);
-  box-shadow: var(--shadow-purple);
+  background: var(--c-secondary);
+  color: var(--fg-on-primary);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-gold {
@@ -198,10 +198,10 @@
   border: 1px solid var(--hairline);
   line-height: 1.4;
 }
-.badge-quran  { background: color-mix(in srgb, var(--c-blue) 14%, transparent); color: var(--quran-color); border-color: transparent; }
-.badge-action { background: color-mix(in srgb, var(--c-cyan) 14%, transparent); color: var(--action-color); border-color: transparent; }
-.badge-remind { background: color-mix(in srgb, var(--c-pink) 18%, transparent); color: var(--remind-color); border-color: transparent; }
-.badge-reflect{ background: color-mix(in srgb, var(--c-purple) 16%, transparent); color: var(--reflect-color); border-color: transparent; }
+.badge-quran  { background: color-mix(in srgb, var(--c-primary) 14%, transparent); color: var(--quran-color); border-color: transparent; }
+.badge-action { background: color-mix(in srgb, var(--c-emerald) 14%, transparent); color: var(--action-color); border-color: transparent; }
+.badge-remind { background: color-mix(in srgb, var(--c-clay) 18%, transparent); color: var(--remind-color); border-color: transparent; }
+.badge-reflect{ background: color-mix(in srgb, var(--c-secondary) 16%, transparent); color: var(--reflect-color); border-color: transparent; }
 .badge-gold   { background: color-mix(in srgb, var(--c-gold) 16%, transparent); color: var(--gold-color); border-color: transparent; }
 
 /* ===== Row — list item inside a card ===== */

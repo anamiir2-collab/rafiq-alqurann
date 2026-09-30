@@ -56,10 +56,10 @@ const MORE_ITEMS = [
 ];
 
 const COLOR_BG = {
-  quran:  'color-mix(in srgb, var(--c-blue) 14%, transparent)',
-  remind: 'color-mix(in srgb, var(--c-pink) 18%, transparent)',
-  reflect:'color-mix(in srgb, var(--c-purple) 14%, transparent)',
-  action: 'color-mix(in srgb, var(--c-cyan) 14%, transparent)',
+  quran:  'color-mix(in srgb, var(--c-primary) 14%, transparent)',
+  remind: 'color-mix(in srgb, var(--c-clay) 18%, transparent)',
+  reflect:'color-mix(in srgb, var(--c-secondary) 14%, transparent)',
+  action: 'color-mix(in srgb, var(--c-emerald) 14%, transparent)',
 };
 
 const COLOR_FG = {

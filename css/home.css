@@ -1,6 +1,11 @@
 /* =====================================================================
-   Home v3 — Premium iPhone-style Dashboard
-   Hero card + grid of services + continue reading
+   Home v4 — Premium iPhone-style Dashboard (Sage/Cream)
+   - Compact greeting
+   - Continue Reading HERO card (primary visual element)
+   - Wurd (daily portion) progress ring
+   - Quran tools grid
+   - Quick links
+   - Prayer card
    ===================================================================== */
 
 /* ===== Greeting (compact, refined) ===== */
@@ -26,6 +31,14 @@
   color: var(--fg-strong);
   margin-top: 2px;
   line-height: 1.15;
+  font-family: var(--font-display);
+}
+.home-greeting .greeting-tagline {
+  font-size: var(--fs-xs);
+  color: var(--fg-subtle);
+  margin-top: 4px;
+  font-weight: var(--fw-medium);
+  letter-spacing: -0.005em;
 }
 .home-greeting .greeting-date {
   font-size: var(--fs-xs);
@@ -52,19 +65,205 @@
   transition: transform var(--dur-fast) var(--ease-standard),
               background var(--dur-fast) var(--ease-standard);
   cursor: pointer;
+  text-decoration: none;
 }
 .home-action-btn:active { transform: scale(0.94); background: var(--bg-subtle); }
 .home-action-btn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 
-/* ===== Ayah of the Day — Hero card (most prominent) ===== */
-.ayah-card {
-  background: linear-gradient(135deg,
-    color-mix(in srgb, var(--c-blue) 22%, var(--card)) 0%,
-    var(--card) 70%);
+/* ===== Continue Reading — HERO CARD (primary visual) ===== */
+.continue-hero {
+  background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-primary-deep) 100%);
   border-radius: var(--radius-2xl);
   padding: var(--sp-8) var(--sp-6) var(--sp-6);
-  box-shadow: var(--shadow-blue);
-  border: 1px solid color-mix(in srgb, var(--c-blue) 24%, transparent);
+  box-shadow: var(--shadow-primary);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease-standard);
+  display: block;
+  text-decoration: none;
+  color: var(--fg-on-primary);
+  margin-top: var(--sp-5);
+}
+.continue-hero:active { transform: scale(0.985); }
+
+/* Decorative ornament */
+.continue-hero::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 220px; height: 220px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--c-gold) 22%, transparent) 0%, transparent 70%);
+  pointer-events: none;
+}
+.continue-hero::after {
+  content: '';
+  position: absolute;
+  bottom: -80px; left: -40px;
+  width: 180px; height: 180px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--c-mint) 18%, transparent) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.continue-hero .hero-label {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  color: color-mix(in srgb, var(--fg-on-primary) 88%, transparent);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: var(--sp-3);
+  display: flex; align-items: center; gap: var(--sp-2);
+  position: relative;
+  z-index: 1;
+}
+.continue-hero .hero-label svg {
+  width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2;
+}
+
+.continue-hero .hero-surah {
+  font-size: var(--fs-3xl);
+  font-weight: var(--fw-bold);
+  color: var(--fg-on-primary);
+  font-family: var(--font-quran-display);
+  letter-spacing: 0;
+  line-height: 1.2;
+  position: relative;
+  z-index: 1;
+  margin-bottom: var(--sp-2);
+}
+
+.continue-hero .hero-ayah-info {
+  font-size: var(--fs-sm);
+  color: color-mix(in srgb, var(--fg-on-primary) 80%, transparent);
+  font-weight: var(--fw-medium);
+  margin-bottom: var(--sp-5);
+  position: relative;
+  z-index: 1;
+  display: flex; align-items: center; gap: var(--sp-2);
+}
+
+.continue-hero .hero-progress-wrap {
+  position: relative;
+  z-index: 1;
+  margin-bottom: var(--sp-5);
+}
+
+.continue-hero .hero-progress {
+  width: 100%; height: 8px;
+  background: color-mix(in srgb, var(--fg-on-primary) 18%, transparent);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+.continue-hero .hero-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--c-gold), color-mix(in srgb, var(--c-gold) 80%, #FFFFFF));
+  border-radius: inherit;
+  transition: width var(--dur-slow) var(--ease-standard);
+}
+
+.continue-hero .hero-meta {
+  display: flex; align-items: center; justify-content: space-between;
+  position: relative;
+  z-index: 1;
+}
+.continue-hero .hero-percent {
+  font-size: var(--fs-sm);
+  color: color-mix(in srgb, var(--fg-on-primary) 80%, transparent);
+  font-weight: var(--fw-semi);
+}
+.continue-hero .hero-cta {
+  display: inline-flex; align-items: center; gap: var(--sp-2);
+  padding: 10px 18px;
+  background: var(--fg-on-primary);
+  color: var(--c-primary-deep);
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  letter-spacing: -0.005em;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--dur-fast) var(--ease-standard);
+}
+.continue-hero .hero-cta:active { transform: scale(0.95); }
+.continue-hero .hero-cta svg {
+  width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.2;
+}
+
+/* ===== Wurd Card (with Progress Ring) ===== */
+.wurd-card {
+  background: var(--card);
+  border-radius: var(--radius-xl);
+  padding: var(--sp-5);
+  border: 1px solid var(--hairline);
+  box-shadow: var(--shadow-sm);
+  display: flex; align-items: center; gap: var(--sp-4);
+  cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease-standard),
+              box-shadow var(--dur-fast) var(--ease-standard);
+  margin-top: var(--sp-3);
+}
+.wurd-card:active { transform: scale(0.985); }
+
+.wurd-card .wurd-progress-ring {
+  flex: 0 0 auto;
+  width: 64px; height: 64px;
+  position: relative;
+}
+.wurd-card .wurd-progress-ring svg {
+  width: 100%; height: 100%;
+  transform: rotate(-90deg);
+}
+.wurd-card .wurd-progress-ring circle {
+  fill: none;
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+.wurd-card .wurd-progress-ring .ring-bg {
+  stroke: var(--bg-subtle);
+}
+.wurd-card .wurd-progress-ring .ring-fill {
+  stroke: var(--c-emerald);
+  transition: stroke-dashoffset var(--dur-slow) var(--ease-standard);
+}
+.wurd-card .wurd-progress-ring .ring-text {
+  position: absolute;
+  inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--fg-strong);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.wurd-card .wurd-body { flex: 1; min-width: 0; }
+.wurd-card .wurd-title {
+  font-size: var(--fs-md);
+  font-weight: var(--fw-bold);
+  color: var(--fg-strong);
+  letter-spacing: -0.01em;
+}
+.wurd-card .wurd-sub {
+  font-size: var(--fs-xs);
+  color: var(--fg-muted);
+  margin-top: 3px;
+  font-weight: var(--fw-medium);
+}
+.wurd-card .wurd-arrow {
+  flex: 0 0 auto;
+  color: var(--fg-subtle);
+  display: flex; align-items: center;
+}
+.wurd-card .wurd-arrow svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+/* ===== Ayah of the Day — secondary card ===== */
+.ayah-card {
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--c-gold) 8%, var(--card)) 0%,
+    var(--card) 70%);
+  border-radius: var(--radius-xl);
+  padding: var(--sp-6) var(--sp-5) var(--sp-5);
+  box-shadow: var(--shadow-gold);
+  border: 1px solid color-mix(in srgb, var(--c-gold) 22%, transparent);
   position: relative;
   overflow: hidden;
   cursor: pointer;
@@ -72,29 +271,21 @@
   display: block;
   text-decoration: none;
   color: inherit;
-  margin-top: var(--sp-4);
+  margin-top: var(--sp-3);
 }
 .ayah-card:active { transform: scale(0.985); }
 .ayah-card::before {
   content: '';
   position: absolute;
-  top: -60px; left: -60px;
-  width: 180px; height: 180px;
-  background: radial-gradient(circle, color-mix(in srgb, var(--c-blue) 32%, transparent) 0%, transparent 70%);
-  pointer-events: none;
-}
-.ayah-card::after {
-  content: '';
-  position: absolute;
-  bottom: -40px; right: -40px;
-  width: 140px; height: 140px;
-  background: radial-gradient(circle, color-mix(in srgb, var(--c-purple) 18%, transparent) 0%, transparent 70%);
+  top: -50px; left: -50px;
+  width: 160px; height: 160px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--c-gold) 18%, transparent) 0%, transparent 70%);
   pointer-events: none;
 }
 .ayah-card .ayah-card-label {
   font-size: var(--fs-xs);
   font-weight: var(--fw-bold);
-  color: var(--quran-color);
+  color: var(--gold-color);
   text-transform: uppercase;
   letter-spacing: 0.1em;
   margin-bottom: var(--sp-3);
@@ -116,29 +307,26 @@
   z-index: 1;
   letter-spacing: 0;
 }
-.ayah-card .ayah-card-ref {
-  text-align: center;
-  font-size: var(--fs-sm);
-  color: var(--fg-muted);
-  font-weight: var(--fw-semi);
-  position: relative;
-  z-index: 1;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  background: color-mix(in srgb, var(--card) 70%, transparent);
-  border-radius: var(--radius-pill);
-  border: 1px solid var(--hairline);
-  margin: 0 auto;
-}
 .ayah-card .ayah-card-ref-wrap {
   text-align: center;
   position: relative;
   z-index: 1;
 }
+.ayah-card .ayah-card-ref {
+  text-align: center;
+  font-size: var(--fs-sm);
+  color: var(--fg-muted);
+  font-weight: var(--fw-semi);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: var(--card);
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--hairline);
+}
 
-/* ===== Continue Reading — large primary card ===== */
+/* ===== Continue Reading small cards ===== */
 .continue-card {
   background: var(--card);
   border-radius: var(--radius-xl);
@@ -151,7 +339,7 @@
               box-shadow var(--dur-fast) var(--ease-standard);
   text-decoration: none;
   color: inherit;
-  margin-top: var(--sp-4);
+  margin-top: var(--sp-3);
   position: relative;
   overflow: hidden;
 }
@@ -161,14 +349,13 @@
 }
 .continue-card .continue-icon {
   flex: 0 0 auto;
-  width: 56px; height: 56px;
-  border-radius: var(--radius-lg);
-  background: color-mix(in srgb, var(--c-cyan) 16%, transparent);
+  width: 52px; height: 52px;
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--c-emerald) 14%, transparent);
   color: var(--action-color);
   display: flex; align-items: center; justify-content: center;
-  position: relative;
 }
-.continue-card .continue-icon svg { width: 26px; height: 26px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.continue-card .continue-icon svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .continue-card .continue-body { flex: 1; min-width: 0; }
 .continue-card .continue-title {
   font-size: var(--fs-md);
@@ -191,38 +378,37 @@
 }
 .continue-card .continue-progress-bar {
   height: 100%;
-  background: linear-gradient(90deg, var(--action-color), color-mix(in srgb, var(--action-color) 70%, var(--c-blue)));
+  background: var(--action-color);
   border-radius: inherit;
   transition: width var(--dur-slow) var(--ease-standard);
 }
 .continue-card .continue-arrow {
   flex: 0 0 auto;
   color: var(--fg-subtle);
-  display: flex;
-  align-items: center;
+  display: flex; align-items: center;
 }
 .continue-card .continue-arrow svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; }
 
-/* Variant: blue (Quran) */
-.continue-card.quran {
-  background: linear-gradient(135deg, color-mix(in srgb, var(--c-blue) 8%, var(--card)) 0%, var(--card) 80%);
-  border-color: color-mix(in srgb, var(--c-blue) 20%, transparent);
+/* Variant: gold */
+.continue-card.gold {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--c-gold) 8%, var(--card)) 0%, var(--card) 80%);
+  border-color: color-mix(in srgb, var(--c-gold) 20%, transparent);
 }
-.continue-card.quran .continue-icon {
-  background: color-mix(in srgb, var(--c-blue) 16%, transparent);
-  color: var(--quran-color);
+.continue-card.gold .continue-icon {
+  background: color-mix(in srgb, var(--c-gold) 16%, transparent);
+  color: var(--gold-color);
 }
-.continue-card.quran .continue-progress-bar {
-  background: var(--quran-color);
+.continue-card.gold .continue-progress-bar {
+  background: var(--gold-color);
 }
 
-/* Variant: purple (search) */
+/* Variant: secondary (search) */
 .continue-card.reflect {
-  background: linear-gradient(135deg, color-mix(in srgb, var(--c-purple) 8%, var(--card)) 0%, var(--card) 80%);
-  border-color: color-mix(in srgb, var(--c-purple) 20%, transparent);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--c-secondary) 8%, var(--card)) 0%, var(--card) 80%);
+  border-color: color-mix(in srgb, var(--c-secondary) 20%, transparent);
 }
 .continue-card.reflect .continue-icon {
-  background: color-mix(in srgb, var(--c-purple) 16%, transparent);
+  background: color-mix(in srgb, var(--c-secondary) 16%, transparent);
   color: var(--reflect-color);
 }
 .continue-card.reflect .continue-progress-bar {
@@ -266,10 +452,10 @@
 }
 .home-tile .tile-icon svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 
-.home-tile.quran  .tile-icon { background: color-mix(in srgb, var(--c-blue) 16%, transparent); color: var(--quran-color); }
-.home-tile.wird   .tile-icon { background: color-mix(in srgb, var(--c-cyan) 16%, transparent); color: var(--action-color); }
-.home-tile.remind .tile-icon { background: color-mix(in srgb, var(--c-pink) 18%, transparent); color: var(--remind-color); }
-.home-tile.reflect .tile-icon { background: color-mix(in srgb, var(--c-purple) 16%, transparent); color: var(--reflect-color); }
+.home-tile.quran  .tile-icon { background: color-mix(in srgb, var(--c-primary) 14%, transparent); color: var(--quran-color); }
+.home-tile.wird   .tile-icon { background: color-mix(in srgb, var(--c-emerald) 14%, transparent); color: var(--action-color); }
+.home-tile.remind .tile-icon { background: color-mix(in srgb, var(--c-clay) 18%, transparent); color: var(--remind-color); }
+.home-tile.reflect .tile-icon { background: color-mix(in srgb, var(--c-secondary) 14%, transparent); color: var(--reflect-color); }
 .home-tile.gold    .tile-icon { background: color-mix(in srgb, var(--c-gold) 16%, transparent); color: var(--gold-color); }
 
 .home-tile .tile-title {
@@ -296,20 +482,20 @@
   pointer-events: none;
   opacity: 0.6;
 }
-.home-tile.quran::after  { background: radial-gradient(circle, color-mix(in srgb, var(--c-blue) 12%, transparent) 0%, transparent 70%); }
-.home-tile.wird::after   { background: radial-gradient(circle, color-mix(in srgb, var(--c-cyan) 12%, transparent) 0%, transparent 70%); }
-.home-tile.remind::after { background: radial-gradient(circle, color-mix(in srgb, var(--c-pink) 12%, transparent) 0%, transparent 70%); }
-.home-tile.reflect::after{ background: radial-gradient(circle, color-mix(in srgb, var(--c-purple) 12%, transparent) 0%, transparent 70%); }
+.home-tile.quran::after  { background: radial-gradient(circle, color-mix(in srgb, var(--c-primary) 12%, transparent) 0%, transparent 70%); }
+.home-tile.wird::after   { background: radial-gradient(circle, color-mix(in srgb, var(--c-emerald) 12%, transparent) 0%, transparent 70%); }
+.home-tile.remind::after { background: radial-gradient(circle, color-mix(in srgb, var(--c-clay) 12%, transparent) 0%, transparent 70%); }
+.home-tile.reflect::after{ background: radial-gradient(circle, color-mix(in srgb, var(--c-secondary) 12%, transparent) 0%, transparent 70%); }
 .home-tile.gold::after   { background: radial-gradient(circle, color-mix(in srgb, var(--c-gold) 12%, transparent) 0%, transparent 70%); }
 
-/* ===== Prayer card (compact, gradient) ===== */
+/* ===== Prayer card (compact) ===== */
 .prayer-card {
-  background: linear-gradient(135deg, color-mix(in srgb, var(--c-cyan) 14%, var(--card)) 0%, var(--card) 70%);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--c-emerald) 12%, var(--card)) 0%, var(--card) 70%);
   border-radius: var(--radius-xl);
   padding: var(--sp-5);
-  border: 1px solid color-mix(in srgb, var(--c-cyan) 22%, transparent);
+  border: 1px solid color-mix(in srgb, var(--c-emerald) 18%, transparent);
   display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3);
-  margin-top: var(--sp-4);
+  margin-top: var(--sp-3);
   box-shadow: var(--shadow-sm);
 }
 .prayer-card .prayer-info { flex: 1; }
@@ -343,30 +529,19 @@
   margin-top: 4px;
 }
 
-/* ===== Quick stats row (compact, optional) ===== */
-.home-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--sp-3);
-  margin-top: var(--sp-4);
-}
-.home-stat {
-  background: var(--card);
-  border-radius: var(--radius-md);
-  padding: var(--sp-3) var(--sp-3);
-  border: 1px solid var(--hairline);
-  text-align: center;
-}
-.home-stat .stat-value {
-  font-size: var(--fs-xl);
+/* ===== Section divider label ===== */
+.home-section-label {
+  display: flex; align-items: center; gap: var(--sp-3);
+  margin: var(--sp-6) 0 var(--sp-3);
+  color: var(--fg-subtle);
+  font-size: var(--fs-xs);
   font-weight: var(--fw-bold);
-  color: var(--fg-strong);
-  letter-spacing: -0.02em;
-  font-variant-numeric: tabular-nums;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
-.home-stat .stat-label {
-  font-size: var(--fs-2xs);
-  color: var(--fg-muted);
-  margin-top: 2px;
-  font-weight: var(--fw-medium);
+.home-section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--hairline);
 }
