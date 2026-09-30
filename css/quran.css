@@ -55,19 +55,20 @@
   flex: 0 0 auto;
   width: 48px; height: 48px;
   border-radius: var(--radius-md);
-  background: linear-gradient(135deg, color-mix(in srgb, var(--c-primary) 14%, transparent) 0%, color-mix(in srgb, var(--c-secondary) 8%, transparent) 100%);
-  color: var(--quran-color);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--c-primary) 18%, transparent) 0%, color-mix(in srgb, var(--c-gold) 10%, transparent) 100%);
+  color: var(--c-primary-deep);
   display: flex; align-items: center; justify-content: center;
   font-weight: var(--fw-bold);
   font-size: var(--fs-md);
   position: relative;
   font-variant-numeric: tabular-nums;
 }
+.theme-dark .surah-row .surah-num { color: var(--c-mint); }
 .surah-row .surah-num::before {
   content: '';
   position: absolute;
   inset: 5px;
-  border: 1.5px solid color-mix(in srgb, var(--c-primary) 28%, transparent);
+  border: 1.5px solid color-mix(in srgb, var(--c-primary) 38%, transparent);
   border-radius: var(--radius-sm);
   pointer-events: none;
 }
@@ -104,13 +105,14 @@
 .surah-row .surah-play-btn {
   width: 38px; height: 38px;
   border-radius: var(--radius-pill);
-  background: color-mix(in srgb, var(--c-primary) 12%, transparent);
-  color: var(--quran-color);
+  background: color-mix(in srgb, var(--c-primary) 14%, transparent);
+  color: var(--c-primary-deep);
   display: flex; align-items: center; justify-content: center;
   transition: transform var(--dur-fast) var(--ease-standard),
               background var(--dur-fast) var(--ease-standard);
 }
-.surah-row .surah-play-btn:active { transform: scale(0.92); background: color-mix(in srgb, var(--c-primary) 22%, transparent); }
+.theme-dark .surah-row .surah-play-btn { color: var(--c-mint); }
+.surah-row .surah-play-btn:active { transform: scale(0.92); background: color-mix(in srgb, var(--c-primary) 24%, transparent); }
 .surah-row .surah-play-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: currentColor; stroke-width: 0; }
 
 .surah-row .surah-chevron {
@@ -123,11 +125,11 @@
 
 /* ===== Reader header — refined ===== */
 .reader-header {
-  background: linear-gradient(135deg, color-mix(in srgb, var(--c-primary) 8%, var(--card)) 0%, var(--card) 80%);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--c-primary) 10%, var(--card)) 0%, var(--card) 80%);
   border-radius: var(--radius-xl);
   padding: var(--sp-8) var(--sp-6) var(--sp-6);
   box-shadow: var(--shadow-md);
-  border: 1px solid color-mix(in srgb, var(--c-primary) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--c-primary) 18%, transparent);
   margin-bottom: var(--sp-5);
   text-align: center;
   position: relative;
@@ -138,7 +140,15 @@
   position: absolute;
   top: -50px; right: -50px;
   width: 160px; height: 160px;
-  background: radial-gradient(circle, color-mix(in srgb, var(--c-primary) 16%, transparent) 0%, transparent 70%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--c-primary) 22%, transparent) 0%, transparent 70%);
+  pointer-events: none;
+}
+.reader-header::after {
+  content: '';
+  position: absolute;
+  bottom: -40px; left: -40px;
+  width: 120px; height: 120px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--c-gold) 12%, transparent) 0%, transparent 70%);
   pointer-events: none;
 }
 .reader-header .surah-title {
@@ -218,27 +228,27 @@
 .ayah-word:active { background: color-mix(in srgb, var(--c-primary) 22%, transparent); }
 
 .ayah-word.highlighted {
-  background: color-mix(in srgb, var(--c-emerald) 22%, transparent);
+  background: color-mix(in srgb, var(--c-mint) 30%, transparent);
   color: var(--fg-strong);
   border-radius: 6px;
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--c-emerald) 42%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--c-mint) 48%, transparent);
 }
 
 .ayah-word.playing {
-  background: color-mix(in srgb, var(--c-primary) 24%, transparent);
+  background: color-mix(in srgb, var(--c-primary) 30%, transparent);
   color: var(--fg-strong);
   border-radius: 6px;
   animation: pulse-play 2s var(--ease-standard) infinite;
 }
 @keyframes pulse-play {
-  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--c-primary) 35%, transparent); }
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--c-primary) 42%, transparent); }
   50%      { box-shadow: 0 0 0 6px color-mix(in srgb, var(--c-primary) 0%, transparent); }
 }
 @media (prefers-reduced-motion: reduce) {
   .ayah-word.playing { animation: none; }
 }
 
-/* ===== Ayah number — elegant Islamic ornament ﴿١﴾ ===== */
+/* ===== Ayah number — elegant Islamic 8-point star ornament ===== */
 .ayah-num {
   display: inline-flex;
   align-items: center;
@@ -247,36 +257,40 @@
   margin: 0 8px;
   vertical-align: middle;
   position: relative;
-  color: var(--quran-color);
+  color: var(--c-primary-deep);
   font-family: var(--font-ui);
   font-size: var(--fs-sm);
   font-weight: var(--fw-bold);
   transform: translateY(-4px);
+  z-index: 0;
 }
-.ayah-num::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: color-mix(in srgb, var(--c-primary) 8%, transparent);
-  border: 1.5px solid color-mix(in srgb, var(--c-primary) 28%, transparent);
-  border-radius: 50% 8px 50% 8px / 50% 8px 50% 8px;
-  transform: rotate(45deg);
-  z-index: -1;
-}
+.theme-dark .ayah-num { color: var(--c-mint); }
+
+/* Outer 8-point star (two overlapping squares) */
+.ayah-num::before,
 .ayah-num::after {
   content: '';
   position: absolute;
-  inset: 3px;
-  border: 1px solid color-mix(in srgb, var(--c-primary) 18%, transparent);
-  border-radius: 50% 6px 50% 6px / 50% 6px 50% 6px;
-  transform: rotate(45deg);
+  inset: 0;
   z-index: -1;
   pointer-events: none;
+}
+.ayah-num::before {
+  background: color-mix(in srgb, var(--c-primary) 14%, transparent);
+  border: 1.5px solid color-mix(in srgb, var(--c-primary) 38%, transparent);
+  border-radius: 50% 8px 50% 8px / 8px 50% 8px 50%;
+  transform: rotate(0deg);
+}
+.ayah-num::after {
+  background: transparent;
+  border: 1.5px solid color-mix(in srgb, var(--c-gold) 32%, transparent);
+  border-radius: 8px 50% 8px 50% / 50% 8px 50% 8px;
+  transform: rotate(0deg);
+  opacity: 0.7;
 }
 .ayah-num span {
   font-family: var(--font-ui);
   font-feature-settings: 'tnum';
-  font-variant-numeric: tabular-nums;
   position: relative;
   z-index: 1;
 }
@@ -293,9 +307,19 @@
               border-color var(--dur-base) var(--ease-standard);
 }
 .ayah-row.active {
-  box-shadow: var(--shadow-md), 0 0 0 2px color-mix(in srgb, var(--c-primary) 38%, transparent);
-  border-color: color-mix(in srgb, var(--c-primary) 36%, transparent);
-  background: linear-gradient(135deg, color-mix(in srgb, var(--c-primary) 4%, var(--card)) 0%, var(--card) 80%);
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--c-soft-green) 70%, var(--card)) 0%,
+    var(--card) 100%);
+  border-color: color-mix(in srgb, var(--c-primary) 38%, transparent);
+  box-shadow: var(--shadow-md), 0 0 0 2px color-mix(in srgb, var(--c-primary) 28%, transparent);
+  transition: background var(--dur-base) var(--ease-standard),
+              box-shadow var(--dur-base) var(--ease-standard),
+              border-color var(--dur-base) var(--ease-standard);
+}
+.theme-dark .ayah-row.active {
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--c-primary) 18%, var(--card)) 0%,
+    var(--card) 100%);
 }
 
 .ayah-row .ayah-text {
@@ -329,7 +353,7 @@
 }
 .ayah-action-btn:active { transform: scale(0.92); }
 .ayah-action-btn:hover { background: var(--bg-subtle); color: var(--fg); }
-.ayah-action-btn.active { color: var(--remind-color); background: color-mix(in srgb, var(--c-clay) 12%, transparent); }
+.ayah-action-btn.active { color: var(--remind-color); background: color-mix(in srgb, var(--c-pink) 12%, transparent); }
 .ayah-action-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 
 /* ===== Reader controls (font size, line height, etc.) — refined ===== */
@@ -367,7 +391,7 @@
 .reader-controls .control-btn:active { transform: scale(0.92); }
 .reader-controls .control-btn:hover { background: var(--card); color: var(--fg); }
 .reader-controls .control-btn.active {
-  background: var(--quran-color);
+  background: var(--c-primary);
   color: var(--fg-on-color);
   box-shadow: var(--shadow-xs);
 }
@@ -464,4 +488,4 @@
 }
 .sheet-action:active { transform: scale(0.96); background: var(--card-2); }
 .sheet-action svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-.sheet-action.active { color: var(--remind-color); background: color-mix(in srgb, var(--c-clay) 12%, transparent); }
+.sheet-action.active { color: var(--remind-color); background: color-mix(in srgb, var(--c-pink) 12%, transparent); }

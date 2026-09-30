@@ -10,6 +10,7 @@ export const Icons = {
   /* ===== Navigation (5 main sections) ===== */
   home:        wrap(`<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9.5 21v-6h5v6"/>`),
   book:        wrap(`<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20"/>`),
+  bookOpen:    wrap(`<path d="M12 7v14"/><path d="M3 5v14h7"/><path d="M3 5h6a3 3 0 0 1 3 3v14"/><path d="M21 5v14h-7"/><path d="M21 5h-6a3 3 0 0 0-3 3v14"/>`),
   quran:       wrap(`<path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v18H6.5A2.5 2.5 0 0 0 4 22.5z"/><path d="M8 7h8"/><path d="M8 11h8"/><path d="M8 15h5"/>`),
   wird:        wrap(`<path d="M12 7v5l3 2"/><circle cx="12" cy="12" r="9"/><path d="M12 7V3"/><path d="M9 5h6"/>`),
   reflect:     wrap(`<path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.5.4.8.9.9 1.5l.1 1.8h6l.1-1.8c.1-.6.4-1.1.9-1.5A7 7 0 0 0 12 2Z"/>`),

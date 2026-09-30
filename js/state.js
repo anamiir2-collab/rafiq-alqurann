@@ -128,7 +128,7 @@ export function applyTheme(theme) {
   if (meta) {
     const isDark = theme === 'dark' ||
       (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-    meta.setAttribute('content', isDark ? '#14181F' : '#FAF9F7');
+    meta.setAttribute('content', isDark ? '#111815' : '#F8F5ED');
   }
 }
 

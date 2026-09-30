@@ -86,10 +86,11 @@
 }
 
 .nav-btn.active .nav-icon {
-  background: color-mix(in srgb, var(--c-primary) 16%, transparent);
-  color: var(--quran-color);
+  background: color-mix(in srgb, var(--c-primary) 18%, transparent);
+  color: var(--c-primary-deep);
   transform: translateY(-1px) scale(1.04);
 }
+.theme-dark .nav-btn.active .nav-icon { color: var(--c-mint); }
 
 .nav-btn.active .nav-icon svg {
   stroke-width: 2.2;
@@ -99,31 +100,37 @@
   font-weight: var(--fw-semi);
 }
 
-/* Variant colors per section */
+/* Variant colors per section (all calmed down to sage family) */
 .nav-btn[data-color="quran"].active .nav-icon {
-  background: color-mix(in srgb, var(--c-primary) 16%, transparent);
-  color: var(--quran-color);
+  background: color-mix(in srgb, var(--c-primary) 18%, transparent);
+  color: var(--c-primary-deep);
 }
+.theme-dark .nav-btn[data-color="quran"].active .nav-icon { color: var(--c-mint); }
 
 .nav-btn[data-color="wird"].active .nav-icon {
-  background: color-mix(in srgb, var(--c-emerald) 16%, transparent);
-  color: var(--action-color);
+  background: color-mix(in srgb, var(--c-mint) 22%, transparent);
+  color: var(--c-primary-deep);
 }
+.theme-dark .nav-btn[data-color="wird"].active .nav-icon { color: var(--c-mint); }
 
 .nav-btn[data-color="tadabbur"].active .nav-icon {
-  background: color-mix(in srgb, var(--c-secondary) 16%, transparent);
-  color: var(--reflect-color);
+  background: color-mix(in srgb, var(--c-secondary) 20%, transparent);
+  color: var(--c-primary-deep);
 }
+.theme-dark .nav-btn[data-color="tadabbur"].active .nav-icon { color: var(--c-mint); }
 
 .nav-btn[data-color="more"].active .nav-icon {
-  background: color-mix(in srgb, var(--c-clay) 16%, transparent);
-  color: var(--remind-color);
+  background: color-mix(in srgb, var(--c-gold) 18%, transparent);
+  color: var(--c-gold);
 }
 
-.nav-btn[data-color="quran"].active    { color: var(--quran-color); }
-.nav-btn[data-color="wird"].active     { color: var(--action-color); }
-.nav-btn[data-color="tadabbur"].active { color: var(--reflect-color); }
-.nav-btn[data-color="more"].active     { color: var(--remind-color); }
+.nav-btn[data-color="quran"].active    { color: var(--c-primary-deep); }
+.nav-btn[data-color="wird"].active     { color: var(--c-primary-deep); }
+.nav-btn[data-color="tadabbur"].active { color: var(--c-primary-deep); }
+.nav-btn[data-color="more"].active     { color: var(--c-gold); }
+.theme-dark .nav-btn[data-color="quran"].active,
+.theme-dark .nav-btn[data-color="wird"].active,
+.theme-dark .nav-btn[data-color="tadabbur"].active { color: var(--c-mint); }
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {

@@ -72,27 +72,27 @@
 
 .btn-primary {
   background: var(--c-primary);
-  color: var(--fg-on-primary);
-  box-shadow: var(--shadow-primary);
+  color: var(--fg-on-color);
+  box-shadow: var(--shadow-blue);
 }
-.btn-primary:hover { filter: brightness(1.05); }
+.btn-primary:hover { filter: brightness(1.04); }
 
 .btn-action {
-  background: var(--c-emerald);
-  color: var(--fg-on-primary);
+  background: var(--c-mint);
+  color: var(--c-primary-deep);
   box-shadow: var(--shadow-sm);
 }
 
 .btn-remind {
-  background: var(--c-clay);
+  background: var(--remind-color);
   color: var(--fg-on-color);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-pink);
 }
 
 .btn-reflect {
-  background: var(--c-secondary);
-  color: var(--fg-on-primary);
-  box-shadow: var(--shadow-sm);
+  background: var(--reflect-color);
+  color: var(--fg-on-color);
+  box-shadow: var(--shadow-purple);
 }
 
 .btn-gold {
@@ -115,10 +115,11 @@
 .btn-ghost:hover { background: var(--bg-subtle); }
 
 .btn-soft {
-  background: color-mix(in srgb, var(--quran-color) 14%, transparent);
-  color: var(--quran-color);
+  background: color-mix(in srgb, var(--c-primary) 14%, transparent);
+  color: var(--c-primary-deep);
 }
-.btn-soft:hover { background: color-mix(in srgb, var(--quran-color) 22%, transparent); }
+.theme-dark .btn-soft { color: var(--c-mint); }
+.btn-soft:hover { background: color-mix(in srgb, var(--c-primary) 22%, transparent); }
 
 .btn-danger {
   background: transparent;
@@ -168,8 +169,8 @@
 }
 .input:focus, .textarea:focus, .select:focus {
   outline: none;
-  border-color: var(--quran-color);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--quran-color) 16%, transparent);
+  border-color: var(--c-primary);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--c-primary) 16%, transparent);
 }
 .textarea { resize: vertical; min-height: 96px; line-height: 1.7; }
 .label {
@@ -198,11 +199,14 @@
   border: 1px solid var(--hairline);
   line-height: 1.4;
 }
-.badge-quran  { background: color-mix(in srgb, var(--c-primary) 14%, transparent); color: var(--quran-color); border-color: transparent; }
-.badge-action { background: color-mix(in srgb, var(--c-emerald) 14%, transparent); color: var(--action-color); border-color: transparent; }
-.badge-remind { background: color-mix(in srgb, var(--c-clay) 18%, transparent); color: var(--remind-color); border-color: transparent; }
-.badge-reflect{ background: color-mix(in srgb, var(--c-secondary) 16%, transparent); color: var(--reflect-color); border-color: transparent; }
-.badge-gold   { background: color-mix(in srgb, var(--c-gold) 16%, transparent); color: var(--gold-color); border-color: transparent; }
+.badge-quran  { background: color-mix(in srgb, var(--c-primary) 14%, transparent); color: var(--c-primary-deep); border-color: transparent; }
+.theme-dark .badge-quran { color: var(--c-mint); }
+.badge-action { background: color-mix(in srgb, var(--c-mint) 18%, transparent); color: var(--c-primary-deep); border-color: transparent; }
+.theme-dark .badge-action { color: var(--c-mint); }
+.badge-remind { background: color-mix(in srgb, var(--c-pink) 18%, transparent); color: var(--c-pink); border-color: transparent; }
+.badge-reflect{ background: color-mix(in srgb, var(--c-secondary) 18%, transparent); color: var(--c-primary-deep); border-color: transparent; }
+.theme-dark .badge-reflect { color: var(--c-mint); }
+.badge-gold   { background: color-mix(in srgb, var(--c-gold) 18%, transparent); color: var(--c-gold); border-color: transparent; }
 
 /* ===== Row — list item inside a card ===== */
 .row {
@@ -243,14 +247,14 @@
 }
 .progress-bar {
   height: 100%;
-  background: var(--quran-color);
+  background: var(--c-primary);
   border-radius: inherit;
   transition: width var(--dur-slow) var(--ease-standard);
 }
-.progress-bar.action { background: var(--action-color); }
-.progress-bar.remind { background: var(--remind-color); }
-.progress-bar.reflect{ background: var(--reflect-color); }
-.progress-bar.gold  { background: var(--gold-color); }
+.progress-bar.action { background: var(--c-mint); }
+.progress-bar.remind { background: var(--c-pink); }
+.progress-bar.reflect{ background: var(--c-secondary); }
+.progress-bar.gold  { background: var(--c-gold); }
 
 /* Larger progress with rounded pill style */
 .progress-thick {
@@ -282,7 +286,7 @@
 }
 .toast.error   { background: #D64545; color: white; }
 .toast.success { background: #2F855A; color: white; }
-.toast.info    { background: var(--quran-color); color: var(--fg-on-color); }
+.toast.info    { background: var(--c-primary); color: var(--fg-on-color); }
 @keyframes toast-in {
   from { opacity: 0; transform: translateY(-16px) scale(0.92); }
   to   { opacity: 1; transform: translateY(0) scale(1); }
@@ -393,12 +397,13 @@
 }
 .chip:active { transform: scale(0.96); }
 .chip.active {
-  background: color-mix(in srgb, var(--quran-color) 18%, transparent);
-  color: var(--quran-color);
+  background: color-mix(in srgb, var(--c-primary) 18%, transparent);
+  color: var(--c-primary-deep);
 }
+.theme-dark .chip.active { color: var(--c-mint); }
 .chip.active.remind {
   background: color-mix(in srgb, var(--c-pink) 18%, transparent);
-  color: var(--remind-color);
+  color: var(--c-pink);
 }
 
 /* ===== Switch (iOS-style) ===== */
@@ -434,7 +439,7 @@
   transition: transform var(--dur-base) var(--ease-spring);
 }
 .switch input:checked + .slider {
-  background: var(--quran-color);
+  background: var(--c-primary);
 }
 .switch input:checked + .slider::before {
   transform: translateX(-20px);
@@ -447,8 +452,10 @@
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
-.setting-icon.quran  { background: color-mix(in srgb, var(--c-blue) 14%, transparent); color: var(--quran-color); }
-.setting-icon.action { background: color-mix(in srgb, var(--c-cyan) 14%, transparent); color: var(--action-color); }
+.setting-icon.quran  { background: color-mix(in srgb, var(--c-primary) 14%, transparent); color: var(--c-primary-deep); }
+.theme-dark .setting-icon.quran { color: var(--c-mint); }
+.setting-icon.action { background: color-mix(in srgb, var(--c-mint) 18%, transparent); color: var(--c-primary-deep); }
+.theme-dark .setting-icon.action { color: var(--c-mint); }
 .setting-icon.neutral { background: var(--bg-subtle); color: var(--fg); }
 .setting-icon.danger { background: rgba(214, 69, 69, 0.1); color: #D64545; }
 .setting-icon svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }

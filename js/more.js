@@ -57,16 +57,18 @@ const MORE_ITEMS = [
 
 const COLOR_BG = {
   quran:  'color-mix(in srgb, var(--c-primary) 14%, transparent)',
-  remind: 'color-mix(in srgb, var(--c-clay) 18%, transparent)',
+  remind: 'color-mix(in srgb, var(--c-pink) 18%, transparent)',
   reflect:'color-mix(in srgb, var(--c-secondary) 14%, transparent)',
-  action: 'color-mix(in srgb, var(--c-emerald) 14%, transparent)',
+  action: 'color-mix(in srgb, var(--c-mint) 18%, transparent)',
+  gold:   'color-mix(in srgb, var(--c-gold) 18%, transparent)',
 };
 
 const COLOR_FG = {
-  quran:  'var(--quran-color)',
-  remind: 'var(--remind-color)',
-  reflect:'var(--reflect-color)',
-  action: 'var(--action-color)',
+  quran:  'var(--c-primary-deep)',
+  remind: 'var(--c-pink)',
+  reflect:'var(--c-primary-deep)',
+  action: 'var(--c-primary-deep)',
+  gold:   'var(--c-gold)',
 };
 
 export function renderMore(container) {

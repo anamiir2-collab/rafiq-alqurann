@@ -11,7 +11,7 @@
    Versioning (spec section 75): bump CACHE_VERSION on each deploy
    ===================================================================== */
 
-const CACHE_VERSION = 'rafiq-alquran-v2.2';
+const CACHE_VERSION = 'rafiq-alquran-v4.0';
 const SHELL_CACHE = `${CACHE_VERSION}-shell`;
 const DATA_CACHE = `${CACHE_VERSION}-data`;
 const AUDIO_CACHE = `${CACHE_VERSION}-audio`;

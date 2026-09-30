@@ -9,8 +9,8 @@ import { navigate, getCurrentPath } from '../js/router.js';
 const NAV_ITEMS = [
   { path: '/',            label: 'الرئيسية', icon: Icons.home,    color: 'quran' },
   { path: '/quran',       label: 'القرآن',   icon: Icons.quran,   color: 'quran' },
-  { path: '/wird',        label: 'الورد',    icon: Icons.wird,    color: 'wird' },
   { path: '/tadabbur',    label: 'التدبر',   icon: Icons.reflect, color: 'tadabbur' },
+  { path: '/more/favorites', label: 'المحفوظات', icon: Icons.bookmark, color: 'wird' },
   { path: '/more',        label: 'المزيد',   icon: Icons.more,    color: 'more' },
 ];
 

@@ -30,7 +30,7 @@ body {
   letter-spacing: -0.005em;
 }
 
-/* Soft background gradient (subtle sage & gold tints) */
+/* Soft background gradient (subtle iOS-like feel — warm sage tones) */
 body::before {
   content: '';
   position: fixed;
@@ -38,12 +38,13 @@ body::before {
   z-index: -1;
   background:
     radial-gradient(ellipse at top, color-mix(in srgb, var(--c-primary) 5%, transparent) 0%, transparent 50%),
-    radial-gradient(ellipse at bottom right, color-mix(in srgb, var(--c-gold) 3%, transparent) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom right, color-mix(in srgb, var(--c-gold) 4%, transparent) 0%, transparent 50%),
     var(--bg);
   pointer-events: none;
 }
 
-.theme-dark body::before {
+.theme-dark body::before,
+.theme-system.theme-dark body::before {
   background:
     radial-gradient(ellipse at top, color-mix(in srgb, var(--c-primary) 4%, transparent) 0%, transparent 50%),
     var(--bg);
@@ -57,7 +58,8 @@ img, svg { display: block; max-width: 100%; }
 img { height: auto; }
 button, input, textarea, select { font: inherit; color: inherit; }
 button { background: none; border: none; padding: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-a { color: var(--quran-color); text-decoration: none; transition: opacity var(--dur-fast) var(--ease-standard); }
+a { color: var(--c-primary-deep); text-decoration: none; transition: opacity var(--dur-fast) var(--ease-standard); }
+.theme-dark a { color: var(--c-mint); }
 a:active { opacity: 0.65; }
 
 /* ===== Typography System (iOS-style hierarchy) ===== */
@@ -126,13 +128,13 @@ a:active { opacity: 0.65; }
 /* Color utilities */
 .text-muted   { color: var(--fg-muted); }
 .text-subtle  { color: var(--fg-subtle); }
-.text-strong  { color: var(--fg-strong); font-weight: var(--fw-semi); }
-.text-quran   { color: var(--quran-color); }
-.text-action  { color: var(--action-color); }
-.text-remind  { color: var(--remind-color); }
-.text-reflect { color: var(--reflect-color); }
-.text-gold    { color: var(--gold-color); }
-.text-primary { color: var(--c-primary); }
+.text-strong  { color: var(--fg-strong); }
+.text-quran   { color: var(--c-primary-deep); }
+.theme-dark .text-quran { color: var(--c-mint); }
+.text-action  { color: var(--c-mint); }
+.text-remind  { color: var(--c-pink); }
+.text-reflect { color: var(--c-secondary); }
+.text-gold    { color: var(--c-gold); }
 
 .text-center  { text-align: center; }
 .text-right   { text-align: right; }
@@ -222,11 +224,11 @@ a:active { opacity: 0.65; }
 ::-webkit-scrollbar-thumb:hover { background: var(--fg-subtle); }
 
 /* ===== Selection ===== */
-::selection { background: color-mix(in srgb, var(--c-primary) 25%, transparent); color: var(--fg-strong); }
+::selection { background: color-mix(in srgb, var(--c-primary) 30%, transparent); color: var(--fg-strong); }
 
 /* ===== Focus (accessibility) ===== */
 :focus-visible {
-  outline: 2px solid var(--quran-color);
+  outline: 2px solid var(--c-primary);
   outline-offset: 2px;
   border-radius: var(--radius-xs);
 }

@@ -9,8 +9,8 @@
   "display": "standalone",
   "display_override": ["standalone", "minimal-ui"],
   "orientation": "portrait-primary",
-  "background_color": "#FAF9F7",
-  "theme_color": "#FAF9F7",
+  "background_color": "#F8F5ED",
+  "theme_color": "#F8F5ED",
   "categories": ["education", "books", "lifestyle", "religion"],
   "icons": [
     {

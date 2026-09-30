@@ -29,12 +29,12 @@
   flex: 0 0 auto;
   width: 48px; height: 48px;
   border-radius: var(--radius-md);
-  background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-emerald) 100%);
+  background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-secondary) 100%);
   display: flex; align-items: center; justify-content: center;
-  color: var(--fg-on-primary);
+  color: var(--fg-on-color);
   position: relative;
   overflow: hidden;
-  flex-shrink: 0;
+  box-shadow: var(--shadow-sm);
 }
 .audio-bar .audio-bar-art svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.8; }
 .audio-bar .audio-bar-art.playing svg {
@@ -82,11 +82,11 @@
 .audio-bar .audio-bar-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .audio-bar .audio-bar-btn.play {
   width: 44px; height: 44px;
-  background: var(--quran-color);
-  color: var(--fg-on-primary);
+  background: var(--c-primary);
+  color: var(--fg-on-color);
   box-shadow: var(--shadow-blue);
 }
-.audio-bar .audio-bar-btn.play:hover { filter: brightness(1.04); background: var(--quran-color); }
+.audio-bar .audio-bar-btn.play:hover { filter: brightness(1.04); background: var(--c-primary); }
 .audio-bar .audio-bar-btn.play svg { fill: currentColor; stroke: none; }
 
 /* Progress bar at bottom of audio bar */
@@ -98,7 +98,7 @@
 }
 .audio-bar .audio-bar-progress-bar {
   height: 100%;
-  background: linear-gradient(90deg, var(--quran-color), color-mix(in srgb, var(--quran-color) 70%, var(--c-secondary))));
+  background: linear-gradient(90deg, var(--c-primary), var(--c-mint));
   border-inline-start-radius: var(--radius-pill);
   border-inline-end-radius: var(--radius-pill);
   transition: width 250ms linear;
@@ -112,9 +112,9 @@
   width: 220px; height: 220px;
   margin: var(--sp-5) auto var(--sp-6);
   border-radius: var(--radius-2xl);
-  background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-emerald) 50%, var(--c-secondary) 100%);
+  background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-secondary) 50%, var(--c-mint) 100%);
   display: flex; align-items: center; justify-content: center;
-  color: var(--fg-on-primary);
+  color: var(--fg-on-color);
   box-shadow: var(--shadow-xl), var(--shadow-blue);
   position: relative;
   overflow: hidden;
@@ -175,7 +175,7 @@
 }
 .audio-full-player .player-progress-bar {
   height: 100%;
-  background: var(--quran-color);
+  background: linear-gradient(90deg, var(--c-primary), var(--c-mint));
   border-radius: inherit;
   transition: width 200ms linear;
 }
@@ -207,14 +207,15 @@
 }
 .audio-full-player .player-btn:active { transform: scale(0.92); }
 .audio-full-player .player-btn.active {
-  color: var(--quran-color);
-  background: color-mix(in srgb, var(--c-primary) 14%, transparent);
+  color: var(--c-primary-deep);
+  background: color-mix(in srgb, var(--c-primary) 16%, transparent);
 }
+.theme-dark .audio-full-player .player-btn.active { color: var(--c-mint); }
 .audio-full-player .player-btn svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .audio-full-player .player-btn.play {
   width: 76px; height: 76px;
-  background: var(--quran-color);
-  color: var(--fg-on-primary);
+  background: var(--c-primary);
+  color: var(--fg-on-color);
   box-shadow: var(--shadow-blue);
 }
 .audio-full-player .player-btn.play svg { fill: currentColor; stroke: none; width: 30px; height: 30px; }
@@ -232,16 +233,17 @@
 .reciter-row:active { background: var(--bg-subtle); transform: scale(0.99); }
 .reciter-row.selected {
   background: color-mix(in srgb, var(--c-primary) 12%, transparent);
-  border: 1px solid color-mix(in srgb, var(--c-primary) 28%, transparent);
+  border: 1px solid color-mix(in srgb, var(--c-primary) 30%, transparent);
 }
 .reciter-row .reciter-icon {
   flex: 0 0 auto;
   width: 48px; height: 48px;
   border-radius: var(--radius-pill);
-  background: linear-gradient(135deg, color-mix(in srgb, var(--c-primary) 14%, transparent), color-mix(in srgb, var(--c-secondary) 10%, transparent));
-  color: var(--quran-color);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--c-primary) 18%, transparent), color-mix(in srgb, var(--c-gold) 14%, transparent));
+  color: var(--c-primary-deep);
   display: flex; align-items: center; justify-content: center;
 }
+.theme-dark .reciter-row .reciter-icon { color: var(--c-mint); }
 .reciter-row .reciter-icon svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.8; }
 .reciter-row .reciter-info { flex: 1; min-width: 0; }
 .reciter-row .reciter-name {
@@ -256,7 +258,7 @@
   font-weight: var(--fw-medium);
 }
 .reciter-row .reciter-check {
-  color: var(--quran-color);
+  color: var(--c-primary);
   opacity: 0;
   transition: opacity var(--dur-fast) var(--ease-standard);
 }

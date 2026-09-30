@@ -1,12 +1,13 @@
 /* =====================================================================
-   home.js v4 — Premium iPhone-style Dashboard (Sage/Cream)
-   - Compact greeting with hijri date
-   - Continue Reading HERO card (primary visual element)
-   - Wurd card with Progress Ring
-   - Ayah of the Day
-   - Quran tools grid
-   - Quick links
-   - Prayer card
+   home.js v4 — Premium iPhone-style Dashboard
+   ---------------------------------------------------------------------
+   Layout (top → bottom):
+   1) Brand bar: رفيق القرآن + tagline + search + settings
+   2) Hijri date pill
+   3) Continue reading hero card (primary visual element)
+   4) Wird of the day (progress ring)
+   5) Quran tools grid (8 cards)
+   6) Optional quick links
    ===================================================================== */
 
 import { State } from './state.js';
@@ -41,15 +42,6 @@ async function getAyahOfDay() {
   return ayah;
 }
 
-function greeting() {
-  const h = new Date().getHours();
-  if (h < 5)  return 'ليلة هادئة';
-  if (h < 12) return 'صباح الخير';
-  if (h < 17) return 'طاب يومك';
-  if (h < 20) return 'مساء الخير';
-  return 'ليلة مباركة';
-}
-
 function hijriDate() {
   try {
     return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', {
@@ -58,21 +50,38 @@ function hijriDate() {
   } catch { return ''; }
 }
 
-/* Progress Ring SVG for Wurd */
-function renderProgressRing(percent, label = '') {
-  const r = 26;
+/* Compute Wird progress (juz-based) from state */
+function getWirdProgress() {
+  const wird = State.getSlice('wird');
+  const plans = wird?.plans || [];
+  const active = plans.find(p => p.id === wird?.activePlanId) || plans[0];
+  if (!active) {
+    // Default: show 0/5 juz as a sensible placeholder
+    return { current: 0, target: 5, pct: 0 };
+  }
+  const current = active.progress?.juzRead || 0;
+  const target = active.target || 5;
+  const pct = target > 0 ? Math.min(100, Math.round((current / target) * 100)) : 0;
+  return { current, target, pct };
+}
+
+/* Render progress ring SVG */
+function renderProgressRing(pct, size = 64, stroke = 6) {
+  const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;
-  const offset = c - (Math.min(100, percent) / 100) * c;
+  const offset = c * (1 - pct / 100);
   return `
-    <div class="wurd-progress-ring">
-      <svg viewBox="0 0 64 64">
-        <circle class="ring-bg" cx="32" cy="32" r="${r}"></circle>
-        <circle class="ring-fill" cx="32" cy="32" r="${r}"
-          stroke-dasharray="${c}"
-          stroke-dashoffset="${offset}"></circle>
-      </svg>
-      <div class="ring-text">${label || percent + '%'}</div>
-    </div>
+    <svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}">
+      <defs>
+        <linearGradient id="wurd-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="var(--c-primary)"/>
+          <stop offset="100%" stop-color="var(--c-mint)"/>
+        </linearGradient>
+      </defs>
+      <circle class="ring-bg" cx="${size/2}" cy="${size/2}" r="${r}"/>
+      <circle class="ring-fg" cx="${size/2}" cy="${size/2}" r="${r}"
+        stroke-dasharray="${c}" stroke-dashoffset="${offset}"/>
+    </svg>
   `;
 }
 
@@ -82,141 +91,128 @@ export async function renderHome(container) {
 
   container.innerHTML = `
     <div class="page container-app">
-      <!-- Greeting -->
-      <div class="home-greeting">
-        <div class="greeting-text">
-          <div class="greeting-hello">${greeting()}</div>
-          <div class="greeting-name">رفيق القرآن</div>
-          <div class="greeting-tagline">رفيقك في كل آية</div>
-          <div class="greeting-date">
+
+      <!-- 1) Brand bar -->
+      <div class="home-brand">
+        <div class="brand-text">
+          <div class="brand-name">
+            <span class="brand-glyph">ر ق</span>
+            رفيق القرآن
+          </div>
+          <div class="brand-tagline">رفيقك في كل آية</div>
+          <div class="home-date-pill">
+            ${Icons.calendar}
             <span class="hijri">${hijriDate()}</span>
           </div>
         </div>
-        <a class="home-action-btn" href="#/search" aria-label="البحث">${Icons.search}</a>
+        <div class="brand-actions">
+          <a class="brand-btn" href="#/search" aria-label="البحث">${Icons.search}</a>
+          <a class="brand-btn" href="#/settings" aria-label="الإعدادات">${Icons.settings}</a>
+        </div>
       </div>
 
-      <!-- Continue Reading HERO CARD (primary visual) -->
+      <!-- 2) Continue reading hero card -->
       <a class="continue-hero" href="#/quran/${State.getSlice('quran').lastSurah || 1}">
-        <div class="hero-label">${Icons.book} أكمل قراءتك</div>
-        <div class="hero-surah" id="hero-surah">جارٍ التحميل...</div>
-        <div class="hero-ayah-info" id="hero-ayah-info">آية ١ من ٠</div>
+        <div class="hero-label">
+          ${Icons.bookOpen}
+          أكمل قراءتك
+        </div>
+        <div class="hero-surah-name" id="hero-surah-name">جارٍ التحميل...</div>
+        <div class="hero-ayah-info">
+          الآية <span class="hero-ayah-num" id="hero-ayah-num">١</span> من <span id="hero-ayah-total">٢٨٦</span>
+        </div>
         <div class="hero-progress-wrap">
+          <div class="hero-progress-top">
+            <span class="hero-progress-label">التقدّم في السورة</span>
+            <span class="hero-progress-pct" id="hero-pct">٠٪</span>
+          </div>
           <div class="hero-progress">
-            <div class="hero-progress-bar" id="hero-progress-bar" style="width:0%"></div>
+            <div class="hero-progress-bar" id="hero-bar" style="width:0"></div>
           </div>
         </div>
-        <div class="hero-meta">
-          <span class="hero-percent" id="hero-percent">٠%</span>
-          <span class="hero-cta">
-            متابعة القراءة
-            ${Icons.chevronLeft}
-          </span>
+        <div class="hero-cta">
+          متابعة القراءة
+          ${Icons.arrowLeft}
         </div>
       </a>
 
-      <!-- Wurd Card with Progress Ring -->
+      <!-- 3) Wird of the day -->
       <a class="wurd-card" href="#/wird">
-        ${renderProgressRing(0, '٠%')}
+        <div class="wurd-ring">
+          ${renderProgressRing(0)}
+          <div class="ring-text" id="wurd-pct">٠٪</div>
+        </div>
         <div class="wurd-body">
-          <div class="wurd-title">وردي اليوم</div>
-          <div class="wurd-sub" id="wurd-sub">لم تبدأ وردك بعد</div>
+          <div class="wurd-label">وردي اليوم</div>
+          <div class="wurd-title" id="wurd-title">لم تبدأ ورد اليوم بعد</div>
+          <div class="wurd-sub" id="wurd-sub">اضغط لتحديد هدفك اليومي</div>
         </div>
         <div class="wurd-arrow">${Icons.chevronLeft}</div>
       </a>
 
-      <!-- Section: Quick Access -->
-      <div class="home-section-label">أدوات القرآن</div>
-
-      <!-- Service Grid -->
-      <div class="home-grid">
-        <a class="home-tile quran" href="#/quran">
-          <div class="tile-icon">${Icons.book}</div>
-          <div>
-            <div class="tile-title">القرآن</div>
-            <div class="tile-sub">اقرأ القرآن الكريم</div>
-          </div>
-        </a>
-        <a class="home-tile reflect" href="#/more/tafsir">
-          <div class="tile-icon">${Icons.book}</div>
-          <div>
-            <div class="tile-title">التفسير</div>
-            <div class="tile-sub">افهم معاني الآيات</div>
-          </div>
-        </a>
-        <a class="home-tile remind" href="#/tadabbur">
-          <div class="tile-icon">${Icons.reflect}</div>
-          <div>
-            <div class="tile-title">التدبر</div>
-            <div class="tile-sub">تدبر آيات القرآن</div>
-          </div>
-        </a>
-        <a class="home-tile gold" href="#/quran">
-          <div class="tile-icon">${Icons.tajweed}</div>
-          <div>
-            <div class="tile-title">التجويد</div>
-            <div class="tile-sub">أحكام التجويد</div>
-          </div>
-        </a>
-        <a class="home-tile quran" href="#/more/favorites">
-          <div class="tile-icon">${Icons.bookmark}</div>
-          <div>
-            <div class="tile-title">المحفوظات</div>
-            <div class="tile-sub">الآيات والسور المحفوظة</div>
-          </div>
-        </a>
-        <a class="home-tile reflect" href="#/tadabbur">
-          <div class="tile-icon">${Icons.edit}</div>
-          <div>
-            <div class="tile-title">الخواطر</div>
-            <div class="tile-sub">خواطرك حول الآيات</div>
-          </div>
-        </a>
-        <a class="home-tile wird" href="#/more/adhkar">
-          <div class="tile-icon">${Icons.adhkar}</div>
-          <div>
-            <div class="tile-title">الأذكار</div>
-            <div class="tile-sub">أذكار المسلم</div>
-          </div>
-        </a>
-        <a class="home-tile gold" href="#/quran/search">
-          <div class="tile-icon">${Icons.search}</div>
-          <div>
-            <div class="tile-title">البحث</div>
-            <div class="tile-sub">ابحث داخل القرآن</div>
-          </div>
-        </a>
-      </div>
-
-      <!-- Ayah of the Day -->
-      <div id="ayah-card-slot"></div>
-
-      <!-- Quick links -->
-      <a class="continue-card gold" href="#/today">
-        <div class="continue-icon">${Icons.home}</div>
-        <div class="continue-body">
-          <div class="continue-title">يومي مع الله</div>
-          <div class="continue-sub">ملخص اليوم + عمل خير</div>
+      <!-- 4) Quran tools grid -->
+      <div class="tools-section">
+        <div class="tools-section-title">
+          <span class="tools-decor"></span>
+          أدوات القرآن
         </div>
-        <div class="continue-arrow">${Icons.chevronLeft}</div>
-      </a>
-
-      <a class="continue-card" href="#/listening">
-        <div class="continue-icon">${Icons.speaker}</div>
-        <div class="continue-body">
-          <div class="continue-title">الاستماع</div>
-          <div class="continue-sub">تلاوات القراء مع التتبع</div>
-        </div>
-        <div class="continue-arrow">${Icons.chevronLeft}</div>
-      </a>
-
-      <!-- Prayer card -->
-      <div class="prayer-card">
-        <div class="prayer-info">
-          <div class="prayer-label">الصلاة القادمة</div>
-          <div class="prayer-name" id="prayer-name">سيتم إضافته قريبًا</div>
-        </div>
-        <div class="prayer-time">
-          <div class="prayer-countdown" id="prayer-countdown"></div>
+        <div class="tools-grid">
+          <a class="tool-card t-quran" href="#/quran">
+            <div class="tool-icon">${Icons.quran}</div>
+            <div>
+              <div class="tool-title">القرآن</div>
+              <div class="tool-sub">اقرأ القرآن الكريم</div>
+            </div>
+          </a>
+          <a class="tool-card t-tafsir" href="#/more/tafsir">
+            <div class="tool-icon">${Icons.book}</div>
+            <div>
+              <div class="tool-title">التفسير</div>
+              <div class="tool-sub">افهم معاني الآيات</div>
+            </div>
+          </a>
+          <a class="tool-card t-tadabbur" href="#/tadabbur">
+            <div class="tool-icon">${Icons.reflect}</div>
+            <div>
+              <div class="tool-title">التدبر</div>
+              <div class="tool-sub">تدبر آيات القرآن</div>
+            </div>
+          </a>
+          <a class="tool-card t-tajweed" href="#/quran/1">
+            <div class="tool-icon">${Icons.tajweed}</div>
+            <div>
+              <div class="tool-title">التجويد</div>
+              <div class="tool-sub">تعلم أحكام التجويد</div>
+            </div>
+          </a>
+          <a class="tool-card t-hifz" href="#/hifz">
+            <div class="tool-icon">${Icons.bookmark}</div>
+            <div>
+              <div class="tool-title">المحفوظات</div>
+              <div class="tool-sub">الآيات والسور المحفوظة</div>
+            </div>
+          </a>
+          <a class="tool-card t-khawater" href="#/tadabbur">
+            <div class="tool-icon">${Icons.edit}</div>
+            <div>
+              <div class="tool-title">الخواطر</div>
+              <div class="tool-sub">اكتب خواطرك حول الآيات</div>
+            </div>
+          </a>
+          <a class="tool-card t-search" href="#/quran/search">
+            <div class="tool-icon">${Icons.search}</div>
+            <div>
+              <div class="tool-title">البحث</div>
+              <div class="tool-sub">ابحث داخل القرآن</div>
+            </div>
+          </a>
+          <a class="tool-card t-adhkar" href="#/more/adhkar">
+            <div class="tool-icon">${Icons.adhkar}</div>
+            <div>
+              <div class="tool-title">الأذكار</div>
+              <div class="tool-sub">أذكار المسلم</div>
+            </div>
+          </a>
         </div>
       </div>
 
@@ -224,7 +220,7 @@ export async function renderHome(container) {
     </div>
   `;
 
-  // Async: fill hero card (continue reading)
+  // Async: fill continue reading card
   try {
     await loadQuran();
     const quranState = State.getSlice('quran');
@@ -233,64 +229,45 @@ export async function renderHome(container) {
     const meta = getSurahMeta(last);
     if (meta) {
       const progress = Math.min(100, Math.round((lastAyah / meta.ayahCount) * 100));
-      container.querySelector('#hero-surah').textContent = meta.name;
-      container.querySelector('#hero-ayah-info').textContent = `الآية ${toAr(lastAyah)} من ${toAr(meta.ayahCount)}`;
-      container.querySelector('#hero-progress-bar').style.width = `${progress}%`;
-      container.querySelector('#hero-percent').textContent = `${toAr(progress)}%`;
+      const nameEl = container.querySelector('#hero-surah-name');
+      const numEl = container.querySelector('#hero-ayah-num');
+      const totalEl = container.querySelector('#hero-ayah-total');
+      const pctEl = container.querySelector('#hero-pct');
+      const barEl = container.querySelector('#hero-bar');
+      if (nameEl)  nameEl.textContent = meta.name;
+      if (numEl)   numEl.textContent = toAr(lastAyah);
+      if (totalEl) totalEl.textContent = toAr(meta.ayahCount);
+      if (pctEl)   pctEl.textContent = `${toAr(progress)}٪`;
+      if (barEl)   barEl.style.width = `${progress}%`;
     }
-  } catch (e) {
-    console.warn('Hero card fill failed:', e);
-    container.querySelector('#hero-surah').textContent = 'سورة الفاتحة';
-    container.querySelector('#hero-ayah-info').textContent = 'آية ١ من ٧';
-  }
+  } catch (e) { console.warn('Continue card fill failed', e); }
 
-  // Async: fill Wurd card (placeholder for now)
+  // Async: fill wird progress
   try {
-    // Wurd logic placeholder — could read from State.wird
-    const wirdState = State.getSlice('wird');
-    if (wirdState && wirdState.plans && wirdState.plans.length > 0) {
-      const activePlan = wirdState.plans.find(p => p.id === wirdState.activePlanId) || wirdState.plans[0];
-      const progress = activePlan.progress || 0;
-      const target = activePlan.target || 1;
-      const current = Math.round((progress / target) * 100);
-      // Update ring
-      const ringEl = container.querySelector('.wurd-progress-ring');
-      if (ringEl) {
-        const r = 26;
-        const c = 2 * Math.PI * r;
-        const offset = c - (Math.min(100, current) / 100) * c;
-        const fill = ringEl.querySelector('.ring-fill');
-        if (fill) fill.setAttribute('stroke-dashoffset', String(offset));
-        const text = ringEl.querySelector('.ring-text');
-        if (text) text.textContent = `${toAr(current)}%`;
-      }
-      container.querySelector('#wurd-sub').textContent = `${toAr(progress)} / ${toAr(target)} ${activePlan.type === 'pages' ? 'صفحة' : 'أجزاء'}`;
-    } else {
-      container.querySelector('#wurd-sub').textContent = 'اضغط لبدء وردك اليومي';
+    const { current, target, pct } = getWirdProgress();
+    const ringEl = container.querySelector('.wurd-ring');
+    const pctEl = container.querySelector('#wurd-pct');
+    const titleEl = container.querySelector('#wurd-title');
+    const subEl = container.querySelector('#wurd-sub');
+    if (ringEl) {
+      const r = 29;
+      const c = 2 * Math.PI * r;
+      const offset = c * (1 - pct / 100);
+      const fg = ringEl.querySelector('.ring-fg');
+      if (fg) fg.setAttribute('stroke-dashoffset', offset);
     }
-  } catch (e) {
-    console.warn('Wurd card fill failed:', e);
-  }
-
-  // Async: fill ayah of day
-  try {
-    const ayah = await getAyahOfDay();
-    if (ayah) {
-      container.querySelector('#ayah-card-slot').innerHTML = `
-        <a class="ayah-card" href="#/quran/${ayah.surah}">
-          <div class="ayah-card-label">${Icons.sparkles} آية اليوم</div>
-          <div class="ayah-card-text">${ayah.text}</div>
-          <div class="ayah-card-ref-wrap">
-            <div class="ayah-card-ref">${ayah.surahName} • آية ${toAr(ayah.ayah)}</div>
-          </div>
-        </a>
-      `;
+    if (pctEl) pctEl.textContent = `${toAr(pct)}٪`;
+    if (titleEl) {
+      titleEl.textContent = current > 0
+        ? `${toAr(current)} من ${toAr(target)} أجزاء`
+        : 'لم تبدأ ورد اليوم بعد';
     }
-  } catch (e) { console.warn('ayah of day failed', e); }
-
-  // Prayer placeholder
-  container.querySelector('#prayer-name').textContent = 'سيتم إضافته قريبًا';
-  container.querySelector('#prayer-countdown').textContent = '';
+    if (subEl) {
+      subEl.textContent = current > 0
+        ? `بقيت ${toAr(Math.max(0, target - current))} جزء`
+        : 'اضغط لتحديد هدفك اليومي';
+    }
+  } catch (e) { console.warn('Wird fill failed', e); }
 }
 
 const AR_DIGITS = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];

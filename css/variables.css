@@ -1,78 +1,80 @@
 /* =====================================================================
    رفيق القرآن | Quran Companion — Premium v4
-   Design Tokens — Sage/Emerald Islamic palette
+   Design Tokens — iOS-inspired Sage/Emerald/Cream/Gold Palette
    ---------------------------------------------------------------------
-   Inspired by modern Islamic design:
-   - Soft Sage & Emerald greens (calm, spiritual)
-   - Cream & warm off-white surfaces
-   - Soft gold accents (used sparingly)
-   - True dark mode (no pure black)
+   Inspiration: Modern Islamic minimalism + iPhone premium feel
+   Principles: Calm, soft, spiritual, premium — never loud
    ===================================================================== */
 
 :root {
-  /* ===== Brand palette (Light — Sage/Emerald) ===== */
-  --c-primary:      #52796F;   /* sage green — primary brand */
-  --c-primary-deep: #3F5F56;   /* deeper sage for emphasis */
-  --c-secondary:    #84A98C;   /* lighter sage */
-  --c-mint:         #9DC5AB;   /* soft mint */
-  --c-emerald:      #5C8A72;  /* emerald accent */
-  --c-cream:        #F8F5ED;  /* warm cream background */
-  --c-soft-green:   #DCE9E1;  /* soft green tint */
-  --c-gold:         #C9A45C;  /* light gold */
-  --c-gold-soft:    #E8D9B3;  /* soft gold tint */
-  --c-clay:         #B4815C;  /* warm clay (secondary accent) */
+  /* ===== Brand palette (Light — refined Sage/Emerald/Cream) ===== */
+  --c-primary:      #52796F;   /* Sage green — primary brand */
+  --c-primary-deep: #3F5F57;   /* Deeper sage for emphasis */
+  --c-secondary:    #84A98C;   /* Light sage — secondary */
+  --c-mint:         #9FC8B3;   /* Soft mint accent */
+  --c-soft-green:   #DCE9E1;   /* Very soft green wash */
+  --c-cream:        #F8F5ED;   /* Warm cream — page bg */
+  --c-gold:         #C9A45C;   /* Soft Islamic gold */
+  --c-gold-soft:    #E2C887;   /* Lighter gold for tints */
+  --c-pastel-blue:  #B7CFD9;   /* Calm pastel blue (rare use) */
+  --c-pastel-pink:  #E8C5CD;   /* Pastel pink (very rare use) */
+  --c-beige:        #EFE8D8;   /* Beige divider tone */
+
+  /* ===== Backward-compatible aliases (so existing CSS still works)
+     Map old blue/cyan/pink/purple to new sage/emerald/gold system
+     while preserving visual variety across sections. ===== */
+  --c-blue:        var(--c-primary);       /* Quran section → sage */
+  --c-blue-deep:   var(--c-primary-deep);
+  --c-cyan:        var(--c-mint);          /* Action → mint */
+  --c-sage:        var(--c-secondary);     /* Sage */
+  --c-pink-soft:   #F4DDD5;                /* Soft warm tint */
+  --c-pink:        #C98A78;                /* Warm terracotta (replaces pink) */
+  --c-purple:      #8FA39B;                /* Muted sage-grey (replaces purple) */
+  --c-gold-old:    var(--c-gold);
 
   /* ===== Semantic roles ===== */
-  --quran-color:    var(--c-primary);
+  --quran-color:      var(--c-primary);
   --quran-color-deep: var(--c-primary-deep);
-  --action-color:   var(--c-emerald);
-  --remind-color:   var(--c-clay);
-  --remind-soft:   #F2E0D5;
-  --reflect-color:  var(--c-secondary);
-  --gold-color:     var(--c-gold);
-  --neutral-bg:     var(--c-cream);
-
-  /* ===== Legacy aliases (for backward compatibility with existing CSS files) ===== */
-  --c-blue:         var(--c-primary);
-  --c-cyan:         var(--c-emerald);
-  --c-pink-soft:    var(--remind-soft);
-  --c-pink:         var(--c-clay);
-  --c-purple:       var(--c-secondary);
-  --shadow-blue:    var(--shadow-primary);
-  --shadow-pink:    var(--shadow-sm);
-  --shadow-purple:  var(--shadow-sm);
+  --action-color:     var(--c-mint);
+  --remind-color:     var(--c-pink);
+  --remind-soft:      var(--c-pink-soft);
+  --reflect-color:    var(--c-secondary);
+  --gold-color:       var(--c-gold);
+  --neutral-bg:       var(--c-cream);
 
   /* ===== Surfaces (Light — warm cream tones) ===== */
-  --bg:             #F8F5ED;          /* warm cream — NOT pure white */
-  --bg-elevated:    #FFFDF7;          /* near-white for elevated cards */
-  --bg-subtle:      #EFEADD;          /* slightly darker recess */
-  --bg-soft:        #F3EFE3;
-  --card:           #FFFFFF;
-  --card-2:         #FBF8F0;
-  --card-elevated:  #FFFFFF;
-  --overlay:        rgba(36, 51, 46, 0.42);
+  --bg:            #F8F5ED;          /* warm cream — primary bg */
+  --bg-elevated:   #FFFEFB;          /* near-white for elevated cards */
+  --bg-subtle:     #EFE9DA;          /* beige recess */
+  --bg-soft:       #F2EDDF;          /* soft warm tint */
+  --card:          #FFFFFF;          /* pure white card surface */
+  --card-2:        #FBF8F1;          /* warm card alt */
+  --card-elevated: #FFFFFF;
+  --overlay:       rgba(36, 51, 46, 0.42);
 
-  /* ===== Text (Light — NO pure black) ===== */
-  --fg:             #24332E;          /* deep forest, not pure black */
-  --fg-strong:      #18241F;
-  --fg-muted:       #5A6B62;
-  --fg-subtle:      #8A958E;
-  --fg-on-color:    #FFFFFF;
-  --fg-on-primary:  #FFFFFF;
+  /* ===== Text (Light — never pure black) ===== */
+  --fg:            #24332E;          /* deep sage-charcoal, NOT pure black */
+  --fg-strong:     #1A2622;          /* strongest text */
+  --fg-muted:      #5E6E66;          /* muted sage */
+  --fg-subtle:     #8B9890;          /* subtlest */
+  --fg-on-color:   #FFFFFF;
 
   /* ===== Borders & dividers ===== */
-  --border:         #E5DDC9;
-  --border-strong:  #D0C6AE;
-  --hairline:       rgba(36, 51, 46, 0.08);
+  --border:        #E2DAC6;          /* warm beige border */
+  --border-strong: #C9BEA4;          /* stronger beige */
+  --hairline:      rgba(36, 51, 46, 0.08);
 
-  /* ===== Shadows (very soft, layered) ===== */
+  /* ===== Shadows (iOS-like, very soft, warm-tinted) ===== */
   --shadow-xs: 0 1px 2px rgba(36, 51, 46, 0.04);
   --shadow-sm: 0 2px 8px rgba(36, 51, 46, 0.05), 0 1px 2px rgba(36, 51, 46, 0.04);
   --shadow-md: 0 6px 18px rgba(36, 51, 46, 0.07), 0 2px 6px rgba(36, 51, 46, 0.05);
   --shadow-lg: 0 14px 36px rgba(36, 51, 46, 0.10), 0 4px 12px rgba(36, 51, 46, 0.06);
   --shadow-xl: 0 28px 64px rgba(36, 51, 46, 0.14), 0 8px 24px rgba(36, 51, 46, 0.08);
-  --shadow-primary: 0 8px 24px rgba(82, 121, 111, 0.25);
-  --shadow-gold:    0 8px 24px rgba(201, 164, 92, 0.20);
+  --shadow-blue:  0 8px 24px rgba(82, 121, 111, 0.22);
+  --shadow-pink:  0 8px 24px rgba(201, 138, 120, 0.20);
+  --shadow-purple: 0 8px 24px rgba(143, 163, 155, 0.20);
+  --shadow-gold:  0 8px 24px rgba(201, 164, 92, 0.22);
+  --shadow-mint:  0 8px 24px rgba(159, 200, 179, 0.28);
 
   /* ===== Radii (iOS-like — large, soft) ===== */
   --radius-xs: 8px;
@@ -100,13 +102,13 @@
   /* ===== Typography ===== */
   --font-ui: 'IBM Plex Sans Arabic', 'Cairo', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-display: 'Reem Kufi', 'IBM Plex Sans Arabic', 'Cairo', system-ui, sans-serif;
-  --font-quran: 'KFGQPC Uthmani Script', 'Amiri Quran', 'Amiri', 'Scheherazade New', serif;
+  --font-quran: 'Amiri Quran', 'Amiri', 'Scheherazade New', 'KFGQPC Uthmani Script', serif;
   --font-quran-display: 'Amiri Quran', 'Amiri', serif;
   --font-mono: 'IBM Plex Mono', 'SF Mono', Menlo, monospace;
 
   /* Quran typographic scale */
-  --quran-font-size: 1.75rem;   /* 28px default */
-  --quran-line-height: 2.3;
+  --quran-font-size: 1.75rem;   /* 28px default — comfortable */
+  --quran-line-height: 2.2;
   --quran-letter-spacing: 0;
 
   /* UI typographic scale (iOS-style hierarchy) */
@@ -149,141 +151,142 @@
   --safe-area-left: env(safe-area-inset-left, 0px);
   --safe-area-right: env(safe-area-inset-right, 0px);
 
-  /* ===== Tajweed colors (calm, sage-friendly) ===== */
-  --taj-madd:      #2E7D32;   /* المد — green */
-  --taj-ghunnah:   #6A1B9A;   /* الغنة — purple */
-  --taj-ikhfa:     #00838F;   /* الإخفاء — teal */
-  --taj-idgham:    #AD1457;   /* الإدغام — rose */
-  --taj-iqlab:     #5D4037;   /* الإقلاب — brown */
-  --taj-idhar:     #1565C0;   /* الإظهار — blue */
-  --taj-qalqalah:  #BF360C;   /* القلقلة — terracotta */
+  /* ===== Tajweed colors — calm, harmonious with new palette ===== */
+  --taj-madd:     #5B8C5A;   /* Madd — soft green */
+  --taj-ghunnah:  #8E6FA9;   /* Ghunnah — soft purple */
+  --taj-ikhfa:    #4A8B8E;   /* Ikhfa — soft teal */
+  --taj-idgham:   #B5738A;   /* Idgham — soft mauve */
+  --taj-iqlab:    #8E6B4A;   /* Iqlab — warm brown */
+  --taj-idhar:    #4A7A8E;   /* Idhar — soft blue */
+  --taj-qalqalah: #B96B3E;   /* Qalqalah — warm terracotta */
 }
 
-/* ===== Dark Mode — true dark, deep forest (NOT pure black) ===== */
+/* ===== Dark Mode — true dark, deep & calm (NOT pure black) ===== */
 .theme-dark,
 .theme-dark :root {
-  --c-primary:      #9FC8B3;   /* lighter sage for dark mode readability */
-  --c-primary-deep: #84A98C;
-  --c-secondary:    #A8C9B5;
-  --c-mint:         #B5D4C1;
-  --c-emerald:      #8FBA9F;
+  --c-primary:      #9FC8B3;   /* Mint sage — primary in dark */
+  --c-primary-deep: #9FC8B3;   /* Alias to primary (lighter for text on dark bg) */
+  --c-secondary:    #A8C2A6;
+  --c-mint:         #B5D9C2;
+  --c-soft-green:   #1F2A26;
   --c-cream:        #19231F;
-  --c-soft-green:   #1F2C25;
   --c-gold:         #DCC088;
-  --c-gold-soft:    #3A3120;
-  --c-clay:         #C99A78;
+  --c-gold-soft:    #B8945A;
+  --c-pastel-blue:  #5A7080;
+  --c-pastel-pink:  #6B4A4A;
+  --c-beige:        #1F2A26;
 
-  --quran-color:    var(--c-primary);
+  /* Aliases */
+  --c-blue:        var(--c-primary);
+  --c-blue-deep:   var(--c-primary-deep);
+  --c-cyan:        var(--c-mint);
+  --c-sage:        var(--c-secondary);
+  --c-pink-soft:   #3D2A2A;
+  --c-pink:        #D89A8A;
+  --c-purple:      #A8C2A6;
+
+  --quran-color:      var(--c-primary);
   --quran-color-deep: var(--c-primary-deep);
-  --action-color:   var(--c-emerald);
-  --remind-color:   var(--c-clay);
-  --remind-soft:   #2E2520;
-  --reflect-color:  var(--c-secondary);
-  --gold-color:     var(--c-gold);
-  --neutral-bg:     var(--c-cream);
+  --action-color:     var(--c-mint);
+  --remind-color:     var(--c-pink);
+  --remind-soft:      var(--c-pink-soft);
+  --reflect-color:    var(--c-secondary);
+  --gold-color:       var(--c-gold);
+  --neutral-bg:       var(--c-cream);
 
-  /* Legacy aliases for dark mode */
-  --c-blue:         var(--c-primary);
-  --c-cyan:         var(--c-emerald);
-  --c-pink-soft:    var(--remind-soft);
-  --c-pink:         var(--c-clay);
-  --c-purple:       var(--c-secondary);
-  --shadow-blue:    var(--shadow-primary);
-  --shadow-pink:    var(--shadow-sm);
-  --shadow-purple:  var(--shadow-sm);
+  /* Dark surfaces — deep sage-charcoal, NOT pure black */
+  --bg:            #111815;          /* deep near-black with green tint */
+  --bg-elevated:   #19231F;          /* elevated surface */
+  --bg-subtle:     #0C1310;          /* deeper recess */
+  --bg-soft:       #141C18;          /* soft surface */
+  --card:          #19231F;          /* card surface */
+  --card-2:        #1F2A26;          /* alt card */
+  --card-elevated: #1F2A26;
+  --overlay:       rgba(0, 0, 0, 0.65);
 
-  /* Dark surfaces — deep forest, NOT pure black */
-  --bg:             #111815;          /* deep forest, soft */
-  --bg-elevated:    #19231F;
-  --bg-subtle:      #0C1411;
-  --bg-soft:        #161F1A;
-  --card:           #19231F;
-  --card-2:         #1F2C25;
-  --card-elevated:  #1D2823;
-  --overlay:        rgba(0, 0, 0, 0.65);
+  /* Text — warm off-white, never harsh pure white */
+  --fg:            #E8EDE6;          /* warm off-white */
+  --fg-strong:     #F5F8F3;          /* brightest */
+  --fg-muted:      #A6B3AB;          /* muted sage */
+  --fg-subtle:     #6E7B73;          /* subtlest */
+  --fg-on-color:   #111815;
 
-  /* Text — warm off-white, not harsh */
-  --fg:             #E5EBE7;          /* warm off-white */
-  --fg-strong:      #FFFFFF;
-  --fg-muted:       #A6B0AC;
-  --fg-subtle:      #74807A;
-  --fg-on-color:    #111815;
-  --fg-on-primary:  #111815;
+  --border:        #2A3530;
+  --border-strong: #3A4842;
+  --hairline:      rgba(255, 255, 255, 0.06);
 
-  --border:         #2A332E;
-  --border-strong:  #3A453E;
-  --hairline:       rgba(255, 255, 255, 0.06);
-
-  /* Shadows (stronger in dark mode) */
+  /* Shadows (stronger in dark) */
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.35);
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.40), 0 1px 2px rgba(0, 0, 0, 0.30);
   --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.45), 0 2px 6px rgba(0, 0, 0, 0.35);
   --shadow-lg: 0 14px 36px rgba(0, 0, 0, 0.55), 0 4px 12px rgba(0, 0, 0, 0.40);
   --shadow-xl: 0 28px 64px rgba(0, 0, 0, 0.65), 0 8px 24px rgba(0, 0, 0, 0.45);
-  --shadow-primary: 0 8px 24px rgba(159, 200, 179, 0.18);
-  --shadow-gold:    0 8px 24px rgba(220, 192, 136, 0.18);
+  --shadow-blue:  0 8px 24px rgba(159, 200, 179, 0.18);
+  --shadow-pink:  0 8px 24px rgba(216, 154, 138, 0.18);
+  --shadow-purple: 0 8px 24px rgba(168, 194, 166, 0.18);
+  --shadow-gold:  0 8px 24px rgba(220, 192, 136, 0.20);
+  --shadow-mint:  0 8px 24px rgba(181, 217, 194, 0.22);
 
-  --taj-madd:   #81C784;
-  --taj-ghunnah:#BA68C8;
-  --taj-ikhfa:  #4DD0E1;
-  --taj-idgham: #F06292;
-  --taj-iqlab:  #A1887F;
-  --taj-idhar:  #64B5F6;
-  --taj-qalqalah: #FF8A65;
+  /* Tajweed in dark — lighter for visibility */
+  --taj-madd:     #81C784;
+  --taj-ghunnah:  #BA8FC8;
+  --taj-ikhfa:    #5DB5B8;
+  --taj-idgham:   #D88FA8;
+  --taj-iqlab:    #C49A6F;
+  --taj-idhar:    #6FA5C0;
+  --taj-qalqalah: #E89B6E;
 }
 
-/* Auto-respect system preference */
+/* Auto-respect system preference (when theme = 'system') */
 @media (prefers-color-scheme: dark) {
   .theme-system,
   .theme-system :root {
     --c-primary:      #9FC8B3;
-    --c-primary-deep: #84A98C;
-    --c-secondary:    #A8C9B5;
-    --c-mint:         #B5D4C1;
-    --c-emerald:      #8FBA9F;
+    --c-primary-deep: #9FC8B3;
+    --c-secondary:    #A8C2A6;
+    --c-mint:         #B5D9C2;
+    --c-soft-green:   #1F2A26;
     --c-cream:        #19231F;
-    --c-soft-green:   #1F2C25;
     --c-gold:         #DCC088;
-    --c-gold-soft:    #3A3120;
-    --c-clay:         #C99A78;
+    --c-gold-soft:    #B8945A;
+    --c-pastel-blue:  #5A7080;
+    --c-pastel-pink:  #6B4A4A;
+    --c-beige:        #1F2A26;
 
-    --quran-color:    var(--c-primary);
+    --c-blue:        var(--c-primary);
+    --c-blue-deep:   var(--c-primary-deep);
+    --c-cyan:        var(--c-mint);
+    --c-sage:        var(--c-secondary);
+    --c-pink-soft:   #3D2A2A;
+    --c-pink:        #D89A8A;
+    --c-purple:      #A8C2A6;
+
+    --quran-color:      var(--c-primary);
     --quran-color-deep: var(--c-primary-deep);
-    --action-color:   var(--c-emerald);
-    --remind-color:   var(--c-clay);
-    --remind-soft:   #2E2520;
-    --reflect-color:  var(--c-secondary);
-    --gold-color:     var(--c-gold);
-    --neutral-bg:     var(--c-cream);
-
-    /* Legacy aliases for system dark */
-    --c-blue:         var(--c-primary);
-    --c-cyan:         var(--c-emerald);
-    --c-pink-soft:    var(--remind-soft);
-    --c-pink:         var(--c-clay);
-    --c-purple:       var(--c-secondary);
-    --shadow-blue:    var(--shadow-primary);
-    --shadow-pink:    var(--shadow-sm);
-    --shadow-purple:  var(--shadow-sm);
+    --action-color:     var(--c-mint);
+    --remind-color:     var(--c-pink);
+    --remind-soft:      var(--c-pink-soft);
+    --reflect-color:    var(--c-secondary);
+    --gold-color:       var(--c-gold);
+    --neutral-bg:       var(--c-cream);
 
     --bg:            #111815;
     --bg-elevated:   #19231F;
-    --bg-subtle:     #0C1411;
-    --bg-soft:       #161F1A;
+    --bg-subtle:     #0C1310;
+    --bg-soft:       #141C18;
     --card:          #19231F;
-    --card-2:        #1F2C25;
-    --card-elevated: #1D2823;
+    --card-2:        #1F2A26;
+    --card-elevated: #1F2A26;
     --overlay:       rgba(0, 0, 0, 0.65);
 
-    --fg:            #E5EBE7;
-    --fg-strong:     #FFFFFF;
-    --fg-muted:      #A6B0AC;
-    --fg-subtle:     #74807A;
+    --fg:            #E8EDE6;
+    --fg-strong:     #F5F8F3;
+    --fg-muted:      #A6B3AB;
+    --fg-subtle:     #6E7B73;
     --fg-on-color:   #111815;
-    --fg-on-primary: #111815;
 
-    --border:        #2A332E;
-    --border-strong: #3A453E;
+    --border:        #2A3530;
+    --border-strong: #3A4842;
     --hairline:      rgba(255, 255, 255, 0.06);
 
     --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.35);
@@ -291,7 +294,18 @@
     --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.45), 0 2px 6px rgba(0, 0, 0, 0.35);
     --shadow-lg: 0 14px 36px rgba(0, 0, 0, 0.55), 0 4px 12px rgba(0, 0, 0, 0.40);
     --shadow-xl: 0 28px 64px rgba(0, 0, 0, 0.65), 0 8px 24px rgba(0, 0, 0, 0.45);
-    --shadow-primary: 0 8px 24px rgba(159, 200, 179, 0.18);
-    --shadow-gold:    0 8px 24px rgba(220, 192, 136, 0.18);
+    --shadow-blue:  0 8px 24px rgba(159, 200, 179, 0.18);
+    --shadow-pink:  0 8px 24px rgba(216, 154, 138, 0.18);
+    --shadow-purple: 0 8px 24px rgba(168, 194, 166, 0.18);
+    --shadow-gold:  0 8px 24px rgba(220, 192, 136, 0.20);
+    --shadow-mint:  0 8px 24px rgba(181, 217, 194, 0.22);
+
+    --taj-madd:     #81C784;
+    --taj-ghunnah:  #BA8FC8;
+    --taj-ikhfa:    #5DB5B8;
+    --taj-idgham:   #D88FA8;
+    --taj-iqlab:    #C49A6F;
+    --taj-idhar:    #6FA5C0;
+    --taj-qalqalah: #E89B6E;
   }
 }
